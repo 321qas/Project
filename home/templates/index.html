@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FF-HOME</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ul, li {list-style: none;}
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    html, body {
+      height: 100%;
+      font-family: sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #wrap {
+      flex: 1;
+    }
+
+    /* 네비게이션 바 */
+    #nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+      gap: 40px;
+      height: 180px;
+      flex-wrap: wrap;
+    }
+
+    #logo .logoBtn {
+      font-size: 40px;
+      font-weight: bold;
+      background: none;
+      cursor: pointer;
+      padding: 10px 20px;
+      border: none;
+    }
+
+    #searchAll {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+      padding: 10px;
+      height: 150px;
+      gap: 10px;
+      
+      flex: 1;
+    }
+
+    #searchAll .searchIco img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .searchKey {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .searchKey input {
+      padding: 12px 18px;
+      font-size: 1.2rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      height: 60px;
+      width: 400px;
+    }
+
+    .searchKey button {
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      height: 60px;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #pageMove ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    #pageMove a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    #pageMove a:hover {
+      color: #007bff;
+    }
+
+    .contents::selection{
+      background-color: red;
+    }
+
+    .contents {
+      width: 100%;
+      height: 1400px;
+      padding: 30px 0;
+    }
+
+    #shortsContainer {
+      width: 25%;
+      height: 650px;
+      margin: 20px auto;
+      display: flex;
+      border: 1px solid #ccc;
+    }
+
+    #shorts {
+      width: 75%;
+      height: 95%;
+      margin: 0 10px 0 40px;
+      border: 1px solid #ccc;
+    }
+
+    #shortsIcoContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 20px 0;
+      gap: 20px;
+      height: 95%;
+      
+    }
+
+    .iconBtn {
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    #shortsIcoContainer {
+      display: flex;
+      flex-direction: column;
+      /* 다른 버튼은 하단에 붙도록 */
+      justify-content: flex-end;
+    }
+
+    .createBtn {
+      /* 아래쪽 여백을 자동으로 늘려서 맨 위로 보냄 */
+      margin-bottom: auto;
+      background-color: #007bff;
+      color: white;
+      border-radius: 10%;
+      width: 100%;
+    }
+
+    #recommendFestList {
+      width: 60%;
+      margin: 50px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      border-top: 1px solid #ccc;
+      padding-top: 30px;
+    }
+
+    .festCard {
+      width: 200px;
+      height: 250px;
+      
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      background-color: white;
+    }
+
+    .festCard img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .festCard p {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    #footer {
+      padding: 20px;
+      background-color: #f1f1f1;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #666;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+     /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+  /* 네비게이션, 푸터 등도 함께 스타일링 */
+    body.dark #nav, body.dark #pageMove a,
+    body.dark #footer {
+      background-color: #1f1f1f;
+      border-color: #333;
+      color: #ffff;
+    }
+
+    body.dark #pageMove a:hover {
+      color: #6ef8f1;
+    }
+
+
+  /* 검색창, 카드 등 박스 배경 */
+    body.dark .searchKey input,
+    body.dark .festCard {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="wrap">
+    <div id="nav">
+      <div id="logo">
+        <button type="button" class="logoBtn" onclick="logoBtn()">logo_img</button>
+      </div>
+
+      <div id="searchAll">
+        <div class="searchIco"><img src="" alt="search icon"></div>
+        <form role="search" class="searchWithFilter">
+          <div class="searchKey">
+            <input name="keyWord" type="text" placeholder="search the keyword" />
+            <button type="submit">검색</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="pageMove">
+        <ul>
+          <li><a href="#">축제정보</a></li>
+          <li><a href="#">커뮤니티</a></li>
+          <li><a href="#">회원가입</a></li>
+          <li><a href="#">로그인</a></li>
+          <li><a href="#">고객센터</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="contents">
+      <div id="shortsContainer">
+        <div id="shorts">1</div>
+        <div id="shortsIcoContainer">
+          <button class="iconBtn createBtn">+</button>
+          <button class="iconBtn likeBtn">❤️</button>
+          <button class="iconBtn dislikeBtn">💔</button>
+          <button class="iconBtn wishBtn">⭐</button>
+          <button class="iconBtn replyBtn">💬</button>
+        </div>
+      </div>
+
+      <div id="recommendFestList">
+        <div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div>
+        <div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div>
+        <div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div>
+        <div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div>
+        <div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div>
+        <div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div>
+        <div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div>
+        <div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
+    <ul class="footer-links">
+      <li><a href="#">개인정보처리방침</a></li>
+      <li><a href="#">이용약관</a></li>
+      <li><a href="#">관리자페이지 이동</a></li>
+      <li>
+        <div id="ldMode">
+          <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    function logoBtn() {
+      alert('go home');
+    }
+
+    // 3. JS: body.dark 클래스를 토글
+    function ldBtn() {
+    document.body.classList.toggle('dark');
+    // (선택) 로컬 스토리지에 상태 저장
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
+    }
+
+</script>

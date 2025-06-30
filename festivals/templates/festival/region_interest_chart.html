@@ -1,0 +1,69 @@
+{# 지역별 관심도 통계 페이지 #}
+{% load dict_extras %}
+
+<select id="chartTypeSelect" style="margin-bottom:16px;">
+  <option value="bar">막대그래프</option>
+  <option value="line">선그래프</option>
+  <option value="pie">파이차트</option>
+  <option value="doughnut">도넛차트</option>
+</select>
+
+<canvas id="regionChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // region_interests 쿼리셋을 JS 배열로 변환
+    const regionData = [
+        {% for obj in region_interests %}
+        {
+            region: "{{ region_labels|get_item:obj.region }}",
+            count: {{ obj.count }},
+        },
+        {% endfor %}
+    ];
+
+    const labels = regionData.map(item => item.region);
+    const counts = regionData.map(item => item.count);
+
+    // 기본 차트 타입
+    let currentChartType = 'bar';
+    let chartInstance = null;
+
+    // 차트 생성 함수
+    function renderChart(type) {
+        const ctx = document.getElementById('regionChart').getContext('2d');
+
+        // 이미 차트가 있다면 파괴
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '지역별 관심도',
+                    data: counts,
+                    // 막대, 선, 파이 모두 호환을 위해 기본 스타일만 지정
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: (type !== 'bar' && type !== 'line') ? true : false,
+                    }
+                }
+            }
+        });
+    }
+
+    // 최초 그래프 렌더링
+    renderChart(currentChartType);
+
+    // 셀렉트 박스 변경 시 그래프 타입 동적 변경
+    document.getElementById('chartTypeSelect').addEventListener('change', function(e) {
+        currentChartType = this.value;
+        renderChart(currentChartType);
+    });
+</script>
