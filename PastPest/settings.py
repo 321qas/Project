@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'tags',
 ]
 
-JAZZMIN_SETTINGS = {   # Jazzmin 설정
+JAZZMIN_SETTINGS = {   # Jazzmin 설정 (admin 커스터마이징)
     "site_title": "My Admin Site",
     "site_header": "Welcome to Admin!",
     "site_brand": "Admin",
