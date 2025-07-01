@@ -29,9 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts', # 앱추가
-    'festivals',
-    'shortforms',
-    'reviews',
+    'festivals.apps.FestivalsConfig', # festivals 앱 설정 추가
+    'shortforms.apps.ShortformsConfig', # shortforms 앱 설정 추가
+    'reviews.apps.ReviewsConfig', # reviews 앱 설정 추가
     'wishlist',
     'inquiry',
     'home',
@@ -94,6 +94,7 @@ DATABASES = { # Oracle 데이터베이스 설정
 AUTH_USER_MODEL = 'accounts.User' # 사용자 모델을 accounts 앱의 User로 설정
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -127,7 +128,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

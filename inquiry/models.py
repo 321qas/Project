@@ -4,8 +4,8 @@ from django.conf import settings
 class Inquiry(models.Model):                                 # 문의글
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE,
-        help_text="문의글을 작성한 회원을 선택하세요. (회원 탈퇴시 문의글도 삭제됨)"
+        on_delete=models.SET_NULL, null=True,
+        help_text="문의글을 작성한 회원을 선택하세요. (회원 탈퇴시에도 문의글 보존됨)"
     ) 
     title = models.CharField(
         max_length=100,
@@ -30,8 +30,10 @@ class Inquiry(models.Model):                                 # 문의글
     )
 
     def __str__(self):
-        # user.nickname을 쓰는 게 최신 설계와 맞음. username이 없을 수도 있음
-        return f"{self.title} ({getattr(self.user, 'nickname', self.user.pk)})"
+        if self.user:
+            return f"{self.title} ({getattr(self.user, 'nickname', self.user.pk)})"
+        else:
+            return f"{self.title} (탈퇴한 회원)"
 
 class InquiryReply(models.Model):                            # 답변글
     inquiry = models.ForeignKey(

@@ -3,7 +3,8 @@ from django.conf import settings
 from festivals.models import Festival
 from django.core.exceptions import ValidationError
 
-class Review(models.Model):  
+class Review(models.Model):
+    """축제 후기(리뷰) 모델"""
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
     festival = models.ForeignKey(
         Festival,
@@ -13,7 +14,7 @@ class Review(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        help_text="후기를 작성한 회원입니다. (회원 탈퇴 시 삭제)"
+        help_text="후기를 작성한 회원입니다. (회원 탈퇴 시 후기 삭제)"
     )
     rating = models.PositiveSmallIntegerField(
         choices=RATING_CHOICES,
@@ -45,15 +46,16 @@ class Review(models.Model):
         return f"Review of {self.festival.name} by {self.user.nickname}"
 
 class ReviewImage(models.Model):
+    """후기 이미지 모델 (파일은 media/reviews/images에 저장)"""
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
         related_name='images',
         help_text="이미지를 첨부할 후기를 선택하세요."
     )
-    image_filename = models.CharField(
-        max_length=255,
-        help_text="이미지 파일의 이름 또는 경로를 입력하세요."
+    image = models.ImageField(
+        upload_to='reviews/images/',blank=True, null=True,
+        help_text="이미지 파일을 업로드하세요."
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -64,6 +66,7 @@ class ReviewImage(models.Model):
         return f"Image for Review {self.review.id}"
 
 class Comment(models.Model):
+    """리뷰 댓글 모델"""
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,

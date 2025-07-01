@@ -15,7 +15,7 @@ class InquiryAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content', 'user__nickname')          # 검색
     readonly_fields = ('created_at',)
     inlines = [InquiryReplyInline]                                  # 답변 인라인 표시
-    fieldsets = (
+    fieldsets = (                                                   # 관리자 페이지에서 작성시 필드 그룹화
         (None, {
             'fields': ('user', 'title', 'content', 'status', 'created_at')
         }),
