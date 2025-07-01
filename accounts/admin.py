@@ -4,19 +4,43 @@ from .models import User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     # 목록에서 보여줄 컬럼들
-    list_display = ('id', 'username', 'email', 'login_type', 'social_id')
-    # 검색 가능 필드
-    search_fields = ('username', 'email', 'social_id')
-    # 필터로 사용할 필드
-    list_filter = ('login_type',)
-    # 상세페이지에서 읽기전용 필드 (예시)
-    readonly_fields = ('date_joined', 'last_login')
+    list_display = (
+        'id',               # PK
+        'user_id',          # 회원 아이디
+        'display_nickname', # 닉네임
+        'real_name',        # 실명
+        'email',            # 이메일
+        'login_type',       # 가입 방식
+        'social_id',        # 소셜 고유ID
+        'is_active',        # 활성여부
+        'is_staff',         # 관리자여부
+        'date_joined',      # 가입일
+    )
 
-    # (추가로, interest_tags 등 M2M 필드는 기본 위젯 그대로 노출됨)
+    
+    def display_nickname(self, obj):
+        # 닉네임 없으면 '탈퇴한 회원'로 표시
+        return obj.nickname if obj.nickname else '탈퇴한 회원'
+    display_nickname.short_description = '닉네임'
 
-    # 객체 표시(상단에 제목)
+    # 검색 필드
+    search_fields = ('user_id', 'nickname', 'real_name', 'email', 'social_id')
+    # 필터 필드
+    list_filter = ('login_type', 'is_active', 'is_staff')
+    # 읽기전용 필드(상세에서)
+    readonly_fields = ('date_joined',)
+
+    # ManyToManyField(interest_tags)는 기본 위젯 제공
+    fieldsets = (
+        (None, {
+            'fields': (
+                'user_id', 'email', 'nickname', 'real_name', 'phone_number',
+                'login_type', 'social_id', 'interest_tags',
+                'is_active', 'is_staff', 'is_superuser', 'date_joined'
+            ),
+            'description': '회원 기본정보와 권한을 설정합니다.'
+        }),
+    )
+
     def __str__(self, obj):
-        return obj.username
-
-# 기존 방식처럼 admin.site.register(User)만 써도 되지만,
-# 위처럼 하면 관리자 기능을 더 많이 커스터마이즈 가능!
+        return obj.user_id

@@ -1,15 +1,11 @@
-# tags/models.py
 from django.db import models
 
-class Tag(models.Model):
+class Tag(models.Model):                                    # 관심 태그
     name = models.CharField(max_length=30, unique=True)
+    # 문화예술, 전통역사, 자연생태, 지역특산물, 먹거리/푸드, 음악/공연, 체험/참여, 봄, 여름, 가을, 겨울, 가족, 어린이, 청소년, 청년, 가족, 성인, 어르신, 전연령 / 총 19개
 
     def __str__(self):
         return self.name
 
-    def user_count(self):
-        # 역참조를 이용한 실시간 카운트 반환 (User에서 ManyToMany 선언했을 때)
+    def user_count(self):                                   # 유저 수
         return self.user_set.count()
-        # 사용 예시
-        # music_tag = Tag.objects.get(name='음악')
-        # print(music_tag.user_count())   # 출력 결과 = 3

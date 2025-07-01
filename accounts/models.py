@@ -1,31 +1,98 @@
-from django.db import models                # Django의 ORM을 위한 models 모듈 임포트
-from django.contrib.auth.models import AbstractUser  # 기본 User 확장을 위한 AbstractUser 임포트
-from tags.models import Tag                  # 사용자의 관심 태그를 위한 Tag 모델 임포트
+from django.db import models
+from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin, BaseUserManager)
+from tags.models import Tag
+import uuid
 
-class User(AbstractUser):                    # Django 기본 유저 모델을 상속해서 사용자 정의 User 모델 정의
-    email = models.EmailField(unique=True)    # 이메일 필드, unique=True로 설정해 같은 이메일로 두 번 가입 불가
-    phone_number = models.CharField(max_length=15, blank=True)    # 전화번호 필드(최대 15자), 입력 안 해도 됨(blank=True)
+# 소셜로그인 시 회원의 아이디 자동생성 함수
+def generate_social_user_id(login_type):
+    return f"{login_type}_{uuid.uuid4().hex[:4]}" # 예: kakao_1234, naver_abcd
 
-    interest_tags = models.ManyToManyField(Tag, blank=True)       # 사용자가 여러 관심 태그를 선택할 수 있는 ManyToMany 관계(선택사항)
+# 커스텀 User 매니저
+class UserManager(BaseUserManager):
+    def create_user(self, user_id=None, email=None, password=None, login_type='local', **extra_fields):
+        if not email:
+            raise ValueError("이메일은 필수입니다.")
+        if not user_id:
+            if login_type != 'local':
+                user_id = generate_social_user_id(login_type)
+            else:
+                raise ValueError("아이디는 필수입니다.")
+        email = self.normalize_email(email)
+        user = self.model(
+            user_id=user_id,
+            email=email,
+            login_type=login_type,
+            **extra_fields
+        )
+        # 소셜 회원은 비밀번호 없음/None, 일반회원은 반드시 있음
+        if login_type == 'local':
+            if not password:
+                raise ValueError("비밀번호는 필수입니다.")
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        user.save(using=self._db)
+        return user
 
-    # 소셜로그인 타입을 구분하기 위한 choice 필드 정의
+    def create_superuser(self, user_id, email, password=None, **extra_fields): # 슈퍼유저 생성시 사용 (권한부여)
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(user_id, email, password, login_type='local', **extra_fields)
+
+# User 모델
+class User(AbstractBaseUser, PermissionsMixin):
+    user_id = models.CharField(
+        max_length=30, unique=True,
+        help_text="서비스 내 회원 아이디. (소셜회원은 자동생성)"
+    )
+    email = models.EmailField(
+        unique=True,
+        help_text="로그인/알림용 이메일 주소 (중복 불가)"
+    )
+    nickname = models.CharField(
+        max_length=30, unique=True, default="",
+        help_text="닉네임(중복 불가, 필수)"
+    )
+    real_name = models.CharField(
+        max_length=30,
+        help_text="사용자 본명(필수)"
+    )
+    phone_number = models.CharField(
+        max_length=15, blank=True,
+        help_text="연락처(선택)"
+    )
+    interest_tags = models.ManyToManyField(
+        Tag, blank=True,
+        help_text="관심 태그"
+    )
+    is_active = models.BooleanField(default=True, help_text="계정 활성화 여부")
+    is_staff = models.BooleanField(default=False, help_text="관리자 권한 여부")
+
     LOGIN_CHOICES = (
-        ('local', '일반가입'),                # 자체 회원가입(local)
-        ('kakao', '카카오'),                  # 카카오 로그인
-        ('naver', '네이버'),                  # 네이버 로그인
+        ('local', '일반가입'),
+        ('kakao', 'kakao'),
+        ('naver', 'naver'),
     )
     login_type = models.CharField(
-        max_length=10,                        # 최대 10자(로컬, 카카오, 네이버)
-        choices=LOGIN_CHOICES,                # 위에서 정의한 선택지 중 하나만 입력 가능
-        default='local',                      # 기본값은 'local'(일반 회원가입)
-        help_text='계정 생성 방식을 구분 (local, kakao, naver 등)'  # 관리자 등에서 안내 문구
+        max_length=10,
+        choices=LOGIN_CHOICES,
+        default='local',
+        help_text='계정 생성 방식 (local, kakao, naver 등)'
     )
-
     social_id = models.CharField(
-        max_length=100,                       # 소셜에서 받은 유니크한 ID값(카카오, 네이버 등)
-        blank=True, null=True,                # 소셜로그인 아닌 경우 비워둘 수 있음
-        help_text='카카오/네이버 등 소셜 회원 고유 ID'
+        max_length=100, blank=True, null=True,
+        help_text='소셜로그인 회원 고유ID'
     )
+    date_joined = models.DateTimeField(auto_now_add=True, help_text="회원 가입일")
 
-    def __str__(self):                        # 객체를 문자열로 출력할 때 username을 보여줌(관리자, 쉘 등에서)
-        return self.username
+    objects = UserManager()
+
+    USERNAME_FIELD = 'user_id'    # 로그인에 사용하는 필드 (아이디)
+    REQUIRED_FIELDS = ['email', 'nickname', 'real_name']
+
+    def __str__(self):
+        return f"{self.user_id} / {self.nickname}"
+
+    class Meta:
+        verbose_name = "회원"
+        verbose_name_plural = "회원"

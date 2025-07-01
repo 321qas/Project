@@ -1,14 +1,29 @@
 from django.db import models
 from django.conf import settings
+from festivals.models import Festival
 
-class Wishlist(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # 위시리스트 추가한 사용자
-    festival = models.ForeignKey('festivals.Festival', on_delete=models.CASCADE)  # 위시리스트에 담은 축제
-    notify = models.BooleanField(default=True)  # 알림 수신 여부 (True이면 축제 관련 알림 전송)
-    added_date = models.DateTimeField(auto_now_add=True)  # 위시리스트에 추가된 시간
+class Wishlist(models.Model):  
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        help_text="이 위시리스트를 등록한 회원입니다. (회원 탈퇴 시 삭제)"
+    )
+    festival = models.ForeignKey(
+        Festival,
+        on_delete=models.CASCADE,
+        help_text="관심을 등록한 축제를 선택하세요. (축제 삭제 시 함께 삭제)"
+    )
+    notify = models.BooleanField(
+        default=True,
+        help_text="축제 일정 알림 여부 (ON: 알림, OFF: 알림 없음)"
+    )
+    added_date = models.DateTimeField(
+        auto_now_add=True,
+        help_text="위시리스트에 등록된 날짜(자동 입력)"
+    )
 
     class Meta:
-        unique_together = [('user', 'festival')]  # 한 사용자당 동일 축제 하나만 위시리스트에 추가 가능
+        unique_together = [('user', 'festival')]  # 한 회원이 같은 축제 중복 등록 불가
 
     def __str__(self):
-        return f"{self.user.username} -> {self.festival.name}"
+        return f"{self.user.nickname} -> {self.festival.name}"  # username 대신 최신 설계에 맞게
