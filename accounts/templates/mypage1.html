@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>My Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* 헤더
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #f97316;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        .header a:hover {
+            color: #f97316;
+        }
+        */
+
+        .profile-card {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 2px solid #2563eb;
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #fde68a;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        .profile-details {
+            margin-top: 10px;
+        }
+
+
+        .links {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .links a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        .links a:hover {
+            color: #f97316;
+        }
+        .tags-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #fde68a;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tag-search {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .tag-search input {
+            width: 60%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .my-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .whole-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            border: 1px solid #2563eb;
+            border-radius: 4px;
+            padding: 5px 10px;
+            background-color: #f0f9ff;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tag button {
+            margin-left: 5px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #f97316;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!--
+    <header class="header">
+        <a href="#">로고</a>
+        <nav>
+            <a href="#">축제 정보</a>
+            <a href="#">마이페이지</a>
+            <a href="#">고객센터</a>
+        </nav>
+    </header>
+    -->
+    <div id="wrap">
+        <div class="contents">
+
+            <!-- 프로필 카드 -->
+            <div class="profile-card">
+                <div class="profile-pic">U</div>
+                <div class="profile-details">
+                    <p><strong>아이디</strong>: user123</p>
+                    <p><strong>닉네임</strong>: User</p>
+                </div>
+                <!-- 설정 버튼 링크 -->
+                <!-- <button>회원정보 수정</button> -->
+                <div class="links">
+                    <a href="#">My Plans</a>
+                    <a href="#">My Posts</a>
+                    <a href="#">Settings</a>
+                </div>
+            </div>
+            <!--/ 프로필 카드 -->
+
+
+            <div class="tags-container">
+                <div class="tag-search">
+                    <p>나의 관심 태그</p>
+                    <input type="text" placeholder="태그 검색">
+                </div>
+                <!-- 내가 선택한 태그 -->
+                <div class="my-tag-list">
+                    <div class="tag">태그1 <button>X</button></div>
+                    <div class="tag">태그2 <button>X</button></div>
+                    <div class="tag">태그3 <button>X</button></div>
+                </div>
+                <hr>
+                <!-- 전체 태그 리스트 -->
+                <div class="whole-tag-list">
+                    <div class="tag">문화예술 </div>
+                    <div class="tag">전통역사 </div>
+                    <div class="tag">자연생태 </div>
+                    <div class="tag">지역특산물 </div>
+                    <div class="tag">먹거리/푸드 </div>
+                    <div class="tag">음악/공연 </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

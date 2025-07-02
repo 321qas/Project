@@ -1,0 +1,80 @@
+
+    
+    /* html */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+    html, body {
+      height: 100%;
+      font-family: "poppins";
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #wrap {
+      flex: 1;
+    }
+
+    /* 네비게이션 바 */
+    #nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 70px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      gap: 0px;
+      height: 80px;
+      flex-wrap: wrap;
+
+    }
+
+    #logo .logoBtn {
+      font-size: 40px;
+      font-weight: bold;
+      background: none;
+      cursor: pointer;
+      width: 200px;
+      height: 76px;
+      padding: 0;
+      border: none;
+    }
+
+    #logo_img {
+        height:100%;
+    }
+
+    /*
+    #pageMove {
+        border:1px solid black;
+    }
+    */
+    
+    #pageMove ul {
+      display: flex;
+      list-style: none;
+      gap: 40px;
+      flex-wrap: wrap;
+      line-height: 74px;
+      border: none;
+    }
+
+    #pageMove a {
+      font-size: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    #pageMove a:hover {
+      color: #ffb300;
+    }
