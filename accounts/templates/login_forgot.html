@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            width: 350px;
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto 150px;
+        }
+        
+        .card form {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .card input[type="email"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+       
+        
+        .card .social-login {
+            border: none;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 45px;
+            color: #828282;
+        }
+        
+        .card .send {
+            color: #2563eb;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #2563eb;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .card .send:hover {
+            background-color: #B2CCFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="logo-placeholder.png" alt="Logo">
+        <form action="/login" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <button type="button" class="send">Send</button>
+        </form>
+        <div class="social-login">
+            <span class="notice">{!}</span>
+            <span>If there's an issue with email delivery, try logging in using Facebook or Google.</span>
+        </div>
+    </div>
+</body>
+</html>

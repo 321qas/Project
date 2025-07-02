@@ -1,0 +1,132 @@
+    /* html */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+    html, body {
+      height: 100%;
+      font-family: "poppins", "Noto Sans KR", sans-serif;
+      background: #f8fafc;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #wrap {
+      flex: 1;
+    }
+
+    /* 네비게이션 바 */
+    #nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;     
+      padding: 0px 100px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      gap: 0px;
+      height: 98x;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      position: sticky;      
+      top: 0;
+      z-index: 100;
+    }
+
+    #logo .logoBtn {
+      font-size: 40px;
+      font-weight: bold;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 180px;
+      height: 90px; 
+      padding: 0;
+      transition: transform 0.15s;
+      
+    }
+
+    #logo_img {
+        display: block; 
+        width: 100%;
+        height: 60px;
+        object-fit: contain;
+        margin-left: 10px; 
+    }
+
+    #pageMove ul {
+      display: flex;
+      list-style: none;
+      gap: 48px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      border: none;
+      height: 90px;
+    }
+
+    #pageMove li {
+      display: flex;
+      align-items: flex-end;
+      height: 90px;   
+
+    }
+
+
+    #pageMove a {
+      position: relative; 
+      font-size: 20px;
+      text-decoration: none;
+      color: #222;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      padding: 8px 0 4px 0;
+      transition: color 0.2s;
+    }
+
+    #pageMove a:hover {
+      color: #ffb300
+    } 
+
+    #pageMove a::after {
+      content: ''; position: absolute; bottom:-3px; left:0; width:0; height:3px;
+      background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%); 
+      transition: width 0.3s;
+    }
+
+    #pageMove a:hover::after {
+      width: 100%;
+    }
+
+    /* 모바일용 반응형 */
+  @media (max-width: 900px) {
+    #nav {
+      flex-direction: column;
+      height: auto;
+      padding: 18px 10vw;
+      gap: 10px;
+    }
+    #logo .logoBtn {
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    #pageMove ul {
+      gap: 24px;
+      height: auto;
+    }
+    #pageMove li {
+      height: auto;
+    }
+    #logo_img {
+      width: 120px;
+      height: 48px;
+      margin-left: 0;
+    }
+  }

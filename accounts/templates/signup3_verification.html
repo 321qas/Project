@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .step {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .step span {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .step.current span {
+            background-color: #f97316;
+        }
+        .icon {
+            margin: 20px auto;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e8f0fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .icon img {
+            width: 50px;
+            height: 50px;
+        }
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #555;
+            margin: 15px 0;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Member Registration</h1>
+
+        <div class="steps">
+            <div class="step">
+                <span>1</span>
+                Membership Agreement
+            </div>
+            <div class="step">
+                <span>2</span>
+                Enter Basic Information
+            </div>
+            <div class="step current">
+                <span>3</span>
+                Verification
+            </div>
+        </div>
+
+        <div class="icon">
+            <img src="clipboard-check.png" alt="Verification icon">
+        </div>
+
+        <p><strong>You're almost done!</strong></p>
+        <p>
+            We sent you a verification email. Please check your inbox and log in after you verify your email.<br>
+            Please check your inbox and verify your email within 10 minutes.
+        </p>
+        <p>
+            If you don't receive your verification email, please check your Spam or Junk folder.<br>
+            If you still can't find the verification email, please sign up again with a Gmail account.
+        </p>
+
+        <a href="/login" class="button">Log in</a>
+    </div>
+</body>
+</html>

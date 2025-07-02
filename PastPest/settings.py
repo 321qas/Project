@@ -1,5 +1,3 @@
-
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,14 +74,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PastPest.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = { # Oracle 데이터베이스 설정
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',  
+        'NAME': 'xe',  
         'USER': 'ora_user2',
         'PASSWORD': '1111',
         'HOST': 'localhost',
@@ -92,8 +89,6 @@ DATABASES = { # Oracle 데이터베이스 설정
 }
 
 AUTH_USER_MODEL = 'accounts.User' # 사용자 모델을 accounts 앱의 User로 설정
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

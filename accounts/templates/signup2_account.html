@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        /* 회원가입 step 진행상황 */
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .step {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .step span {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: #f97316;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .step.current span {
+            background-color: #2563eb;
+        }
+
+        /* 회원가입 폼 */
+
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .radio-group label {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+        .radio-group input {
+            display: none;
+        }
+        .radio-group input:checked + label {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        /* 관심태그 선택 */
+
+        .tags-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #fde68a;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tag-search {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .tag-search input {
+            width: 60%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .my-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .whole-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            border: 1px solid #2563eb;
+            border-radius: 4px;
+            padding: 5px 10px;
+            background-color: #f0f9ff;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tag button {
+            margin-left: 5px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #f97316;
+            font-weight: bold;
+        }
+
+        /*  관심사 설정 (카드 이미지)
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .interest {
+            flex: 1 1 calc(33.333% - 10px);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+        .interest img {
+            width: 100%;
+            height: auto;
+        }
+        .interest.selected {
+            border-color: #2563eb;
+            background-color: #e8f0fe;
+        }
+        */
+
+        /* 버튼, 전송버튼 */
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .button.signup {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Member Registration</h1>
+
+        <div class="steps">
+            <div class="step">
+                <span>1</span>
+                Membership Agreement
+            </div>
+            <div class="step current">
+                <span>2</span>
+                Enter Basic Information
+            </div>
+            <div class="step">
+                <span>3</span>
+                Verification
+            </div>
+        </div>
+
+        <form>
+            <label for="id">ID *</label>
+            <input type="text" id="id" placeholder="Enter your ID">
+            <button class="button id_check">check for duplicates</button>
+            
+            <label for="password">Password *</label>
+            <input type="password" id="password" placeholder="Enter your password">
+
+            <label for="confirm-password">Confirm password *</label>
+            <input type="password" id="confirm-password" placeholder="Confirm your password">
+
+            <label for="name">Name *</label>
+            <input type="text" id="name" placeholder="Enter your name">
+
+            <label for="nickname">Nickname *</label>
+            <input type="text" id="nickname" placeholder="10 characters maximum">
+            <button class="button nname_check">check for duplicates</button>
+
+            <label for="email">E-mail *</label>
+            <input type="text" id="email" placeholder="Enter your email">
+            <button class="button mail_check">check for duplicates</button>
+
+            <p>Would you like to subscribe to FastFest email notifications? </p>
+            <div class="radio-group">
+                <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
+                <label for="subscribe-yes">Yes!</label>
+
+                <input type="radio" id="subscribe-no" name="subscribe" value="no">
+                <label for="subscribe-no">No thanks.</label>
+            </div>
+            <p>By subscribing to FastFest email notifications, you will receive updates on FastFest announcements, events, content, and more.<br>
+            Non-subscribers will still receive email notifications on important policy updates, individual winner announcement, etc.</p>
+
+            <label for="dob">Date of birth</label>
+            <input type="date" id="dob">
+
+            <!--
+            <div class="radio-group">
+                <input type="radio" id="gender-male" name="gender" value="male">
+                <label for="gender-male">Male</label>
+
+                <input type="radio" id="gender-female" name="gender" value="female">
+                <label for="gender-female">Female</label>
+            </div>
+            -->
+            <!--
+            <label for="country">Country / Region *</label>
+            <select id="country">
+                <option value="">Select your country/region</option>
+                <option value="korea">Korea</option>
+                <option value="usa">USA</option>
+                <option value="uk">UK</option>
+            </select>-->
+            <!-- Add more countries as needed -->
+            
+            <label>Interest Tags</label>
+
+            <div class="tags-container">
+                <div class="tag-search">
+                    <p>나의 관심 태그</p>
+                    <input type="text" placeholder="태그 검색">
+                </div>
+                <!-- 내가 선택한 태그 -->
+                <div class="my-tag-list">
+                    <div class="tag">태그1 <button>X</button></div>
+                    <div class="tag">태그2 <button>X</button></div>
+                    <div class="tag">태그3 <button>X</button></div>
+                </div>
+                <hr>
+                <!-- 전체 태그 리스트 -->
+                <div class="whole-tag-list">
+                    <div class="tag">태그태그1 </div>
+                    <div class="tag">태그2 </div>
+                    <div class="tag">태그3 </div>
+                    <div class="tag">태그4 </div>
+                    <div class="tag">태그5 </div>
+                    <div class="tag">태태그6 </div>
+                </div>
+            </div>
+
+            <!--
+            <div class="interests">
+                <div class="interest">
+                    <img src="city.jpg" alt="City">
+                    <p>City</p>
+                </div>
+                <div class="interest">
+                    <img src="culture.jpg" alt="Culture">
+                    <p>Culture</p>
+                </div>
+                <div class="interest">
+                    <img src="nature.jpg" alt="Nature">
+                    <p>Nature</p>
+                </div>
+            </div>-->
+            <!-- Add more interests as needed -->
+
+            <div class="actions">
+                <button type="submit" class="button signup">Sign up</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
