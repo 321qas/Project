@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        /* 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header a {
+            text-decoration: none;
+            color: #333;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        .header a.active {
+            text-decoration: underline;
+        }
+        */
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        /* FAQ, Inquiry 탭 */
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 15px;
+        }
+        .tabs button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size:20px;
+            color: #333;
+        }
+        .tabs button.active {
+            color: #f97316;
+            font-weight: bold;
+        }
+        .content {
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+        }
+
+        /* FAQ 내용 */
+
+        #FAQ {
+            text-align: left;
+        }
+
+        h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        }
+
+        .search-bar {
+        margin-bottom: 20px;
+        }
+
+        .search-bar input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        }
+
+        .faq-item {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 10px;
+        overflow: hidden;
+        }
+
+        .faq-question {
+        padding: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        }
+
+        .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0 15px;
+        background: #fafafa;
+        }
+
+        .faq-answer.open {
+        padding: 15px;
+        max-height: 300px;
+        }
+
+        .no-result {
+        text-align: center;
+        margin-top: 20px;
+        color: #888;
+        }
+
+
+        /* Inquiry 내용 */
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            border: none;
+            width: 45%;
+            gap: 10px;
+        }
+        .search-container input[type="text"] {
+            width: calc(100% - 150px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f97316;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            border: none;
+            width: 35%;
+        }
+
+        .controls .exclude-private {
+            margin-right: auto;
+        }
+
+        .controls input[type="checkbox"] {
+            margin-right: 5px;
+            
+        }
+        .controls .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls .btn-orange {
+            background-color: #f97316;
+            color: #ffffff;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 10px;
+        }
+        .table th {
+            background-color: #f5f5f5;
+        }
+        .table tr.collapsible-content {
+            display: none;
+        }
+        .table tr.active.collapsible-content {
+            display: table-row;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination a {
+            text-decoration: none;
+            color: #555;
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .pagination a.active {
+            background-color: #f97316;
+            color: white;
+        }
+        
+    </style>
+</head>
+<body>
+    <!--
+    <header class="header">
+        <a href="#">로고</a>
+        <nav>
+            <a href="#">축제 정보</a>
+            <a href="#" class="active">마이페이지</a>
+            <a href="#">고객센터</a>
+        </nav>
+    </header>
+    -->
+
+    <h1>User Support</h1>
+
+    <div class="tabs">
+        <button class="tab-link active" onclick="showTab('FAQ')">FAQ</button>
+        <button class="tab-link" onclick="showTab('Inquiry')">Inquiry</button>
+    </div>
+
+    <div id="FAQ" class="content">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="궁금한 내용을 검색해보세요..." onkeyup="filterFAQ()">
+        </div>
+
+        <div id="faqContainer">
+            <!-- FAQ 항목 예시 -->
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                Q. 예매 후 취소 시 환불은 언제 되나요?
+            </div>
+            <div class="faq-answer">
+                A. 예매 취소 요청 시 영업일 기준 2~3일 내 환불이 진행됩니다. 카드사 사정에 따라 지연될 수 있습니다.
+            </div>
+            </div>
+
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                Q. 축제 당일 현장 구매도 가능한가요?
+            </div>
+            <div class="faq-answer">
+                A. 네, 현장에서도 일부 티켓 구매가 가능합니다. 다만 수량이 한정되어 있으니 사전 예매를 권장드립니다.
+            </div>
+            </div>
+
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleAnswer(this)">
+                Q. 티켓 양도나 환불은 어떻게 하나요?
+            </div>
+            <div class="faq-answer">
+                A. 마이페이지에서 취소 요청을 하거나, 고객센터를 통해 양도 신청을 하실 수 있습니다.
+            </div>
+            </div>
+        </div>
+
+        <div id="noResult" class="no-result" style="display: none;">
+            관련된 FAQ가 없습니다.
+        </div>
+    </div>
+    <div id="Inquiry" class="content" style="display: none;">
+        <h2>Inquiry</h2>
+        <div class="top-bar">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search by title or content">
+                <button id="search-button">Search</button>
+            </div>
+    
+            <div class="controls">
+                <div class="exclude-private">
+                    <input type="checkbox" id="exclude-private">
+                    <label for="exclude-private">Exclude Private</label>
+                </div>
+                <button class="btn" id="my-posts-toggle">My posts</button>
+                <button class="btn btn-orange"><a href="/inquiry/write/">Write</a></button>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="inquiry-table">
+                <tr data-id="1">
+                    <td>1</td>
+                    <td>Answered: Question about delivery...</td>
+                    <td>kbi***</td>
+                    <td>2025.05.09 19:13</td>
+                </tr>
+                <tr class="collapsible-content" data-id="1">
+                    <td colspan="4">
+                        <p><strong>Q:</strong> Can you deliver this without...</p>
+                        <p><strong>A:</strong> Yes, our delivery service...</p>
+                    </td>
+                </tr>
+                <tr data-id="2">
+                    <td>2</td>
+                    <td>Answered: Inquiry about refund...</td>
+                    <td>as2***</td>
+                    <td>2024.12.17 19:10</td>
+                </tr>
+                <tr class="collapsible-content" data-id="2">
+                    <td colspan="4">
+                        <p><strong>Q:</strong> How do I process a refund...</p>
+                        <p><strong>A:</strong> Please contact our support...</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <a href="#">&lt;</a>
+            <a href="#">1</a>
+            <a href="#" class="active">2</a>
+            <a href="#">3</a>
+            <a href="#">&gt;</a>
+        </div>
+    </div>
+    
+
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.content');
+            const buttons = document.querySelectorAll('.tab-link');
+
+            tabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        const tableRows = document.querySelectorAll('tr[data-id]');
+        tableRows.forEach(row => {
+            row.addEventListener('click', () => {
+                const contentRow = document.querySelector(`.collapsible-content[data-id="${row.dataset.id}"]`);
+                contentRow.classList.toggle('active');
+            });
+        });
+
+        const myPostsToggle = document.getElementById('my-posts-toggle');
+        myPostsToggle.addEventListener('click', () => {
+            const currentState = myPostsToggle.textContent.trim();
+            if (currentState === 'My posts') {
+                myPostsToggle.textContent = 'Show all';
+                // Add logic to filter only user posts here
+            } else {
+                myPostsToggle.textContent = 'My posts';
+                // Add logic to show all posts here
+            }
+        });
+
+        const searchButton = document.getElementById('search-button');
+        searchButton.addEventListener('click', () => {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr[data-id]');
+
+            rows.forEach(row => {
+                const content = row.innerText.toLowerCase();
+                if (content.includes(query)) {
+                    row.style.display = '';
+                    const contentRow = document.querySelector(`.collapsible-content[data-id="${row.dataset.id}"]`);
+                    if (contentRow) contentRow.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                    const contentRow = document.querySelector(`.collapsible-content[data-id="${row.dataset.id}"]`);
+                    if (contentRow) contentRow.style.display = 'none';
+                }
+            });
+        });
+
+        function toggleAnswer(el) {
+        const answer = el.nextElementSibling;
+        answer.classList.toggle('open');
+        }
+
+        function filterFAQ() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const faqItems = document.querySelectorAll(".faq-item");
+        let matchCount = 0;
+
+        faqItems.forEach(item => {
+            const question = item.querySelector(".faq-question").textContent.toLowerCase();
+            const answer = item.querySelector(".faq-answer").textContent.toLowerCase();
+
+            if (question.includes(input) || answer.includes(input)) {
+            item.style.display = "";
+            matchCount++;
+            } else {
+            item.style.display = "none";
+            }
+        });
+
+        document.getElementById("noResult").style.display = matchCount === 0 ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>
