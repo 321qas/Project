@@ -1,0 +1,40 @@
+    
+    /* footer 일반 */
+
+    #footer {
+      padding: 20px;
+      background-color: #FCF8F5;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+    }
+
+    /* 다크모드 버튼
+
+    #ldMode {
+        
+    }
+
+    */
+
+
+    /* policy, terms, admin 목록 */
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding-bottom: 10px;
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #666;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }

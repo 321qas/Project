@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <title>shorts upload</title>
+  <style>
+
+    body {
+      box-sizing: border-box;
+    }
+
+    #wrap {
+      flex: 1;
+    }
+
+    
+    .contents::selection{   /* 마우스 포인터로 드래그 시 배경 색 */
+      background-color: #4fc3f7;
+    }
+
+    .contents {
+      width: 100%;
+      height: 1000px;
+      padding: /*30*/ 0px 0; 
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      justify-content: center;
+      gap: 50px;
+    }
+
+    #shortsContainer {
+      width: fit-content; /*32%*/
+      height: 820px;
+      
+      margin: 10px;
+      display: flex;
+      justify-content: space-between;
+      border: none;
+      
+    }
+
+    #shortsBorder {
+      width: 450px;
+      height: 820px;
+      margin-left: 30px;
+      background: #39555e;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    #shorts {
+      width: 405px;
+      height: 650px;
+      /*background: #fff;*/
+      margin-top: 25px;
+      background: url('https://picsum.photos/410/650?random') center/cover no-repeat;
+    }
+
+    #shortsMeta {
+      width: 405px; /*90%*/
+      padding-top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+      font-size: 1.08rem;
+      color: #222;
+    }
+
+    #shortsMeta a {
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    #shortsMeta span a {
+      color: #000000;
+      text-decoration: none;
+      margin-left: 10px;
+      display: inline-block;
+      border-radius: 10px;
+      padding: 5px 10px;
+      background: #ffffff;
+      box-shadow:  0 2px 2px rgba(0, 0, 0, 1);
+    }
+
+
+    #shortsIcoContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin-left: 20px;
+      padding: 20px 0;
+      gap: 20px;
+      width: 40px;
+      height: 95%;
+      
+    }
+
+    .iconBtn {
+      font-size: 23px; /*23px*/
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-align: center;
+    }
+
+    .createBtn {
+      /* 아래쪽 여백을 자동으로 늘려서 맨 위로 보냄 */
+      margin-bottom: auto;
+      background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%); 
+      color: white;
+      border-radius: 10%;
+      width: 100%;
+    }
+    
+    #shortsEditor {
+      /*max-width: 800px;*/
+      height: 820px;
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+    }
+
+    /* 프레임 색상 선택 */
+    .color_frame {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .color-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .color-btn.yellow { background-color: #f9d835; }
+    .color-btn.purple { background-color: #8c6df0; }
+    .color-btn.blue { background-color: #4aa3f9; }
+    .color-btn.pink { background-color: #f78fb3; }
+
+    /* 이미지 업로드 영역 */
+    .image_upload {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .shorts_img {
+      width: 100%;
+      aspect-ratio: 1; /* 정사각형 유지 */
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #666;
+      background-color: #f9f9f9;
+    }
+
+    .shorts_img.add-new {
+      cursor: pointer;
+      color: #888;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .shorts_img.add-new:hover {
+      background-color: #eee;
+      border-color: #aaa;
+    }
+
+    /* 코멘트 작성 영역 */
+    #shorts_comment {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      resize: none;
+      margin-bottom: 20px;
+    }
+
+    /* 파일 업로드 */
+    .file_upload {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .file_upload label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .file_upload input[type="file"] {
+      flex: 1;
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    /* 버튼 */
+    .action_buttons {
+      text-align: right;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .Btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .func {
+      background-color: #fff;
+      color: black;
+      border:1px solid black;
+    }
+
+    .func:hover {
+      background-color: #f97316;
+    }
+
+    .submit {
+      background-color: #f97316;
+      color: #ffffff;
+    }
+
+    .submit:hover {
+      background-color: #e1620d;
+    }
+
+
+    /*
+    #shortsEditor {
+      width: 600px;
+      height: 820px;
+      border: 1px solid black;
+    }
+
+    .box {
+      border: 1px solid black;
+    }
+
+    #shortsEditor form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    */
+
+     /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+  /* 네비게이션, 푸터 등도 함께 스타일링 */
+    body.dark #nav, body.dark #pageMove a,
+    body.dark #footer {
+      background-color: #1f1f1f;
+      border-color: #333;
+      color: #ffff;
+    }
+
+    body.dark #pageMove a:hover {
+      color: #6ef8f1;
+    }
+
+
+  /* 검색창, 카드 등 박스 배경 */
+    body.dark .searchKey input,
+    body.dark .festCard {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="wrap">
+
+
+    <div class="contents">
+      <div id="shortsContainer"> 
+        <div id="shortsBorder"> 
+          <div id="shorts"></div>
+          <div id="shortsMeta">
+            <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
+            <span class="tags" style="font-size: 15px;">
+              <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
+              <a href="result_list.html?tag=서울">#서울</a>
+              <a href="result_list.html?tag=여름">#여름</a>
+            </span>
+          </div>
+        </div>
+        
+      
+
+        <div id="shortsIcoContainer">
+          <button class="iconBtn createBtn" onclick="createBtn()">+</button>
+          <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
+          <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
+          <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
+          <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
+        </div>
+      </div>
+
+      <div id="shortsEditor">
+        <form action="#" method="post">
+          <!-- 프레임 색상 선택 -->
+          <div class="color_frame box">
+            <button type="button" class="color-btn yellow"></button>
+            <button type="button" class="color-btn purple"></button>
+            <button type="button" class="color-btn blue"></button>
+            <button type="button" class="color-btn pink"></button>
+          </div>
+
+          <!-- 이미지 업로드 // data-index >> JS에서 활용 -->
+          <div class="image_upload box">
+            <div class="shorts_img" data-index="1"></div>
+            <div class="shorts_img" data-index="2"></div>
+            <div class="shorts_img" data-index="3"></div>
+            <div class="shorts_img" data-index="4"></div>
+            <div class="shorts_img" data-index="5"></div>
+            <div class="shorts_img add-new"></div>
+          </div>
+
+          <!-- 코멘트 작성 -->
+          <textarea name="shorts_comment" id="shorts_comment" placeholder="간단한 내용을 작성하세요."></textarea>
+
+          <!-- 파일 업로드 -->
+          <div class="file_upload">
+            <label for="file_upload">음악 업로드</label>
+            <input type="file" id="file_upload" accept="audio/*">
+          </div>
+
+          <!-- 버튼 -->
+          <div class="action_buttons">
+            <button type="button" class="func Btn">Preview</button>
+            <button type="submit" class="submit Btn">Post</button>
+          </div>
+        </form>
+      </div>
+
+      
+    </div>
+  </div>
+ 
+
+  <script>
+    function logoBtn() {
+      alert('go home');
+    }
+
+    function replyBtn() {
+      alert('로그인 후 이용 가능');
+    }
+
+    function wishBtn() {
+      alert('로그인 후 이용 가능');
+    }
+
+    function dislikeBtn() {
+      alert('로그인 후 이용 가능');
+    }
+
+    function likeBtn() {
+      alert('로그인 후 이용 가능');
+    }
+
+    function createBtn() {
+      alert('로그인 후 이용 가능');
+    }
+
+    //JS: body.dark 클래스를 토글
+    function ldBtn() {
+    document.body.classList.toggle('dark');
+    // (선택) 로컬 스토리지에 상태 저장
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
+    }
+
+</script>
