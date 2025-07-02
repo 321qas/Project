@@ -1,5 +1,5 @@
 # 페스티벌 데이터 CSV 파일을 Festival 모델에 일괄 삽입하는 Django 커맨드입니다.
-# 사용법: 터미널에 => python manage.py import_festivals --file=festival_model_with_visitors_final.csv
+# 사용법: 터미널에 => python manage.py import_festivals --file=내csv파일.csv
 
 
 import pandas as pd
@@ -11,12 +11,12 @@ class Command(BaseCommand):
     help = 'CSV 파일(festival_model_with_visitors_final.csv) 데이터를 Festival 테이블에 일괄 삽입합니다.'
 
     def add_arguments(self, parser):
-        # --file 옵션으로 csv 파일 경로 지정 가능(기본값: 현재 경로의 festival_model_with_visitors_final.csv)
+        # --file 옵션으로 csv 파일 경로 지정 가능 (root 가 아니면 Ex. python manage.py import_festivals --file=data/내csv파일.csv)
         parser.add_argument(
             '--file',
             type=str,
-            default='파일네임.csv',  # 파일 이름 바꾸기
-            help='CSV 파일 경로 (기본값: 프로젝트 루트)'
+            help='CSV 파일 경로를 반드시 입력하세요 (예: 위치가 root 일경우 --file=myfile.csv)',
+            required=True,
         )
 
     def handle(self, *args, **options):
