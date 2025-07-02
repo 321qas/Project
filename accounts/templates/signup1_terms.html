@@ -3,21 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
     <title>Membership Agreement</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
@@ -87,87 +77,83 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Member Registration</h1>
-        
-        <div class="steps">
-            <div class="step current">
-                <span>1</span>
-                Membership Agreement
+    <div id="wrap">
+        <div class="contents">
+            <h1>Member Registration</h1>
+            
+            <div class="steps">
+                <div class="step current">
+                    <span>1</span>
+                    Membership Agreement
+                </div>
+                <div class="step">
+                    <span>2</span>
+                    Enter Basic Information
+                </div>
+                <div class="step">
+                    <span>3</span>
+                    Verification
+                </div>
             </div>
-            <div class="step">
-                <span>2</span>
-                Enter Basic Information
+
+            <p>Read and consent to the FastFest Terms & Conditions and Privacy Policy before proceeding to the next step.</p>
+
+            <div class="agreement">
+                <p><strong>(Required) FastFest Terms & Conditions</strong></p>
+                <textarea readonly>
+    Chapter 1 General
+
+    Article 1 (Purpose)
+    The purpose of these Terms is to set out the rights, obligations, and responsibilities of the Korea Tourism Organization and those of the users, and other necessary matters concerning the use of the FastFest service ("the Service") provided by the Korea Tourism Organization.
+                </textarea>
+                <label>
+                    <input type="radio" name="terms" value="agree"> I agree
+                </label>
+                <label>
+                    <input type="radio" name="terms" value="disagree"> I disagree
+                </label>
             </div>
-            <div class="step">
-                <span>3</span>
-                Verification
+
+            <div class="agreement">
+                <p><strong>(Required) FastFest Privacy Policy</strong></p>
+                <textarea readonly>
+    FastFest Privacy Policy for FastFest Members
+    2024. 9. 23
+
+    FastFest Website/App Personal Information Collection and Use Agreement
+                </textarea>
+                <label>
+                    <input type="radio" name="privacy" value="agree"> I agree
+                </label>
+                <label>
+                    <input type="radio" name="privacy" value="disagree"> I disagree
+                </label>
             </div>
-        </div>
 
-        <p>Read and consent to the FastFest Terms & Conditions and Privacy Policy before proceeding to the next step.</p>
+            <div class="agreement">
+                <p><strong>(Required) Consent to the collection & use of MANDATORY information</strong></p>
+                <label>
+                    <input type="radio" name="mandatory" value="agree"> I agree
+                </label>
+                <label>
+                    <input type="radio" name="mandatory" value="disagree"> I disagree
+                </label>
+            </div>
 
-        <div class="agreement">
-            <p><strong>(Required) FastFest Terms & Conditions</strong></p>
-            <textarea readonly>
-Chapter 1 General
+            <div class="agreement">
+                <p><strong>(Optional) Consent to the collection & use of OPTIONAL information</strong></p>
+                <label>
+                    <input type="radio" name="optional" value="agree"> I agree
+                </label>
+                <label>
+                    <input type="radio" name="optional" value="disagree"> I disagree
+                </label>
+            </div>
 
-Article 1 (Purpose)
-The purpose of these Terms is to set out the rights, obligations, and responsibilities of the Korea Tourism Organization and those of the users, and other necessary matters concerning the use of the FastFest service ("the Service") provided by the Korea Tourism Organization.
-            </textarea>
-            <label>
-                <input type="radio" name="terms" value="agree"> I agree
-            </label>
-            <label>
-                <input type="radio" name="terms" value="disagree"> I disagree
-            </label>
-        </div>
-
-        <div class="agreement">
-            <p><strong>(Required) FastFest Privacy Policy</strong></p>
-            <textarea readonly>
-FastFest Privacy Policy for FastFest Members
-2024. 9. 23
-
-FastFest Website/App Personal Information Collection and Use Agreement
-            </textarea>
-            <label>
-                <input type="radio" name="privacy" value="agree"> I agree
-            </label>
-            <label>
-                <input type="radio" name="privacy" value="disagree"> I disagree
-            </label>
-        </div>
-
-        <div class="agreement">
-            <p><strong>(Required) Consent to the collection & use of MANDATORY information</strong></p>
-            <label>
-                <input type="radio" name="mandatory" value="agree"> I agree
-            </label>
-            <label>
-                <input type="radio" name="mandatory" value="disagree"> I disagree
-            </label>
-        </div>
-
-        <div class="agreement">
-            <p><strong>(Optional) Consent to the collection & use of OPTIONAL information</strong></p>
-            <label>
-                <input type="radio" name="optional" value="agree"> I agree
-            </label>
-            <label>
-                <input type="radio" name="optional" value="disagree"> I disagree
-            </label>
-        </div>
-
-        <div class="agreement">
-            <label>
-                <input type="checkbox" name="age" required> (Required) I am over 14 years old.
-            </label>
-        </div>
-
-        <div class="actions">
-            <button class="button cancel">Cancel</button>
-            <button class="button confirm">Confirm</button>
+            <div class="actions">
+                <button class="button cancel">Cancel</button>
+                <button class="button confirm">Confirm</button>
+            </div>
         </div>
     </div>
 </body>
