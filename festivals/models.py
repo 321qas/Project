@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from tags.models import Tag
 
 class Festival(models.Model):
     name = models.CharField(
@@ -47,6 +48,11 @@ class Festival(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
         help_text="데이터가 마지막으로 수정된 일시(자동 입력).")
+    tags = models.ManyToManyField(  # 축제 하나에 여러 태그, 태그 하나가 여러 축제에 할당될 수 있는 N:N 관계
+        Tag,
+        blank=True,
+        related_name="festivals",
+        help_text="축제와 관련된 태그를 여러 개 선택하세요.")
 
     def __str__(self):
         return f"{self.name} ({self.start_date} ~ {self.end_date})"
