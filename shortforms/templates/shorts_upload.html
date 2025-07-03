@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <title>shorts upload</title>
   <style>
-
     body {
       box-sizing: border-box;
     }
@@ -17,7 +16,6 @@
     #wrap {
       flex: 1;
     }
-
     
     .contents::selection{   /* 마우스 포인터로 드래그 시 배경 색 */
       background-color: #4fc3f7;
@@ -93,7 +91,6 @@
       background: #ffffff;
       box-shadow:  0 2px 2px rgba(0, 0, 0, 1);
     }
-
 
     #shortsIcoContainer {
       display: flex;
@@ -273,13 +270,13 @@
 
     */
 
-     /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
+    /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
     body.dark {
       background-color: #121212;
       color: #e0e0e0;
     }
 
-  /* 네비게이션, 푸터 등도 함께 스타일링 */
+    /* 네비게이션, 푸터 등도 함께 스타일링 */
     body.dark #nav, body.dark #pageMove a,
     body.dark #footer {
       background-color: #1f1f1f;
@@ -292,7 +289,7 @@
     }
 
 
-  /* 검색창, 카드 등 박스 배경 */
+    /* 검색창, 카드 등 박스 배경 */
     body.dark .searchKey input,
     body.dark .festCard {
       background-color: #1e1e1e;
@@ -304,8 +301,6 @@
 
 <body>
   <div id="wrap">
-
-
     <div class="contents">
       <div id="shortsContainer"> 
         <div id="shortsBorder"> 
@@ -319,8 +314,6 @@
             </span>
           </div>
         </div>
-        
-      
 
         <div id="shortsIcoContainer">
           <button class="iconBtn createBtn" onclick="createBtn()">+</button>
@@ -366,44 +359,8 @@
             <button type="submit" class="submit Btn">Post</button>
           </div>
         </form>
-      </div>
-
-      
+      </div> 
     </div>
   </div>
+</body>
  
-
-  <script>
-    function logoBtn() {
-      alert('go home');
-    }
-
-    function replyBtn() {
-      alert('로그인 후 이용 가능');
-    }
-
-    function wishBtn() {
-      alert('로그인 후 이용 가능');
-    }
-
-    function dislikeBtn() {
-      alert('로그인 후 이용 가능');
-    }
-
-    function likeBtn() {
-      alert('로그인 후 이용 가능');
-    }
-
-    function createBtn() {
-      alert('로그인 후 이용 가능');
-    }
-
-    //JS: body.dark 클래스를 토글
-    function ldBtn() {
-    document.body.classList.toggle('dark');
-    // (선택) 로컬 스토리지에 상태 저장
-    const isDark = document.body.classList.contains('dark');
-    localStorage.setItem('darkMode', isDark);
-    }
-
-</script>
