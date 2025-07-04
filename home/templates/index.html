@@ -1,14 +1,10 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/navigation.css?v=Y"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/css/navigation.css">
   <title>HOME</title>
   <style>
     * {margin: 0; padding: 0; box-sizing: border-box;}
@@ -55,7 +51,6 @@
     .searchKey input:focus {
       outline: none;
       border: 2px solid #4fc3f7;
-      box-shadow: 0 0 0 2px #4fc3f73a;
     }
 
     .searchKey button {
@@ -75,7 +70,8 @@
 
     .contents {
       width: 100%;
-      height: 900px;
+      min-height: 1000px;
+
       padding: 30px 0;
     }
 
@@ -86,6 +82,21 @@
       display: flex;
       justify-content: space-evenly;
       
+    }
+    
+    .creator {
+      position: absolute;
+      top: 630px;
+      left: 10px;
+      z-index: 2;
+      background: #fff;
+      color: #222;
+      font-weight: bold;
+      padding: 6px 18px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-size: 1.08rem;
+      border: 1px solid #ddd;
     }
 
     #shortsBorder {
@@ -106,6 +117,7 @@
       height: 85%;
       background: #fff;
       display: flex; 
+      position: relative;
     }
 
     #shortsMeta {
@@ -172,15 +184,32 @@
       width: 100%;
     }
 
-    #recommendFestList {
+    .listTitle {
+  width: 60%;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  border-top: rgba(0,0,0,0.1) 1px solid;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.listTitle h3 {
+  margin: auto;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+    .recommendFestList {
       width: 60%;
-      margin: 50px auto;
+      margin: 10px auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 40px;
-      border-top: 1px solid #ccc;
-      padding-top: 30px;
+      
+      padding: 20px 0 60px 0;
     }
 
     .festCard {
@@ -239,171 +268,155 @@
       color: #e0e0e0;
     }
 
-    /* 네비게이션, 푸터 등도 함께 스타일링 */
-    body.dark #nav, body.dark #pageMove a,
-    body.dark #footer {
+    body.dark .contents {
+  background-color: #121212; /* 또는 #1a1a1a 등 어두운 회색 */
+}
+
+
+
+  /* 네비게이션, 푸터 등도 함께 스타일링 */
+    body.dark #nav,
+    body.dark #footer,
+    body.dark #pageMove,
+    body.dark #shortsBorder {
       background-color: #1f1f1f;
+      color: #e0e0e0;
       border-color: #333;
-      color: #ffff;
     }
 
-    body.dark #pageMove a:hover {
-      color: #6ef8f1;
+    /* 버튼 호버 효과를 더 눈에 띄게 */
+    body.dark .searchKey button:hover,
+    body.dark .iconBtn:hover,
+    body.dark .ldBtn:hover {
+      filter: brightness(1.2);
     }
 
 
-    /* 검색창, 카드 등 박스 배경 */
+  /* 검색창, 카드 등 박스 배경 */
     body.dark .searchKey input,
     body.dark .festCard {
       background-color: #1e1e1e;
-      border-color: #333;
+      border: #333;
+      color: #f0f0f0;
+    }
+
+   
+   
+    /* 카드 내부 텍스트 */
+    body.dark .festCard p {
+      color: #ffffff;
+    }
+
+    /* tags */
+    body.dark #shortsMeta span a {
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+
+    /* 링크 hover */
+    body.dark a:hover {
+      color: #6ef8f1;
+      text-decoration: underline;
+    }
+
+    /* 다크모드에서 선택 영역 색상 변경 */
+    body.dark ::selection {
+      background-color: #4fc3f7;
+      color: #000;
     }
 
   </style>
-  <script>
-    let scrollTimer;
-    let i = 0; // 페이지 인덱스 초기화
-    let j = 0; // 콘텐츠 인덱스 초기화
-    let startX, isDragging = false;
-
-    // DOM이 로드되면 바로 실행
-    document.addEventListener('DOMContentLoaded', function() {
-      AOS.init({
-            duration: 1000,   // 기본 애니메이션 지속 시간
-            once: true,       // 애니메이션을 한 번만 실행
-      });  
-      addShortsupdown('bottom');
-    });
-
-    $(document).ready(function() {
-        // 휠 이벤트 처리
-        $('#wrap').on('wheel', '#shortsContainer', function(e) {
-            e.preventDefault();
-            clearTimeout(scrollTimer);
-
-            if (e.originalEvent.deltaY > 0) {  // 휠을 내리면
-                if (i < 3) {
-                    scrollTimer = setTimeout(function() {
-                        i++;
-                        j = 0;
-                        addShortsupdown('down');
-                    }, 1000);
-                }
-            } else {  // 휠을 올리면
-                if (i > 0) {
-                    scrollTimer = setTimeout(function() {
-                        i--;
-                        j = 0;
-                        addShortsupdown('up');
-                    }, 1000);
-                }
-            }
-        });
-    });
-        // 콘텐츠 추가 함수
-    function addShortsupdown(animove){
-        // 새로운 콘텐츠 생성
-        hdata = `<div id="shortsContainer" data-aos="fade-${animove}"> 
-                    <div id="shortsBorder"> 
-                      <data id="shorts"><img src="/static/images/${i}${j}.jpg/" width='100%' height='100%'></data>
-                      <div id="shortsMeta">
-                      <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
-                      <span class="tags" style="font-size: 15px;">
-                        <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
-                        <a href="result_list.html?tag=서울">#서울</a>
-                        <a href="result_list.html?tag=여름">#여름</a>
-                      </span>
-                      </div>
-                    </div>
-                    <div id="shortsIcoContainer">
-                      <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-                      <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-                      <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
-                      <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
-                      <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
-                    </div>
-                  </div>`;
-
-        // #shortsContainer에 새로운 콘텐츠 추가
-        $('.contents').html(hdata);
-        // 애니메이션이 끝나면 애니메이션 클래스를 제거하여 다른 애니메이션을 추가할 수 있도록 함
-    }
-
-    function skipphoto(){
-        // 새로운 콘텐츠 생성
-        hdata = `<img src="/static/images/${i}${j}.jpg/" width='100%' height='100%'>`;
-        $('#shorts').html(hdata);
-    }
-        // 자동 콘텐츠 변경 (5초마다)
-    function changeContent() {
-        j++;
-        if (j > 4) { j = 0; }
-        skipphoto();
-    }
-
-    // 5초마다 콘텐츠 변경
-    setInterval(changeContent, 5000);
-  </script>
 </head>
+
 <body>
   <div id="wrap">
     <div id="nav">
-      <div id="logo">
-        <button type="button" class="logoBtn" onclick="logoBtn()"><img id="logo_img" src="temp_logo.jpg" alt="로고" ></button>
-      </div>
-
-      <div id="searchAll">
-        <div class="searchIco"><img src="" alt="search"></div>
-          <form action="/festivals/list/" method="GET">
-            <div class="searchKey">
-              <input name="keyWord" type="text" placeholder="축제명, 지역, 태그 등으로 검색" />
-              <button type="submit">검색</button>
-            </div>
-          </form>
-        </div>
-
-        <div id="pageMove">     
-          <ul>
-            <li><a href="/festivals/list/">festivals</a></li>
-            <li><a href="/accounts/login/">login</a></li>
-            <li><a href="/accounts/signup1/">sign up</a></li>   
-            <li><a href="/inquiry/support/">support</a></li>  
-          </ul>
-        </div>
-      </div>
-      <div class="contents">
-        <div id="shortsContainer"> 
-          <div id="shortsBorder"> 
-            <data id="shorts"></data>
-            <div id="shortsMeta">
-            <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
-            <span class="tags" style="font-size: 15px;">
-              <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
-              <a href="result_list.html?tag=서울">#서울</a>
-              <a href="result_list.html?tag=여름">#여름</a>
-            </span>
-            </div>
+          <div id="logo">
+            <button type="button" class="logoBtn" onclick="logoBtn()"><img id="logo_img" src="logo.jpg" alt="로고" ></button>
           </div>
-          <div id="shortsIcoContainer">
-            <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-            <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-            <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
-            <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
-            <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
+
+          <div id="searchAll">
+            <div class="searchIco">🔍</div>
+            <form action="fest_list.html" method="GET">
+              <div class="searchKey">
+                <input name="keyWord" type="text" placeholder="축제명, 지역, 태그 등으로 검색" />
+                <button type="submit">검색</button>
+              </div>
+            </form>
+          </div>
+
+          
+          <div id="pageMove">     
+            <ul>
+              <li><a href="/festivals/list/">festivals</a></li>
+              <li><a href="#">login</a></li>
+              <li><a href="#">sign up</a></li>   
+              <li><a href="#">support</a></li>  
+            </ul>
           </div>
         </div>
-      </div>
-      <div class="contents2">
-        <div id="recommendFestList">
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+
+
+    <div class="contents">
+      <div id="shortsContainer"> 
+        <div id="shortsBorder"> 
+          <data id="shorts">
+            <a href="mypage1.html" class="creator">@축제모아</a>
+          </data>
+          <div id="shortsMeta">
+          <!-- <a href="mypage1.html" class="creator">@크리에이터닉네임</a> -->
+          <a href="view.html" class="festNameInShorts">서울 불꽃축제</a>
+          <span class="tags" style="font-size: 15px;">
+            <a href="fest_list.html?tag=불꽃">#불꽃</a>
+            <a href="fest_list.html?tag=서울">#서울</a>
+            <a href="fest_list.html?tag=여름">#여름</a>
+          </span>
         </div>
+        </div>
+        
+      
+
+        <div id="shortsIcoContainer">
+        
+          <button class="iconBtn createBtn" onclick="createBtn()">+</button>
+          <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
+          <button class="iconBtn shareBtn" onclick="shareBtn()">🔄</button>
+          <button class="iconBtn reviewBtn" onclick="reviewBtn()">📝</button>
+          <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
+ 
+
+
+
+        </div>
+      </div>
+
+      <div class="listTitle"><h3>7월의 축제</h3></div>
+      <div class="recommendFestList">
+        <a href="view.html"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>  
+      </div>
+      <div class="listTitle"><h3>내가 좋아할 축제</h3></div>
+      <div class="recommendFestList">
+        <a href="view.html"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
+        <a href="view.html"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+        
+      </div>
+    </div>
+    
+      
     </div>
   </div>
  
@@ -423,39 +436,35 @@
 
   <script>
     function logoBtn() {
-      location.href='/';
+      alert('go home');
     }
 
-    function replyBtn() {
+    function viewBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
-    function wishBtn() {
+    function reviewBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
-    function dislikeBtn() {
+    function shareBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
     function likeBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
     function createBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
     //JS: body.dark 클래스를 토글
     function ldBtn() {
-      document.body.classList.toggle('dark');
-      // (선택) 로컬 스토리지에 상태 저장
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('darkMode', isDark);
+    document.body.classList.toggle('dark');
+    // (선택) 로컬 스토리지에 상태 저장
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
     }
+
 </script>
