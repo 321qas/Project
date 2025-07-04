@@ -287,7 +287,7 @@
                         i++;
                         j = 0;
                         addShortsupdown('down');
-                    }, 1000);
+                    }, 500);
                 }
             } else {  // 휠을 올리면
                 if (i > 0) {
@@ -295,7 +295,7 @@
                         i--;
                         j = 0;
                         addShortsupdown('up');
-                    }, 1000);
+                    }, 500);
                 }
             }
         });
@@ -323,7 +323,6 @@
                       <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
                     </div>
                   </div>`;
-
         // #shortsContainer에 새로운 콘텐츠 추가
         $('.contents').html(hdata);
         // 애니메이션이 끝나면 애니메이션 클래스를 제거하여 다른 애니메이션을 추가할 수 있도록 함
@@ -360,7 +359,7 @@
               <button type="submit">검색</button>
             </div>
           </form>
-        </div>
+      </div>
 
         <div id="pageMove">     
           <ul>
@@ -370,29 +369,10 @@
             <li><a href="/inquiry/support/">support</a></li>  
           </ul>
         </div>
-      </div>
-      <div class="contents">
-        <div id="shortsContainer"> 
-          <div id="shortsBorder"> 
-            <data id="shorts"></data>
-            <div id="shortsMeta">
-            <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
-            <span class="tags" style="font-size: 15px;">
-              <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
-              <a href="result_list.html?tag=서울">#서울</a>
-              <a href="result_list.html?tag=여름">#여름</a>
-            </span>
-            </div>
-          </div>
-          <div id="shortsIcoContainer">
-            <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-            <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-            <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
-            <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
-            <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
-          </div>
-        </div>
-      </div>
+    </div>
+    <div class="contents">
+      
+    </div>
       <div class="contents2">
         <div id="recommendFestList">
           <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
@@ -404,7 +384,7 @@
           <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
           <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
         </div>
-    </div>
+      </div>
   </div>
  
   <div id="footer">
@@ -448,7 +428,7 @@
 
     function createBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
+      location.href='/shortforms/upload/';
     }
 
     //JS: body.dark 클래스를 토글
