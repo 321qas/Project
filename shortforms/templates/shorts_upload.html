@@ -1,12 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="/static/css/main.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
   <title>shorts upload</title>
   <style>
     body {
@@ -22,7 +25,8 @@
     }
 
     .contents {
-      width: 100%;
+      width: 111px;
+      height: 111px;
       height: 1000px;
       padding: /*30*/ 0px 0; 
       display: flex;
@@ -91,41 +95,11 @@
       background: #ffffff;
       box-shadow:  0 2px 2px rgba(0, 0, 0, 1);
     }
-
-    #shortsIcoContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      margin-left: 20px;
-      padding: 20px 0;
-      gap: 20px;
-      width: 40px;
-      height: 95%;
-      
-    }
-
-    .iconBtn {
-      font-size: 23px; /*23px*/
-      cursor: pointer;
-      background: none;
-      border: none;
-      text-align: center;
-    }
-
-    .createBtn {
-      /* 아래쪽 여백을 자동으로 늘려서 맨 위로 보냄 */
-      margin-bottom: auto;
-      background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%); 
-      color: white;
-      border-radius: 10%;
-      width: 100%;
-    }
     
     #shortsEditor {
       /*max-width: 800px;*/
       height: 820px;
-      margin: 20px 0;
+      margin: 9px 0;
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -163,7 +137,8 @@
     }
 
     .shorts_img {
-      width: 100%;
+      width: 111px;
+      height:111px;
       aspect-ratio: 1; /* 정사각형 유지 */
       border: 2px dashed #ccc;
       border-radius: 8px;
@@ -296,9 +271,72 @@
       border-color: #333;
     }
 
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);  /* 반투명한 어두운 배경 */
+        display: none;  /* 기본적으로 숨김 */
+        justify-content: center;
+        align-items: center;
+    }
+
+      /* 팝업 콘텐츠 스타일 */
+      .popup-content {
+          background  : white;
+          width:500px;
+          height:860px;   
+          text-align: center;
+          align-items: center;
+      }
+
+      #xs{
+        align-items: right;
+      }
+
   </style>
 </head>
+<script>
+    let j=0;
+    function openOverlay() {
+        document.getElementById("overlay").style.display = "flex"; // 오버레이를 보이도록 설정
+    }
 
+    // 오버레이 닫기
+    function closeOverlay() {
+        document.getElementById("overlay").style.display = "none"; // 오버레이 숨기기
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const buttons = document.querySelectorAll('.color-btn');
+      const previewBox = document.getElementById('shortsBorder');
+
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          buttons.forEach(btn => btn.classList.remove('selected'));
+          button.classList.add('selected');
+
+          const selectedColor = button.dataset.color;
+          previewBox.style.backgroundColor = selectedColor;
+        });
+      });
+    });
+
+    function changeBtn(num) {
+      hdata=`<img src="/static/images/3${num}.jpg" width='100%' height='100%'>`;
+      $('#shorts').html(hdata);  
+    }
+
+    function preview(){
+      pdata=`<img src="/static/images/3${j}.jpg" width='100%' height='100%'>`;
+      $('.over').html(hdata);  
+    }
+    
+    setInterval(preview, 5000);
+
+</script>
 <body>
   <div id="wrap">
     <div class="contents">
@@ -315,32 +353,45 @@
           </div>
         </div>
 
-        <div id="shortsIcoContainer">
-          <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-          <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-          <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
-          <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
-          <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
-        </div>
       </div>
 
+      <div id="overlay" class="overlay">
+        <!-- 팝업 콘텐츠 -->
+        <div class="popup-content">
+          <button onclick="closeOverlay()" id='xs'>X</button>
+                <div id="shortsContainer"> 
+                    <div id="shortsBorder"> 
+                        <data id="shorts" class='over'>
+                        </data>
+                        <div id="shortsMeta">
+                        <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
+                            <span class="tags" style="font-size: 15px;">
+                                <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
+                                <a href="result_list.html?tag=서울">#서울</a>
+                                <a href="result_list.html?tag=여름">#여름</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+      </div>
       <div id="shortsEditor">
         <form action="#" method="post">
           <!-- 프레임 색상 선택 -->
           <div class="color_frame box">
-            <button type="button" class="color-btn yellow"></button>
-            <button type="button" class="color-btn purple"></button>
-            <button type="button" class="color-btn blue"></button>
-            <button type="button" class="color-btn pink"></button>
+            <button type="button" data-color ="#f9d835" class="color-btn yellow"></button>
+            <button type="button" data-color ="#8c6df0" class="color-btn purple"></button>
+            <button type="button" data-color ="#4aa3f9" class="color-btn blue"></button>
+            <button type="button" data-color ="#f78fb3" class="color-btn pink"></button>
           </div>
 
           <!-- 이미지 업로드 // data-index >> JS에서 활용 -->
           <div class="image_upload box">
-            <div class="shorts_img" data-index="1"></div>
-            <div class="shorts_img" data-index="2"></div>
-            <div class="shorts_img" data-index="3"></div>
-            <div class="shorts_img" data-index="4"></div>
-            <div class="shorts_img" data-index="5"></div>
+            <div class="shorts_img" onclick='changeBtn(0)'><img src="/static/images/30.jpg" width='100%' height='100%'></div>
+            <div class="shorts_img" onclick='changeBtn(1)'><img src="/static/images/31.jpg" width='100%' height='100%'></div>
+            <div class="shorts_img" onclick='changeBtn(2)'><img src="/static/images/32.jpg" width='100%' height='100%'></div>
+            <div class="shorts_img" onclick='changeBtn(3)'><img src="/static/images/33.jpg" width='100%' height='100%'></div>
+            <div class="shorts_img" onclick='changeBtn(4)'><img src="/static/images/34.jpg" width='100%' height='100%'></div>
             <div class="shorts_img add-new"></div>
           </div>
 
@@ -355,7 +406,7 @@
 
           <!-- 버튼 -->
           <div class="action_buttons">
-            <button type="button" class="func Btn">Preview</button>
+            <button type="button" onclick="openOverlay()" class="func Btn">Preview</button>
             <button type="submit" class="submit Btn">Post</button>
           </div>
         </form>
