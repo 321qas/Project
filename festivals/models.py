@@ -30,7 +30,8 @@ class Festival(models.Model):
     longitude = models.DecimalField(
         max_digits=10, decimal_places=7, blank=True, null=True,
         help_text="축제 위치의 경도를 입력하세요. (예: 126.9779692)")
-    fee = models.PositiveIntegerField(
+    fee = models.CharField(
+        max_length=70,
         default=0,
         help_text="참가 요금을 원 단위로 입력하세요. (무료이면 0 입력)")
     organizer = models.CharField(

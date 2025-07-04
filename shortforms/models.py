@@ -20,10 +20,16 @@ class ShortForm(models.Model):
         max_length=50,
         help_text="쇼츠의 제목을 입력하세요. (필수)"
     )
+    frame_color = models.CharField(
+        max_length=20,
+        default='default',   # 혹은 '#FFFFFF' (white) 등
+        help_text="프레임 색상(예: 'red', '#FF5733', 'default' 등)"
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         help_text="쇼츠 등록일 (자동 생성)"
     )
+
 
     def __str__(self):
         # 축제가 삭제되었으면 안내 텍스트로 표시

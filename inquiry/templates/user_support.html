@@ -1,17 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
+        
         /* 
         .header {
             display: flex;
@@ -36,7 +31,7 @@
         h1 {
             text-align: center;
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 100px;
         }
 
         /* FAQ, Inquiry 탭 */
@@ -62,11 +57,13 @@
             text-align: center;
             margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ddd;
             background-color: #ffffff;
+            max-width: 900px;
+            /*
+            border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
+            */
         }
 
         /* FAQ 내용 */
@@ -78,18 +75,28 @@
         h2 {
         font-size: 1.5em;
         margin-bottom: 20px;
+        text-align: left;
         }
 
         .search-bar {
-        margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto 20px;
+            width:860px;
+            
         }
 
         .search-bar input {
-        width: 100%;
+        width: 90%;
         padding: 10px;
         font-size: 1em;
         border: 1px solid #ccc;
         border-radius: 6px;
+        }
+
+        .search-bar button {
+            border: 1px solid black; 
+            padding: 5px;
         }
 
         .faq-item {
@@ -160,12 +167,17 @@
         }
         .controls {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            gap: 10px;
             border: none;
-            width: 35%;
+            width: 100%;
+        }
+
+        .controls-left {
+            display: flex;
+            width: 30%;
+            gap: 10px;
         }
 
         .controls .exclude-private {
@@ -221,6 +233,10 @@
             background-color: #f97316;
             color: white;
         }
+
+        
+
+        
         
     </style>
 </head>
@@ -235,136 +251,118 @@
         </nav>
     </header>
     -->
+    <div id="wrap">
+        <div class="contents">
+            <h1>User Support</h1>
 
-    <h1>User Support</h1>
-
-    <div class="tabs">
-        <button class="tab-link active" onclick="showTab('FAQ')">FAQ</button>
-        <button class="tab-link" onclick="showTab('Inquiry')">Inquiry</button>
-    </div>
-
-    <div id="FAQ" class="content">
-        <h2>Frequently Asked Questions</h2>
-
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="궁금한 내용을 검색해보세요..." onkeyup="filterFAQ()">
-        </div>
-
-        <div id="faqContainer">
-            <!-- FAQ 항목 예시 -->
-            <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(this)">
-                Q. 예매 후 취소 시 환불은 언제 되나요?
-            </div>
-            <div class="faq-answer">
-                A. 예매 취소 요청 시 영업일 기준 2~3일 내 환불이 진행됩니다. 카드사 사정에 따라 지연될 수 있습니다.
-            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="궁금한 내용을 검색해보세요..." onkeyup="filterFAQ()">
+                <button>Search</button>
             </div>
 
-            <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(this)">
-                Q. 축제 당일 현장 구매도 가능한가요?
-            </div>
-            <div class="faq-answer">
-                A. 네, 현장에서도 일부 티켓 구매가 가능합니다. 다만 수량이 한정되어 있으니 사전 예매를 권장드립니다.
-            </div>
-            </div>
+            <div id="FAQ" class="content">
+                <h2>Frequently Asked Questions</h2>
 
-            <div class="faq-item">
-            <div class="faq-question" onclick="toggleAnswer(this)">
-                Q. 티켓 양도나 환불은 어떻게 하나요?
-            </div>
-            <div class="faq-answer">
-                A. 마이페이지에서 취소 요청을 하거나, 고객센터를 통해 양도 신청을 하실 수 있습니다.
-            </div>
-            </div>
-        </div>
 
-        <div id="noResult" class="no-result" style="display: none;">
-            관련된 FAQ가 없습니다.
-        </div>
-    </div>
-    <div id="Inquiry" class="content" style="display: none;">
-        <h2>Inquiry</h2>
-        <div class="top-bar">
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search by title or content">
-                <button id="search-button">Search</button>
-            </div>
-    
-            <div class="controls">
-                <div class="exclude-private">
-                    <input type="checkbox" id="exclude-private">
-                    <label for="exclude-private">Exclude Private</label>
+                <div id="faqContainer">
+                    <!-- FAQ 항목 예시 -->
+                    <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        Q. 예매 후 취소 시 환불은 언제 되나요?
+                    </div>
+                    <div class="faq-answer">
+                        A. 예매 취소 요청 시 영업일 기준 2~3일 내 환불이 진행됩니다. 카드사 사정에 따라 지연될 수 있습니다.
+                    </div>
+                    </div>
+
+                    <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        Q. 축제 당일 현장 구매도 가능한가요?
+                    </div>
+                    <div class="faq-answer">
+                        A. 네, 현장에서도 일부 티켓 구매가 가능합니다. 다만 수량이 한정되어 있으니 사전 예매를 권장드립니다.
+                    </div>
+                    </div>
+
+                    <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        Q. 티켓 양도나 환불은 어떻게 하나요?
+                    </div>
+                    <div class="faq-answer">
+                        A. 마이페이지에서 취소 요청을 하거나, 고객센터를 통해 양도 신청을 하실 수 있습니다.
+                    </div>
+                    </div>
                 </div>
-                <button class="btn" id="my-posts-toggle">My posts</button>
-                <button class="btn btn-orange"><a href="/inquiry/write/">Write</a></button>
+
+                <div id="noResult" class="no-result" style="display: none;">
+                    관련된 FAQ가 없습니다.
+                </div>
+            </div>
+            <div id="Inquiry" class="content">
+                <h2>Inquiry</h2>
+                <div class="top-bar">
+            
+                    <div class="controls">
+                        <div class="controls-left">
+                            <div class="exclude-private">
+                                <input type="checkbox" id="exclude-private">
+                                <label for="exclude-private">Exclude Private</label>
+                            </div>
+                            <button class="btn" id="my-posts-toggle">My posts</button>
+                        </div>
+                        <button class="btn btn-orange">Write</button>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Title</th>
+                            <th>User</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiry-table">
+                        <tr data-id="1">
+                            <td>1</td>
+                            <td>Answered: Question about delivery...</td>
+                            <td>kbi***</td>
+                            <td>2025.05.09 19:13</td>
+                        </tr>
+                        <tr class="collapsible-content" data-id="1">
+                            <td colspan="4">
+                                <p><strong>Q:</strong> Can you deliver this without...</p>
+                                <p><strong>A:</strong> Yes, our delivery service...</p>
+                            </td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>2</td>
+                            <td>Answered: Inquiry about refund...</td>
+                            <td>as2***</td>
+                            <td>2024.12.17 19:10</td>
+                        </tr>
+                        <tr class="collapsible-content" data-id="2">
+                            <td colspan="4">
+                                <p><strong>Q:</strong> How do I process a refund...</p>
+                                <p><strong>A:</strong> Please contact our support...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <a href="#">&lt;</a>
+                    <a href="#">1</a>
+                    <a href="#" class="active">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&gt;</a>
+                </div>
             </div>
         </div>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Title</th>
-                    <th>User</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody id="inquiry-table">
-                <tr data-id="1">
-                    <td>1</td>
-                    <td>Answered: Question about delivery...</td>
-                    <td>kbi***</td>
-                    <td>2025.05.09 19:13</td>
-                </tr>
-                <tr class="collapsible-content" data-id="1">
-                    <td colspan="4">
-                        <p><strong>Q:</strong> Can you deliver this without...</p>
-                        <p><strong>A:</strong> Yes, our delivery service...</p>
-                    </td>
-                </tr>
-                <tr data-id="2">
-                    <td>2</td>
-                    <td>Answered: Inquiry about refund...</td>
-                    <td>as2***</td>
-                    <td>2024.12.17 19:10</td>
-                </tr>
-                <tr class="collapsible-content" data-id="2">
-                    <td colspan="4">
-                        <p><strong>Q:</strong> How do I process a refund...</p>
-                        <p><strong>A:</strong> Please contact our support...</p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <a href="#">&lt;</a>
-            <a href="#">1</a>
-            <a href="#" class="active">2</a>
-            <a href="#">3</a>
-            <a href="#">&gt;</a>
-        </div>
     </div>
-    
 
     <script>
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.content');
-            const buttons = document.querySelectorAll('.tab-link');
-
-            tabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
-            buttons.forEach(button => {
-                button.classList.remove('active');
-            });
-
-            document.getElementById(tabId).style.display = 'block';
-            event.target.classList.add('active');
-        }
-
         const tableRows = document.querySelectorAll('tr[data-id]');
         tableRows.forEach(row => {
             row.addEventListener('click', () => {
