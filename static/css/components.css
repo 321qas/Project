@@ -14,18 +14,50 @@
     border-radius: 6px;
 }
 
+
+
+
 /*
 .Btn-dummy {
     padding: 10px 20px;
     border-radius: 8px;
 }
+
+
+.status-btn {
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.email-btn {
+    background: #007bff;
+    color: white;
+}
+
+.wishlist-btn {
+    background: #eee;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 */
 
 /* 버튼 색상 */
 
-.orange {
+.orange, .orange-n {
     background-color: #f97316;
     color: #ffffff;
+}
+
+.orange-n {
+    cursor:default;
 }
 
 .orange:active {
@@ -35,7 +67,7 @@
 
 .white-orange, .white-orange-active {
     border: 1px solid #f97316;
-    background-color: transparent;
+    background-color: #fff;
     color: #f97316;
     font-weight: bold;
 }
@@ -46,3 +78,16 @@
 }
 
 
+
+/* 태그 */
+/* 상위 div 클래스명 ="tags", span이 태그 */
+
+.tags span {
+    display: inline-block;
+    background-color: #f97316;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
