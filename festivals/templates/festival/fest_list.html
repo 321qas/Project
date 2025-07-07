@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -262,58 +263,53 @@
             
         <div class="contents">  
             <div id="festList">
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-                <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+                
             </div>
             <button id="loadMoreBtn" >view more +</button>
         </div>
     </div>
     <script>
-        const festData = [
-          { img: "", name: "서울 불꽃축제" },
-          { img: "", name: "부산 바다축제" },
-          { img: "", name: "진주 남강유등축제" },
-          { img: "", name: "화천 산천어축제" },
-          { img: "", name: "안동 탈춤축제" },
-          { img: "", name: "제주 들불축제" },
-          { img: "", name: "대구 치맥페스티벌" },
-          { img: "", name: "전주 한지문화축제" },
-          { img: "", name: "춘천 마임축제" },
-          { img: "", name: "광주 비엔날레" },
-          { img: "", name: "포항 불빛축제" },
-          { img: "", name: "여수 밤바다축제" },
-          { img: "", name: "울산 고래축제" },
-          { img: "", name: "인천 펜타포트" },
-          { img: "", name: "수원 화성문화제" },
-          { img: "", name: "청주 직지코리아" }
-        ];
-        
+      // 🚨 여기서 'safe' 대신 'escapejs'를 사용합니다!
+      // 'json_fest_data'는 이미 JSON 문자열이므로, 이를 JavaScript 문자열 리터럴 내에 안전하게 삽입하기 위해 'escapejs'를 사용합니다.
+      const allFestData = JSON.parse('{{ json_fest_data|escapejs }}');
 
-        const festList = document.getElementById('festList');
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        let loadedCount = 8;
-        const LOAD_COUNT = 4;
+      // 이제 allFestData는 JavaScript에서 사용할 수 있는 배열이 됩니다.
+      console.log(allFestData);
 
-        loadMoreBtn.addEventListener('click', () => {
-        for (let i = 0; i < LOAD_COUNT; i++) {
-            if (loadedCount >= festData.length) break;
-            const data = festData[loadedCount];
-            const card = document.createElement('div'); 
-            card.className = 'festCard';
-            card.innerHTML = `<a href="#"><img src="${data.img}" alt="축제${loadedCount+1}"></a><p>${data.name}</p>`;
-            festList.appendChild(card);
-            loadedCount++;
-        }
-        if (loadedCount >= festData.length) {
-            loadMoreBtn.style.display = 'none';
-        }
-        });
+      // 이후 JavaScript 로직은 이전과 동일합니다.
+      const festList = document.getElementById('festList');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      let loadedCount = 0;
+      const LOAD_COUNT = 8; // 초기 로드 개수
+      const LOAD_MORE_COUNT = 4; // '더보기' 클릭 시 추가 로드 개수
+
+      function appendCards(dataArray, count) {
+          for (let i = 0; i < count; i++) {
+              if (loadedCount >= dataArray.length) {
+                  if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                  break;
+              }
+              const data = dataArray[loadedCount];
+              const card = document.createElement('div');
+              card.className = 'festCard';
+              card.innerHTML = `<a href="/festivals/view/${data.id}">
+                                    <img src="" alt="축제${data.id}">
+                                </a>
+                                <p>${data.name}</p>`;
+              festList.appendChild(card);
+              loadedCount++;
+          }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+          appendCards(allFestData, LOAD_COUNT);
+      });
+
+      if (loadMoreBtn) {
+          loadMoreBtn.addEventListener('click', () => {
+              appendCards(allFestData, LOAD_MORE_COUNT);
+          });
+      }
     </script>
 
     <div id="footer">

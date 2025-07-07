@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Festival, RegionInterest
+from .models import Festival, RegionInterest,FestivalImage
+from django.http import JsonResponse
+import json
 
 def festival_detail(request, pk):
     # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
@@ -24,8 +26,21 @@ def region_interest_chart(request): # 지역별 관심도 통계 페이지
         "region_labels": region_labels        # 코드→한글 매핑 딕셔너리
     })
 
-def view(request):
-    return render(request,'festival/view.html')
+def view(request,id):
+    qs = Festival.objects.get(id=id)
+    content = {'list':qs}
+    return render(request, 'festival/view.html', content)
 
 def list(request):
-    return render(request,'festival/fest_list.html')
+    qs = Festival.objects.all()
+    festival_data = []
+    for festival in qs:
+        festival_data.append({
+            'id': festival.id,
+            'name': festival.name,
+    })
+    json_string_data = json.dumps(festival_data, ensure_ascii=False)
+    content = {
+        'json_fest_data': json_string_data# JSON 문자열을 템플릿으로 전달
+    }
+    return render(request, 'festival/fest_list.html', content)
