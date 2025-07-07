@@ -3,6 +3,6 @@ from . import views
 
 app_name = 'inquiry'
 urlpatterns = [
-    path('support/', views.support, name='support'),
-    path('write/', views.write, name='write'),
+    path('support/', views.user_support, name='user_support'),
+    path('write/', views.inquiry_write, name='inquiry_write'),
 ]
