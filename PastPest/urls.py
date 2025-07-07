@@ -9,6 +9,7 @@ urlpatterns = [
     path('festivals/', include('festivals.urls')),
     path('accounts/', include('accounts.urls')),
     path('inquiry/', include('inquiry.urls')),
+    path('shortforms/', include('shortforms.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+def upload(request):
+    return render(request,'shortforms/shorts_upload.html')
+
+def list(request):
+    return render(request,'shortforms/shorts_fest_list.html')
