@@ -6,56 +6,64 @@
 import os
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from festivals.models import Festival, FestivalImage  # 실제 앱/모델명에 맞게 수정
+from festivals.models import Festival, FestivalImage
 
 class Command(BaseCommand):
-    help = 'media/festivals/images/ 폴더 내 이미지 파일을 일괄적으로 FestivalImage로 등록'
+    help = 'media/festivals/images/ 각 폴더 내 이미지를 FestivalImage로 등록 (폴더명=pk.축제명)'
 
     def handle(self, *args, **options):
-        # 1. 실제 이미지가 저장된 폴더 (MEDIA_ROOT 기반)
-        image_dir = os.path.join(settings.MEDIA_ROOT, 'festivals', 'images')
-        if not os.path.exists(image_dir):
-            self.stdout.write(self.style.ERROR(f"폴더가 존재하지 않습니다: {image_dir}"))
+        # 1. 상위 이미지 폴더
+        root_dir = os.path.join(settings.MEDIA_ROOT, 'festivals', 'images')
+        if not os.path.exists(root_dir):
+            self.stdout.write(self.style.ERROR(f"폴더가 존재하지 않습니다: {root_dir}"))
             return
 
-        # 2. 이미지 파일 리스트업
-        files = [f for f in os.listdir(image_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
-        if not files:
-            self.stdout.write(self.style.WARNING("이미지 파일이 없습니다."))
-            return
+        total_registered = 0
+        total_skipped = 0
 
-        registered = 0
-        skipped = 0
-        for fname in files:
-            # 언더바('_')가 없는 파일은 건너뜀
-            if '_' in fname:
-                festival_name = '_'.join(fname.split('_')[:-1])
-            else:
-                self.stdout.write(self.style.WARNING(f"[SKIP] 잘못된 파일명 형식: {fname}"))
-                skipped += 1
+        # 2. 폴더 탐색
+        for folder in os.listdir(root_dir):
+            folder_path = os.path.join(root_dir, folder)
+            if not os.path.isdir(folder_path):
                 continue
 
-            # 축제명으로 DB에서 찾기
+            # 폴더명: '1.춘천 막국수 닭갈비축제' 형식
             try:
-                festival = Festival.objects.get(name=festival_name)
+                pk = int(folder.split('.')[0])
+            except (IndexError, ValueError):
+                self.stdout.write(self.style.WARNING(f"[SKIP] 잘못된 폴더명: {folder}"))
+                total_skipped += 1
+                continue
+
+            # DB에서 해당 pk의 축제 찾기
+            try:
+                festival = Festival.objects.get(pk=pk)
             except Festival.DoesNotExist:
-                self.stdout.write(self.style.WARNING(f"[SKIP] Festival not found: {festival_name} (file: {fname})"))
-                skipped += 1
+                self.stdout.write(self.style.WARNING(f"[SKIP] Festival id={pk} 없음 (폴더: {folder})"))
+                total_skipped += 1
                 continue
 
-            image_path = os.path.join('festivals', 'images', fname)
-
-            # 중복 체크
-            if FestivalImage.objects.filter(festival=festival, image=image_path).exists():
-                self.stdout.write(self.style.NOTICE(f"[SKIP] 이미 등록된 이미지: {image_path}"))
-                skipped += 1
+            # 3. 폴더 안의 이미지 파일 등록
+            files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+            if not files:
+                self.stdout.write(self.style.WARNING(f"[SKIP] 이미지 없음: {folder}"))
+                total_skipped += 1
                 continue
 
-            FestivalImage.objects.create(
-                festival=festival,
-                image=image_path
-            )
-            self.stdout.write(self.style.SUCCESS(f"[OK] 등록 완료: {festival_name} → {fname}"))
-            registered += 1
+            for fname in files:
+                image_path = os.path.join('festivals', 'images', folder, fname)
 
-        self.stdout.write(self.style.SUCCESS(f"\n=== 작업 종료 ===\n성공: {registered}건, 스킵: {skipped}건"))
+                # 중복 체크
+                if FestivalImage.objects.filter(festival=festival, image=image_path).exists():
+                    self.stdout.write(self.style.NOTICE(f"[SKIP] 이미 등록: {image_path}"))
+                    total_skipped += 1
+                    continue
+
+                FestivalImage.objects.create(
+                    festival=festival,
+                    image=image_path
+                )
+                self.stdout.write(self.style.SUCCESS(f"[OK] {festival.name} ← {fname}"))
+                total_registered += 1
+
+        self.stdout.write(self.style.SUCCESS(f"\n=== 작업 종료 ===\n성공: {total_registered}건, 스킵: {total_skipped}건"))
