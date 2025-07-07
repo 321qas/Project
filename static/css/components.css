@@ -1,0 +1,48 @@
+
+/* 버튼 */
+/* <button> 태그의 class명으로 넣을 것 */
+/* 버튼을 div박스 안에 넣어서 활용 */
+
+.clickBtn {
+    font-size: 16px;
+    padding: 8px 15px;
+    border-radius: 4px;
+}
+
+.moreBtn {
+    padding: 8px 15px;
+    border-radius: 6px;
+}
+
+/*
+.Btn-dummy {
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+*/
+
+/* 버튼 색상 */
+
+.orange {
+    background-color: #f97316;
+    color: #ffffff;
+}
+
+.orange:active {
+    background-color: #e1620d;
+}
+
+
+.white-orange, .white-orange-active {
+    border: 1px solid #f97316;
+    background-color: transparent;
+    color: #f97316;
+    font-weight: bold;
+}
+
+.white-orange-active:hover {
+    background-color: #f97316;
+    color: #fff;
+}
+
+

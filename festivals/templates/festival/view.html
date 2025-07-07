@@ -1,291 +1,417 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detailed view</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+=======
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Detailed view</title>
+>>>>>>> 328f18d427883a5851fe1a87e9e77ac5795df764
 
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+    /* 배너 */
 
-        ul, li {list-style: none;}
+    #cont1 #banner {
+      height:400px;
+      background: url('https://picsum.photos/1000/300?random') center/cover no-repeat;
+    }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    /* 축제 정보 */
 
-        #wrap {flex: 1;}
+    #cont1 .section-header {
+      border: none;
+    }
 
-        /* 4. 컨텐츠 래퍼 */
-        .contents {
-            max-width: 1000px;
-            margin: 32px auto;
-            padding: 0 16px;
-        }
+    .titlebox {
+      display: flex;
+      align-items: flex-end;
+      gap: 40px;
+    }
 
-        .gal-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;    
-            background-color: #fafbfc;
-            position: relative;
-            padding: 24px 0;
-        }
+    .datebox {
+      width: 400px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 20px;
+    }
 
+    .festival-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 30px 0 30px 0px;
+    }
 
-        .slider-container {
-            width: 756px;
-            overflow: hidden;
-        }
+    .tag {
+      border: 1px solid #2563eb;
+      border-radius: 4px;
+      padding: 5px 10px;
+      background-color: #f0f9ff;
+      color: #2563eb;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-        #gallery {
-            display: flex;
-            gap: 12px;
-            transition: transform 0.3s ease;
-        }
+    .rating {
+      font-size: 23px;
+      color: #ff9800;
+    }
 
-        .festImg {
-            flex: 0 0 auto;
-            width: 180px;
-        }
+    .status-btn {
+      padding: 5px 10px;
+      background-color: #4caf50;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        .festImg img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 6px;
-            transition: transform 0.3s;
-        }
+    /*
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    */
 
-        .festImg img:hover {
-            
-        }
+    #info-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: #fff;
+      gap: 40px;
+    }
 
-        .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            font-size: 2em;
-            color: #333;
-            cursor: pointer;
-            z-index: 10;
-            padding: 0 8px;
-        }
+    
 
-        .arrow.prev {
-            left: 0;
-        }
+    .info-left {
+      flex: 1;
+    }
 
-        .arrow.next {
-            right: 0;
-        }
+    .info-left .section-header {
+      padding-bottom: 10px;
+    }
 
-        /* 5. 섹션별 카드 스타일 */
-        .section-card {
-            background: var(--card-bg);
-            border-radius:  1%;
-            box-shadow: 0 2px 8px var(--shadow);
-            margin-bottom: 32px;
-            overflow: hidden;
-        }
+    .info-left .txtBox {
+      padding-top: 0px;
+      padding-bottom: 30px;
+    }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
+    .info-box {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      width: 250px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        .section-header h3 {
-            font-size: 28px;
-            font-weight: 700;
-        }
+    
+    .info-box button {
+      width: 100%;
+      margin-bottom: 10px;
+      font-weight: normal;
+      /*
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      */
+    }
+    
 
-        .section-header ul {
-            display: flex;
-            gap: 16px;
-        }
+    .email-btn {
+      background: #007bff;
+      color: white;
+    }
 
-        .section-header a {
-            position: relative;
-            padding: 4px 0;
-            font-weight: 500;
-            color: #888;
-            transition: color 0.2s;
-        }
+    .wishlist-btn {
+      background: #eee;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .section-header a:hover {
-            color: #007bff;
-        }
+    .wishlist-count {
+      font-weight: bold;
+    }
 
-        .section-header a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #007bff;
-            transition: width 0.3s;
-        }
+    .info-list {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .section-header a:hover::after {
-            width: 100%;
-        }
+    .info-line {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      height: 70px;
+      /*border:1px solid black;*/
+    }
 
-        /* 6. 배너 */
-        #cont1 #banner {
-        height:400px;
-        background: url('https://picsum.photos/1000/300?random') center/cover no-repeat;
-        }
-        .txtBox { padding:24px; width: 100%; height: 450px; }
+    .info-icon {
+      width: 30px;
+    }
 
-        /* 8. 오시는 길 */
-        #cont3 .txtBox { padding:24px; font-size:16px; color: rgb(34, 33, 33); }
-        #cont3 .txtBox h4 { margin-bottom:12px; font-size:24px; }
-
-        /* 9. 리뷰 폼 */
-        /* 리뷰 */
-        #cont4 form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        #cont4 textarea {
-            resize: none;
-            padding: 12px;
-            height: 200px;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-family: inherit;
-        }
-
-        #cont4 button {
-            align-self: flex-end;
-            padding: 10px 18px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }   
-
-        #cont4 button:hover {
-            background: #0056b3;   
-        }
-
-        .star { color: #FFD600; font-size: 1.2em; }
-        .tag { display: inline-block; background: #f1f1f1; color: #333; border-radius: 12px; padding: 2px 10px; margin-right: 6px; font-size: 0.95em;}
-        .wish-btn, .alarm-btn { margin-right: 8px; padding: 6px 14px; border-radius: 16px; border: 1px solid #007bff; background: #fff; color: #007bff; cursor: pointer; }
-        .wish-btn.active { background: #ffeaea; color: #e74c3c; border-color: #e74c3c; }
-        .alarm-btn.active { background: #eaf6ff; color: #007bff; }
-        .review-card { border: 1px solid #eee; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #fafbfc; }
-        .review-card .review-header { display: flex; align-items: center; justify-content: space-between; }
-        .review-card .review-user { font-weight: bold; }
-        .review-card .review-date { color: #888; font-size: 0.9em; }
-        .review-card .review-content { margin: 10px 0; }
-        .review-card .review-actions { display: flex; gap: 12px; }
-        .review-card .like-btn { color: #e74c3c; cursor: pointer; }
-        .review-card .like-btn.liked { font-weight: bold; }
-        .review-popup-bg { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; }
-        .review-popup { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; padding:32px; min-width:320px; z-index:1001; box-shadow:0 2px 16px rgba(0,0,0,0.2);}
-        .review-popup .close { position:absolute; top:12px; right:16px; font-size:1.5em; cursor:pointer; }
-        #map { width:100%; height:300px; border-radius:12px; margin:16px 0; }
-        .info-table { width:100%; border-collapse:collapse; margin: 16px 0;}
-        .info-table th, .info-table td { padding:8px 12px; border-bottom:1px solid #eee; text-align:left;}
-        .info-table th { background:#f8f8f8; width:120px;}
-        .section-header { display: flex; justify-content: space-between; align-items: baseline; padding: 10px; border-bottom: 1px solid #eee; }
-        .section-header h3 { font-size: 28px; font-weight:700; }
-        .section-header ul { display: flex; gap:16px; }
-        .section-header a { position: relative; padding: 4px 0; font-weight:500; color: #888; transition: color 0.2s; }
-        .section-header a:hover { color: #007bff; }
-        .section-header a::after { content: ''; position: absolute; bottom:-2px; left:0; width:0; height:2px; background:#007bff; transition: width .3s; }
-        .section-header a:hover::after { width:100%; }
+    /* 축제 위치 */
+    
+    #kakaomap {
+      width: 100%;
+      height: 300px;
+      border: 1px solid black;
+    }
 
 
-        /* 11. 반응형 */
-        @media(max-width:768px) {     
-            .section-header { flex-direction: column; align-items:flex-start; gap:8px; }
-        }
 
-        #footer {
-            padding: 20px;
-            background-color: #f1f1f1;
-            font-size: 14.4px;   
-            color: #666;
-            text-align: center;
-        }
+    /* 9. 리뷰 폼 */
+    /* 리뷰 */
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            list-style: none;
-            margin-top: 10px;
-        }
+    #cont4 .section-header {
+      justify-content: flex-start;
+      align-items: flex-end;
+      gap: 10px;
+    }
 
-        .footer-links a {
-            text-decoration: none;
-            color: #666;
-        }
-        .footer-links a:hover {text-decoration: underline;}
-    </style>
+    #cont4 .txtBox {
+      width:85%;
+      /*margin:0 auto 30px;*/
+      margin-bottom: 30px;
+    }
+
+    #cont4 form {
+      display: flex;
+      gap: 12px;
+    }
+
+    #cont4 textarea {
+      resize: none;
+      padding: 12px;
+      margin-top: 12px;
+      height: 100px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    #cont4 form button {
+      width: 100px;
+      height:100px;
+    }
+
+    /*
+    #cont4 button {
+      align-self: flex-end;
+      padding: 10px 18px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }   
+
+    #cont4 button:hover {
+      background: #0056b3;   
+    }
+    */
+
+    .star { color: #FFD600; font-size: 1.2em; }
+    /*.tag { display: inline-block; background: #f1f1f1; color: #333; border-radius: 12px; padding: 2px 10px; margin-right: 6px; font-size: 0.95em;}*/
+    .wish-btn, .alarm-btn { margin-right: 8px; padding: 6px 14px; border-radius: 16px; border: 1px solid #007bff; background: #fff; color: #007bff; cursor: pointer; }
+    .wish-btn.active { background: #ffeaea; color: #e74c3c; border-color: #e74c3c; }
+    .alarm-btn.active { background: #eaf6ff; color: #007bff; }
+
+    .review-card { border: 1px solid #eee; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #fafbfc; }
+    .review-card .review-header { display: flex; align-items: center; justify-content: space-between; }
+    .review-card .review-user { font-weight: bold; }
+    .review-card .review-date { color: #888; font-size: 0.9em; }
+    .review-card .review-content { margin: 10px 0; }
+    .review-card .review-actions { display: flex; gap: 12px; }
+    .review-card .like-btn { color: #e74c3c; cursor: pointer; }
+    .review-card .like-btn.liked { font-weight: bold; }
+
+    .review-popup-bg { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; }
+    .review-popup { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; border-radius:12px; padding:32px; min-width:320px; z-index:1001; box-shadow:0 2px 16px rgba(0,0,0,0.2);}
+    .review-popup .close { position:absolute; top:12px; right:16px; font-size:1.5em; cursor:pointer; }
+
+    .review-control {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      
+    }
+
+    .review-control div {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+
+    .review-more {
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    /* 10. 관련 숏츠: Grid */     
+    #cont5 #shortsBox {
+      display: grid;     
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:24px; padding:24px;
+    }
+    .festShorts {
+      
+      overflow:hidden; box-shadow: 0 1px 4px var(--shadow);
+    }
+    .festShorts iframe { width:100%; height:140px; }
+
+    /* 11. 반응형
+    @media(max-width:768px) {     
+      .section-header { flex-direction: column; align-items:flex-start; gap:8px; }
+    }
+    */
+  
+
+  </style>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const gallery = document.getElementById("gallery");
+  const slides = gallery.querySelectorAll(".festImg");
+  const totalSlides = slides.length;
+  const visibleCount = 4; // 한 화면에 보이는 이미지 수
+  let currentIndex = 0;
+
+  function updateSlider() {
+    const shift = 100 / visibleCount * currentIndex;
+    gallery.style.transform = `translateX(-${shift}%)`;
+  }
+
+  document.querySelector(".arrow.prev").addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex -= 1;
+      updateSlider();
+    }
+  });
+
+  document.querySelector(".arrow.next").addEventListener("click", () => {
+    if (currentIndex < totalSlides - visibleCount) {
+      currentIndex += 1;
+      updateSlider();
+    }
+  });
+});
+</script>
 
 </head>
 
 <body>
-    <div id="wrap">
-        <div id="nav">
-          <div id="logo">
-            <button type="button" class="logoBtn" onclick="logoBtn()"><img id="logo_img" src="temp_logo.jpg" alt="로고" ></button>
+  <div id="wrap">
+    <div class="contents">
+      <!-- 섹션 공통 구조 -->
+      <section id="cont1" class="section-card">
+        <div class="section-header">
+          <div class="titlebox">
+            <h2>Boryeong Mud Festival</h2>
+            <div class="rating">★4.8</div>
           </div>
-          <div id="pageMove">     
-            <ul>
-              <li><a href="#">festivals</a></li>
-              <li><a href="#">login</a></li>
-              <li><a href="#">sign up</a></li>    
-              <li><a href="#">support</a></li>    
-            </ul> 
+          <div class="datebox">
+            <button class="btn status-btn">개최중</button>
+            <span class="festival-period">2025.07.25 ~ 2025.08.10</span>
           </div>
         </div>
+        <div id="banner"></div>        
+      </section>
 
+<<<<<<< HEAD
+      <section id="info-container" class="section-card">
+        <div class="info-left">
+          <div class="festival-tag-list">
+            <div class="tag">문화예술 </div>
+            <div class="tag">여름 </div>
+            <div class="tag">전연령 </div>
+            <div class="tag">체험/참여 </div>
+          </div>
+          <div class="section-header">
+            <h3>Festival Info</h3>
+          </div>
+          <div class="txtBox">
+            <div class="info-list">
+              <div class="info-line"><div class="info-icon">📅</div> <span>2025.07.25 ~ 2025.08.10</span></div>
+              <div class="info-line"><div class="info-icon">📍</div> <span>2282, Sinheuk-dong, Boryeong-si, Chungcheongnam-do<br>(충청남도 보령시 신흑동 2282)</span></div>
+              <div class="info-line"><div class="info-icon">💰</div> <span>standard zone: adults [Mon-Thu] 10,000 won [Fri-Sun] 14,000 won<br>family zone: kids [Mon-Thu] 9,000 won [Fri-Sun] 11,000 won</span></div>
+              <div class="info-line"><div class="info-icon">📞</div> <span>041-930-0891</span></div>
+              <div class="info-line"><div class="info-icon">🦶</div> <span>33,489</span></div>
+              <!-- <li>📷 boryengfestival_official</li> -->
+              <div class="info-line"><button class="white-orange moreBtn">Official Website</button></div>
+            </div>
+=======
 
      <div class="contents">
       <!-- 상단: 축제명, 평균별점, 기간 -->
       <section class="section-card" style="margin-bottom:24px;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div class = "firstimf">
+>>>>>>> 328f18d427883a5851fe1a87e9e77ac5795df764
           </div>
-          <div>
-            <button class="wish-btn" onclick="toggleWish(this)">위시리스트</button>
-            <button class="alarm-btn" onclick="toggleAlarm(this)">알림받기</button>
-          </div>
+        </div>
+        <div class="info-box">
+          <button class="orange clickBtn">Notification</button>
+          <button class="white-orange moreBtn">
+            Add to Wishlist
+            <span class="wishlist-count">6,654</span>
+          </button>
+        </div>
+      </section>
+      <section class="section-card">
+        <div class="section-header">
+          <h3>About</h3>
+
+        </div>
+        <div class="txtBox">
+          <p>This is a festival dedicated to Boryeong’s famous mud from Daecheon Beach. 
+            The Boryeong Mud Festival has a global reputation, attracting hundreds of thousands of international visitors from all over the world every year, 
+            and for good reason, as the festival offers a variety of attractions and interactive programs for unforgettable memories. 
+            In the Regular Zone, which is for teenagers and adults, you can enjoy full body activities such as large mud baths and mud slides. 
+            In the Family Zone, both adults and children can cover themselves with mud and play together. 
+            You can also participate in programs such as mud self-massage and colored mud painting, which utilize the benefits of Boryeong mud in different ways.</p>
         </div>
       </section>
 
-      <!-- 공식 사진(슬라이드, 클릭 시 확대) -->
-      <section class="section-card" style="padding:0;">
-        <div class="gal-wrapper" style="position:relative;">
-          <button class="arrow prev">&#10094;</button>
-          <div class="slider-container">
+      
 
+<<<<<<< HEAD
+      <section id="cont3" class="section-card">
+        <div class="section-header">
+          <h3>Location</h3>
+=======
           <div id="gallery">
           </div>
+>>>>>>> 328f18d427883a5851fe1a87e9e77ac5795df764
         </div>
-          <button class="arrow next">&#10095;</button>
+        <div class="txtBox">
+          <div id="kakaomap">카카오맵api 활용</div>
         </div>
       </section>
 
+<<<<<<< HEAD
+      <section id="cont4" class="section-card">
+        <div class="section-header">
+          <h3>Reviews</h3>
+          <h4 class="rating">★4.8</h4>
+          <p>(4,321)</p>
+=======
 
 
     <section id="cont1" class="section-card">
@@ -325,37 +451,55 @@
             </select>
             <button id="reviewFilterBtn">필터</button>
           </div>
+>>>>>>> 328f18d427883a5851fe1a87e9e77ac5795df764
         </div>
-        <div id="reviewList">
-          <!-- 리뷰 카드 예시 -->
-          <div class="review-card" onclick="openReviewPopup(this)">
-            <div class="review-header">
-              <span class="review-user">홍길동</span>
-              <span class="star">★ 5</span>
-              <span class="review-date">2025-05-02</span>
+        <div class="txtBox">
+          <div id="reviewList">
+            <!-- 리뷰 카드 예시 -->
+            <div class="review-control">
+              <button id="reviewFilterBtn" class="orange clickBtn">목록/이미지</button>
+              <div>
+                <button id="reviewFilterBtn" class="orange clickBtn">My Posts</button>
+                <select id="reviewSort">
+                  <option value="latest">최신순</option>
+                  <option value="like">좋아요순</option>
+                  <option value="like">별점높은순</option>
+                  <option value="like">별점낮은순</option>
+                </select>
+              </div>
             </div>
-            <div class="review-content">정말 재밌었어요! 내년에 또 올게요.</div>
-            <div class="review-actions">
-              <span class="like-btn">♥ 12</span>
+            <div class="review-card" onclick="openReviewPopup(this)">
+              <div class="review-left"></div>
+              <div class="review-header">
+                <span class="review-user">홍길동</span>
+                <span class="star">★ 5</span>
+              </div>
+              <div class="review-content">정말 재밌었어요! 내년에 또 올게요.</div>
+              <div class="review-actions">
+                <span class="like-btn">♥ 12</span>
+                <span class="review-date">2025-05-02</span>
+              </div>
             </div>
           </div>
           <!-- 더 많은 리뷰 카드가 JS로 무한 스크롤로 추가됨 -->
+          <div class="review-more">
+            <button id="loadMoreReviews" class="white-orange-active moreBtn">더보기</button>
+          </div>
+
+          <h4>후기를 남겨주세요</h4>
+          <form action="#" method="post">
+            <textarea name="review" rows="10" placeholder="생생한 후기 남기기"></textarea>
+            <button type="submit" class="orange clickBtn">등록</button>
+          </form>
         </div>
-        <button id="loadMoreReviews">더보기</button>
       </section>
 
-      <!-- 리뷰 상세 팝업 -->
-      <div class="review-popup-bg" id="reviewPopupBg">
-        <div class="review-popup" id="reviewPopup">
-          <span class="close" onclick="closeReviewPopup()">&times;</span>
-          <div id="popupContent">
-            <!-- JS로 상세 내용 삽입 -->
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 
+<<<<<<< HEAD
+=======
   <div id="footer">
     <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
     <ul class="footer-links">
@@ -480,6 +624,7 @@
     }
 
   </script>
+>>>>>>> 328f18d427883a5851fe1a87e9e77ac5795df764
 </body>
 
 </html>
