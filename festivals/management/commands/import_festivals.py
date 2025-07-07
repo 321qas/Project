@@ -1,10 +1,10 @@
 # festivals/management/commands/import_festivals.py
-# 사용법 : 터미널에 => python manage.py import_festivals --file=F_Data.csv
+# 사용법: python manage.py import_festivals --file=F_Data.csv
+
 import pandas as pd
 from django.core.management.base import BaseCommand
 from festivals.models import Festival
 import os
-import re
 
 class Command(BaseCommand):
     help = 'CSV 파일 데이터를 Festival 테이블에 일괄 삽입합니다.'
@@ -25,10 +25,13 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"파일을 찾을 수 없습니다: {file_path}"))
             return
 
-        # 2. CSV 파일 읽어오기
+        # 2. CSV 파일 읽기
         df = pd.read_csv(file_path, encoding='utf-8-sig')
 
-        # 3. 컬럼명 매핑 (한글 → 모델 필드명)
+        # 3. 모든 컬럼이 NaN인 행은 삭제 (빈 줄 등 예외 방지)
+        df = df.dropna(how='all')
+
+        # 4. 컬럼명 매핑 (한글 → 모델 필드명)
         col_map = {
             'name(이름)': 'name',
             'description(설명)': 'description',
@@ -46,7 +49,7 @@ class Command(BaseCommand):
         }
         df = df.rename(columns=col_map)
 
-        # 4. 한글 지역명을 영문키로 변환
+        # 5. 한글 지역명을 영문키로 변환
         region_display_to_key = {
             '서울': 'SEOUL', '부산': 'BUSAN', '제주': 'JEJU', '인천': 'INCHEON', '광주': 'GWANGJU',
             '대구': 'Daegu', '대전': 'Daejeon', '울산': 'Ulsan', '세종': 'Sejong', '경기': 'Gyeonggi',
@@ -54,12 +57,12 @@ class Command(BaseCommand):
             '강원': 'Gangwon', '전북': 'jeonbuk'
         }
         if 'region' in df.columns:
-            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')  # 미매핑시 'SEOUL'
+            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')
 
-        # 5. 날짜/숫자 포맷 맞추기
+        # 6. 날짜/숫자 포맷 변환
         for c in ['start_date', 'end_date']:
             if c in df.columns:
-                # "2025.03.23" -> "2025-03-23"로 변환
+                # "2025.03.23" -> "2025-03-23"
                 df[c] = df[c].astype(str).str.replace(r'[.]', '-', regex=True)
                 df[c] = pd.to_datetime(df[c], errors='coerce').dt.strftime('%Y-%m-%d')
 
@@ -69,11 +72,11 @@ class Command(BaseCommand):
         if 'visitor_count' in df.columns:
             df['visitor_count'] = pd.to_numeric(df['visitor_count'], errors='coerce').fillna(0).astype(int)
 
-        # 6. 연락처 하이픈 제거
+        # 7. 연락처 하이픈 제거
         if 'contact_phone' in df.columns:
             df['contact_phone'] = df['contact_phone'].astype(str).str.replace('-', '', regex=False)
 
-        # 9. Festival 객체로 변환
+        # 8. Festival 객체로 변환 (필드별로 빈값 허용 여부는 모델 기준)
         objs = []
         for _, row in df.iterrows():
             obj = Festival(
@@ -93,6 +96,6 @@ class Command(BaseCommand):
             )
             objs.append(obj)
 
-        # 10. DB에 일괄 저장
+        # 9. DB에 일괄 저장
         Festival.objects.bulk_create(objs)
         self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료!'))
