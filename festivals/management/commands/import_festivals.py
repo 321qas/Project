@@ -1,5 +1,5 @@
 # festivals/management/commands/import_festivals.py
-# 사용법: python manage.py import_festivals --file=F_Data.csv
+# 사용법 : python manage.py import_festivals --file=F_Data.csv
 
 import pandas as pd
 from django.core.management.base import BaseCommand
@@ -25,10 +25,10 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"파일을 찾을 수 없습니다: {file_path}"))
             return
 
-        # 2. CSV 파일 읽기
+        # 2. CSV 파일 읽어오기
         df = pd.read_csv(file_path, encoding='utf-8-sig')
 
-        # 3. 모든 컬럼이 NaN인 행은 삭제 (빈 줄 등 예외 방지)
+        # 3. 모든 컬럼이 NaN인 행은 제거 (빈 줄 방지)
         df = df.dropna(how='all')
 
         # 4. 컬럼명 매핑 (한글 → 모델 필드명)
@@ -57,12 +57,11 @@ class Command(BaseCommand):
             '강원': 'Gangwon', '전북': 'jeonbuk'
         }
         if 'region' in df.columns:
-            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')
+            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')  # 미매핑시 'SEOUL'
 
-        # 6. 날짜/숫자 포맷 변환
+        # 6. 날짜/숫자 포맷 맞추기
         for c in ['start_date', 'end_date']:
             if c in df.columns:
-                # "2025.03.23" -> "2025-03-23"
                 df[c] = df[c].astype(str).str.replace(r'[.]', '-', regex=True)
                 df[c] = pd.to_datetime(df[c], errors='coerce').dt.strftime('%Y-%m-%d')
 
@@ -76,9 +75,13 @@ class Command(BaseCommand):
         if 'contact_phone' in df.columns:
             df['contact_phone'] = df['contact_phone'].astype(str).str.replace('-', '', regex=False)
 
-        # 8. Festival 객체로 변환 (필드별로 빈값 허용 여부는 모델 기준)
-        objs = []
+        # 8. Festival 객체로 변환, 중복(name, start_date) 건너뜀
+        objs, skipped = [], 0
         for _, row in df.iterrows():
+            # 이미 같은 name과 start_date를 가진 Festival이 DB에 있으면 건너뜀(중복 방지)
+            if Festival.objects.filter(name=row['name'], start_date=row['start_date']).exists():
+                skipped += 1
+                continue
             obj = Festival(
                 name=row['name'],
                 description=row['description'],
@@ -98,4 +101,4 @@ class Command(BaseCommand):
 
         # 9. DB에 일괄 저장
         Festival.objects.bulk_create(objs)
-        self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료!'))
+        self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료! (중복 {skipped}건 제외)'))
