@@ -61,32 +61,42 @@
     }
 
     #shorts {
-      width: 405px;
+      position: relative;
+      width: 90%;
       height: 650px;
-      /*background: #fff;*/
       margin-top: 25px;
       background: url('https://picsum.photos/410/650?random') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;              
+      gap: 8px;                  
+      color: #fff;
+      
     }
 
-    .creator {
-      position: absolute;
-      top: 653px;
-      left:557px;
-      z-index: 2;
-      background: #fff;
-      color: #222;
-      font-weight: bold;
-      padding: 6px 18px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      font-size: 1.08rem;
-      border: 1px solid #ddd;
-      opacity: 0.95;
-    }
+
+    .creator, #shorts_title {
+  
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  
+  color: #fff;
+  max-width: fit-content;
+}
+
+.creator{
+  font-size: 16px;
+}
+#shorts_title {
+  background-color: rgba(0, 0, 0, 0.5); /* 살짝 어두운 반투명 배경 */
+  font-size: 18px;
+}
 
 
     #shortsMeta {
-      width: 405px; /*90%*/
+      width: 90%;
       padding-top: 18px;
       display: flex;
       flex-direction: column;
@@ -179,17 +189,9 @@
       border-color: #aaa;
     }
 
+
     /* 코멘트 작성 영역 */
-    #shorts_title {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      resize: none;
-      margin-bottom: 20px;
-    }
+    
 
     #shorts_festname {
       width: 100%;
@@ -202,19 +204,29 @@
       margin-bottom: 20px;
     }
 
+    .audBtn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #f97316;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .audBtn input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30px;
+        height: 10px;
+        opacity: 0;
+        cursor: pointer;
+      }
+
     
-
-    .file_upload label {
-      font-size: 14px;
-      color: #333;
-    }
-
-    .file_upload input[type="file"] {
-      flex: 1;
-      padding: 5px;
-      font-size: 14px;
-    }
-
     /* 버튼 */
     .action_buttons {
       text-align: right;
@@ -358,14 +370,6 @@
     }
 
 
-    input[type="file"] {
-  opacity: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
   </style>
 </head>
 <script>
@@ -508,9 +512,10 @@
         <div id="shortsBorder"> 
           <data id="shorts">
             <a class="creator">@축제모아</a>
+            <a id="shorts_title">요즘 입소문 탄다는 축제</a>
           </data>
           <div id="shortsMeta">
-          <!-- <a href="mypage1.html" class="creator">@크리에이터닉네임</a> -->
+          
           <a class="festNameInShorts">서울 불꽃축제</a>
           <span class="tags" style="font-size: 15px;">
             <a >#불꽃</a>
@@ -559,11 +564,12 @@
           <textarea name="shorts_title" id="shorts_title" placeholder="제목을 정하세요."></textarea>
           <textarea name="shorts_festname" id="shorts_festname" placeholder="축제 이름을 입력해주세요."></textarea>
 
-          <!-- 파일 업로드 -->
+          <!-- 음악 파일 업로드 -->
           <div class="file_upload">
-            <label for="file_upload">음악 업로드</label>
-            <input type="file" id="file_upload" name="audio_file" accept="audio/*">
+            <label class="audBtntn">🎵 음악 업로드</label>
+            <input type="file" name="audio_file" accept="audio/*">
           </div>
+          <br>
 
           <!-- 버튼 -->
           <div class="action_buttons">
