@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Detailed view</title>
 
     <style>
@@ -263,12 +264,7 @@
       <!-- 상단: 축제명, 평균별점, 기간 -->
       <section class="section-card" style="margin-bottom:24px;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div>
-            <h2 style="margin-bottom:8px;">XXX 축제명</h2>
-            <div>
-              <span class="star">★ 4.5</span>
-              <span style="margin-left:12px; color:#888;">2025.05.01 ~ 2025.05.05</span>
-            </div>
+          <div class = "firstimf">
           </div>
           <div>
             <button class="wish-btn" onclick="toggleWish(this)">위시리스트</button>
@@ -284,11 +280,6 @@
           <div class="slider-container">
 
           <div id="gallery">
-            <div class="festImg"><img src="https://picsum.photos/200/150?1" alt="1"></div>
-            <div class="festImg"><img src="https://picsum.photos/200/150?2" alt="2"></div>
-            <div class="festImg"><img src="https://picsum.photos/200/150?3" alt="3"></div>
-            <div class="festImg"><img src="https://picsum.photos/200/150?4" alt="4"></div>
-            <div class="festImg"><img src="https://picsum.photos/200/150?4" alt="5"></div> 
           </div>
         </div>
           <button class="arrow next">&#10095;</button>
@@ -309,28 +300,8 @@
         </ul>
       </div>
       <div id="banner"></div>
-      <div class="txtBox">
-        <h3>XXX 축제에 어서 오세요!</h3>
-        <div>
-          <div style="margin-bottom:8px;">
-            <span class="tag">#음악</span>
-            <span class="tag">#푸드트럭</span>
-            <span class="tag">#야외</span>
-          </div>
-          <div style="margin-bottom:12px;">
-            <strong>소개</strong> : 올해 XXX축제는 다양한 음악공연과 먹거리, 체험부스가 준비되어 있습니다.
-          </div>
-        <table class="info-table">
-          <tr><th>기간</th><td>2025.05.01 ~ 2025.05.05</td></tr>
-          <tr><th>장소</th><td>경기도 광명시 축제로 123</td></tr>
-          <tr><th>연락처</th><td>02-1234-5678</td></tr>
-          <tr><th>주최</th><td>광명시청</td></tr>
-          <tr><th>홈페이지</th><td><a href="https://festival-homepage.com" target="_blank">festival-homepage.com</a></td></tr>
-          <tr><th>SNS</th><td>
-            <a href="#">Instagram</a> /
-            <a href="#">Facebook</a>
-          </td></tr>
-        </table>
+      <div class="txtBox" id="third">
+        
       </div>
     </section>
 
@@ -339,12 +310,7 @@
       <div class="section-header">
         <h3>오시는 길</h3>
       </div>
-      <div class="txtBox">
-        <h4>찾아오시는 길</h4>
-        <p>경기도 광명시 축제로 123</p>
-        <p>지하철 1호선 광명역 3번 출구 → 셔틀버스</p>
-        <p>자가용 내비: 'XXX 축제장'</p>
-        <p>공영주차장 이용 가능</p>
+      <div class="txtBox" id="four">
       </div>
     </section>
 
@@ -388,11 +354,9 @@
         </div>
       </div>
     </div>
-
-    
   </div>
 
-    <div id="footer">
+  <div id="footer">
     <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
     <ul class="footer-links">
       <li><a href="#">개인정보처리방침</a></li>
@@ -406,6 +370,7 @@
     </ul>
   </div>
   <script>
+    let i=1;
     document.addEventListener("DOMContentLoaded", function () {
         const gallery = document.getElementById("gallery");
         const slides = gallery.querySelectorAll(".festImg");
@@ -417,7 +382,7 @@
         const maxIndex = slides.length - visibleCount;  // 최대 이동 횟수
 
         let currentIndex = 0;
-
+        uploadimf();
         function updateSlider() {
             const shift = (slideWidth + gap) * currentIndex;
             gallery.style.transform = `translateX(-${shift}px)`;
@@ -471,6 +436,49 @@
     function closeReviewPopup() {
         document.getElementById('reviewPopupBg').style.display = 'none';
     }
+
+    function uploadimf(){
+        hdata = ` <h2 style="margin-bottom:8px;">${i}</h2>  
+                    <div>
+                      <span class="star">★ ${i*2}</span>
+                      <span style="margin-left:12px; color:#888;">${i*3}</span>
+                    </div>`;
+        $('.firstimf').html(hdata);
+
+        sdata = `<div class="festImg"><img src="https://picsum.photos/200/150?1" alt="1"></div>
+                <div class="festImg"><img src="https://picsum.photos/200/150?2" alt="2"></div>
+                <div class="festImg"><img src="https://picsum.photos/200/150?3" alt="3"></div>
+                <div class="festImg"><img src="https://picsum.photos/200/150?4" alt="4"></div>
+                <div class="festImg"><img src="https://picsum.photos/200/150?4" alt="5"></div> `;
+        $('#gallery').html(sdata);
+
+        tdata = `<h3>${i}에 어서 오세요!</h3>
+                  <div>
+                    <div style="margin-bottom:8px;">
+                      <span class="tag">#tag</span>
+                      <span class="tag">#tag</span>
+                      <span class="tag">#tag</span>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                      <strong>소개</strong> : 올해 XXX축제는 다양한 음악공연과 먹거리, 체험부스가 준비되어 있습니다.
+                    </div>
+                  <table class="info-table">
+                    <tr><th>기간</th><td>${i*4}</td></tr>
+                    <tr><th>장소</th><td>${i*5}</td></tr>
+                    <tr><th>연락처</th><td>${i*6}</td></tr>
+                    <tr><th>주최</th><td>${i*7}</td></tr>
+                    <tr><th>홈페이지</th><td><a href="https://festival-homepage.com" target="_blank">${i}</a></td></tr>
+                  </table> `;
+        $('#third').html(tdata);
+
+        fdata = `<h4>찾아오시는 길</h4>
+                  <p>경기도 광명시 축제로 123</p>
+                  <p>지하철 1호선 광명역 3번 출구 → 셔틀버스</p>
+                  <p>자가용 내비: 'XXX 축제장'</p>
+                  <p>공영주차장 이용 가능</p> `;
+        $('#four').html(fdata);
+    }
+
   </script>
 </body>
 

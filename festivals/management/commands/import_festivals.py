@@ -1,11 +1,10 @@
-# 페스티벌 데이터 CSV 파일을 Festival 모델에 일괄 삽입하는 Django 커맨드입니다.
-# 사용법: 터미널에 => python manage.py import_festivals --file=내csv파일.csv
-
+# festivals/management/commands/import_festivals.py
+# 사용법 : 터미널에 => python manage.py import_festivals --file=F_Data.csv
 import pandas as pd
-import re
-import os
 from django.core.management.base import BaseCommand
 from festivals.models import Festival
+import os
+import re
 
 class Command(BaseCommand):
     help = 'CSV 파일 데이터를 Festival 테이블에 일괄 삽입합니다.'
@@ -14,21 +13,22 @@ class Command(BaseCommand):
         parser.add_argument(
             '--file',
             type=str,
-            help='CSV 파일 경로를 반드시 입력하세요 (예: --file=myfile.csv)',
+            help='CSV 파일 경로를 반드시 입력하세요 (예: --file=F_Data.csv)',
             required=True,
         )
 
     def handle(self, *args, **options):
         file_path = options['file']
+
         # 1. 파일 존재 여부 체크
         if not os.path.exists(file_path):
             self.stdout.write(self.style.ERROR(f"파일을 찾을 수 없습니다: {file_path}"))
             return
 
-        # 2. CSV 파일 읽어오기 (한글 컬럼 포함)
+        # 2. CSV 파일 읽어오기
         df = pd.read_csv(file_path, encoding='utf-8-sig')
 
-        # 3. 컬럼명(한글포함) → 모델 필드명으로 매핑
+        # 3. 컬럼명 매핑 (한글 → 모델 필드명)
         col_map = {
             'name(이름)': 'name',
             'description(설명)': 'description',
@@ -45,46 +45,54 @@ class Command(BaseCommand):
             'visitor_count(방문객수)': 'visitor_count',
         }
         df = df.rename(columns=col_map)
-        df = df.iloc[:196] # 196개 레코드만 사용
-        
-        # 4. 날짜/숫자 컬럼 포맷 맞추기
+
+        # 4. 한글 지역명을 영문키로 변환
+        region_display_to_key = {
+            '서울': 'SEOUL', '부산': 'BUSAN', '제주': 'JEJU', '인천': 'INCHEON', '광주': 'GWANGJU',
+            '대구': 'Daegu', '대전': 'Daejeon', '울산': 'Ulsan', '세종': 'Sejong', '경기': 'Gyeonggi',
+            '충북': 'Chungbuk', '충남': 'Chungnam', '전남': 'jeonnam', '경북': 'Gyeongbuk', '경남': 'Gyeongnam',
+            '강원': 'Gangwon', '전북': 'jeonbuk'
+        }
+        if 'region' in df.columns:
+            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')  # 미매핑시 'SEOUL'
+
+        # 5. 날짜/숫자 포맷 맞추기
         for c in ['start_date', 'end_date']:
-            df[c] = df[c].astype(str).str.replace('.', '-', regex=False)
-            df[c] = pd.to_datetime(df[c], errors='coerce')
+            if c in df.columns:
+                # "2025.03.23" -> "2025-03-23"로 변환
+                df[c] = df[c].astype(str).str.replace(r'[.]', '-', regex=True)
+                df[c] = pd.to_datetime(df[c], errors='coerce').dt.strftime('%Y-%m-%d')
+
         for c in ['latitude', 'longitude']:
-            df[c] = pd.to_numeric(df[c], errors='coerce')
-        for c in ['visitor_count']:
-            df[c] = pd.to_numeric(df[c], errors='coerce').fillna(0).astype(int)
-        
+            if c in df.columns:
+                df[c] = pd.to_numeric(df[c], errors='coerce')
+        if 'visitor_count' in df.columns:
+            df['visitor_count'] = pd.to_numeric(df['visitor_count'], errors='coerce').fillna(0).astype(int)
 
-        df = df[df['start_date'].notnull()]
+        # 6. 연락처 하이픈 제거
+        if 'contact_phone' in df.columns:
+            df['contact_phone'] = df['contact_phone'].astype(str).str.replace('-', '', regex=False)
 
-        # 5. Festival 객체로 변환
+        # 9. Festival 객체로 변환
         objs = []
         for _, row in df.iterrows():
-            # 전화번호에서 숫자만 남기기 (하이픈, 공백, 기타 문자 모두 제거)
-            phone_raw = str(row['contact_phone']) if pd.notnull(row['contact_phone']) else ""
-            phone_clean = re.sub(r'[^0-9]', '', phone_raw)
-
             obj = Festival(
                 name=row['name'],
                 description=row['description'],
-                start_date=row['start_date'].date() if not pd.isnull(row['start_date']) else None,
-                end_date=row['end_date'].date() if not pd.isnull(row['end_date']) else None,
+                start_date=row['start_date'],
+                end_date=row['end_date'],
                 region=row['region'],
                 detail_region=row['detail_region'],
                 latitude=row['latitude'] if not pd.isnull(row['latitude']) else None,
                 longitude=row['longitude'] if not pd.isnull(row['longitude']) else None,
                 fee=row['fee'],
                 organizer=row['organizer'],
-                contact_phone=phone_clean,  # 정제된 번호만 저장!
+                contact_phone=row['contact_phone'],
                 website_url=row['website_url'],
                 visitor_count=row['visitor_count']
             )
             objs.append(obj)
 
-        # 6. DB에 일괄 저장 (bulk_create는 대량 데이터 처리에 매우 빠름)
+        # 10. DB에 일괄 저장
         Festival.objects.bulk_create(objs)
-
-        # 7. 결과 출력
         self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료!'))

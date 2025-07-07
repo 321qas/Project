@@ -273,6 +273,7 @@
             once: true,       // 애니메이션을 한 번만 실행
       });  
       addShortsupdown('bottom');
+      addlist();
     });
 
     $(document).ready(function() {
@@ -286,7 +287,7 @@
                     scrollTimer = setTimeout(function() {
                         i++;
                         j = 0;
-                        addShortsupdown('down');
+                        addShortsupdown('up');
                     }, 500);
                 }
             } else {  // 휠을 올리면
@@ -294,7 +295,7 @@
                     scrollTimer = setTimeout(function() {
                         i--;
                         j = 0;
-                        addShortsupdown('up');
+                        addShortsupdown('down');
                     }, 500);
                 }
             }
@@ -342,6 +343,18 @@
 
     // 5초마다 콘텐츠 변경
     setInterval(changeContent, 5000);
+
+    function addlist(){
+        hdata = `<a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
+          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>`;
+        $('.recommendFestList').html(hdata);
+    }
   </script>
 </head>
 <body>
@@ -375,14 +388,7 @@
     </div>
       <div class="contents2">
         <div id="recommendFestList">
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+          
         </div>
       </div>
   </div>

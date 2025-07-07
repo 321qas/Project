@@ -94,8 +94,8 @@ class FestivalImage(models.Model):
             current_count += 1
         if current_count < 2:
             raise ValidationError("각 축제는 최소 2장 이상의 이미지를 등록해야 합니다.")
-        if current_count > 8:
-            raise ValidationError("각 축제는 최대 8장까지만 이미지를 등록할 수 있습니다.")
+        if current_count > 15:
+            raise ValidationError("각 축제는 최대 15장까지만 이미지를 등록할 수 있습니다.")
 
         # 용량 제한 (2MB 이하)
         max_size = 2 * 1024 * 1024  # 2MB
