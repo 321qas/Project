@@ -5,3 +5,4 @@ def upload(request):
 
 def list(request):
     return render(request,'shortforms/shorts_fest_list.html')
+   

@@ -10,7 +10,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('inquiry/', include('inquiry.urls')),
     path('shortforms/', include('shortforms.urls')),
-]
+]   
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
