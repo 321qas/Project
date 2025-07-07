@@ -41,19 +41,24 @@ class Festival(models.Model):
         max_length=12, blank=True,
         help_text="문의 전화번호를 숫자만 입력하세요. (예: 0212345678, 선택사항)")
     website_url = models.URLField(
+        max_length=300,
         null=True, blank=True,
         help_text="축제 공식 웹사이트 주소를 입력하세요. (선택사항)")
+    visitor_count = models.PositiveIntegerField(
+        default=0,
+        help_text="축제 방문객 수(명)")
+    tags = models.ManyToManyField(  # 축제 하나에 여러 태그, 태그 하나가 여러 축제에 할당될 수 있는 N:N 관계
+        Tag,
+        blank=True,
+        related_name="festivals",
+        help_text="축제와 관련된 태그를 여러 개 선택하세요.")
     created_at = models.DateTimeField(
         auto_now_add=True,
         help_text="데이터가 등록된 일시(자동 입력).")
     updated_at = models.DateTimeField(
         auto_now=True,
         help_text="데이터가 마지막으로 수정된 일시(자동 입력).")
-    tags = models.ManyToManyField(  # 축제 하나에 여러 태그, 태그 하나가 여러 축제에 할당될 수 있는 N:N 관계
-        Tag,
-        blank=True,
-        related_name="festivals",
-        help_text="축제와 관련된 태그를 여러 개 선택하세요.")
+    
 
     def __str__(self):
         return f"{self.name} ({self.start_date} ~ {self.end_date})"
@@ -89,8 +94,8 @@ class FestivalImage(models.Model):
             current_count += 1
         if current_count < 2:
             raise ValidationError("각 축제는 최소 2장 이상의 이미지를 등록해야 합니다.")
-        if current_count > 8:
-            raise ValidationError("각 축제는 최대 8장까지만 이미지를 등록할 수 있습니다.")
+        if current_count > 15:
+            raise ValidationError("각 축제는 최대 15장까지만 이미지를 등록할 수 있습니다.")
 
         # 용량 제한 (2MB 이하)
         max_size = 2 * 1024 * 1024  # 2MB
