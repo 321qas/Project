@@ -198,29 +198,42 @@
                 </div>
             </div>
 
-            <form action="#" method="post">
+            <!-- Django 에러 메시지 출력 -->
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                    <li style="color: red;">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- form 시작 -->
+            <form action="" method="post">
+                {% csrf_token %}
+
                 <label for="id">ID *</label>
-                <input type="text" id="id" placeholder="Enter your ID">
-                <button class="button id_check">check for duplicates</button>
+                <input type="text" id="id" name="id" placeholder="Enter your ID" required>
+                <!-- 중복확인: 실제 동작은 JS/AJAX 필요, 여기선 버튼만 보여줌 -->
+                <button class="button id_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
                 
                 <label for="password">Password *</label>
-                <input type="password" id="password" placeholder="Enter your password">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
                 <label for="confirm-password">Confirm password *</label>
-                <input type="password" id="confirm-password" placeholder="Confirm your password">
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
 
                 <label for="name">Name *</label>
-                <input type="text" id="name" placeholder="Enter your name">
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
                 <label for="nickname">Nickname *</label>
-                <input type="text" id="nickname" placeholder="10 characters maximum">
-                <button class="button nname_check">check for duplicates</button>
+                <input type="text" id="nickname" name="nickname" placeholder="10 characters maximum" maxlength="10" required>
+                <button class="button nname_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
 
                 <label for="email">E-mail *</label>
-                <input type="text" id="email" placeholder="Enter your email">
-                <button class="button mail_check">check for duplicates</button>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <button class="button mail_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
 
-                <p>Would you like to subscribe to FastFest email notifications? </p>
+                <p>Would you like to subscribe to FastFest email notifications?</p>
                 <div class="radio-group">
                     <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
                     <label for="subscribe-yes">Yes!</label>
@@ -241,59 +254,33 @@
                 </div>
                 
                 <label for="dob">Date of birth</label>
-                <input type="date" id="dob">
+                <input type="date" id="dob" name="dob">
 
-
-                <!--
-                <label for="country">Country / Region *</label>
-                <select id="country">
-                    <option value="">Select your country/region</option>
-                    <option value="korea">Korea</option>
-                    <option value="usa">USA</option>
-                    <option value="uk">UK</option>
-                </select>-->
-                <!-- Add more countries as needed -->
-                
+                <!-- 관심 태그 -->
                 <label>Interest Tags</label>
-
                 <div class="tags-container">
                     <div class="tag-search">
-                        <p>나의 관심 태그</p>
+                        <p>My Interest Tags</p>
                     </div>
-                    <!-- 내가 선택한 태그 -->
-                    <div class="my-tag-list">
-                        <div class="tag">태그1 <button>X</button></div>
-                        <div class="tag">태그2 <button>X</button></div>
-                        <div class="tag">태그3 <button>X</button></div>
+                    <!-- 선택된 태그 표시 예시 (실제 구현은 JS 필요) -->
+                    <div class="my-tag-list" id="selected-tags">
+                        <!-- <div class="tag">Tag1 <button>X</button></div> -->
                     </div>
                     <hr>
-                    <!-- 전체 태그 리스트 -->
-                    <div class="whole-tag-list">
-                        <div class="tag">문화예술 </div>
-                        <div class="tag">전통역사 </div>
-                        <div class="tag">자연생태 </div>
-                        <div class="tag">지역특산물 </div>
-                        <div class="tag">먹거리/푸드 </div>
-                        <div class="tag">음악/공연 </div>
+                    <!-- 전체 태그 목록 (예시) -->
+                    <div class="whole-tag-list" id="all-tags">
+                        <!-- 실제 구현시 아래 태그를 클릭하면 위에 추가되고, name="tags"로 hidden input 추가 JS 필요 -->
+                        <div class="tag" onclick="addTag('문화예술')">문화예술</div>
+                        <div class="tag" onclick="addTag('전통역사')">전통역사</div>
+                        <div class="tag" onclick="addTag('자연생태')">자연생태</div>
+                        <div class="tag" onclick="addTag('지역특산물')">지역특산물</div>
+                        <div class="tag" onclick="addTag('먹거리/푸드')">먹거리/푸드</div>
+                        <div class="tag" onclick="addTag('음악/공연')">음악/공연</div>
                     </div>
                 </div>
 
-                <!--
-                <div class="interests">
-                    <div class="interest">
-                        <img src="city.jpg" alt="City">
-                        <p>City</p>
-                    </div>
-                    <div class="interest">
-                        <img src="culture.jpg" alt="Culture">
-                        <p>Culture</p>
-                    </div>
-                    <div class="interest">
-                        <img src="nature.jpg" alt="Nature">
-                        <p>Nature</p>
-                    </div>
-                </div>-->
-                <!-- Add more interests as needed -->
+                <!-- 선택된 태그를 서버로 전송하는 hidden input -->
+                <div id="hidden-tags"></div>
 
                 <div class="actions">
                     <button type="submit" class="button signup">Sign up</button>
@@ -301,5 +288,32 @@
             </form>
         </div>
     </div>
+    <!-- 관심 태그 JS (간단 데모, 실제 서비스는 고도화 필요) -->
+    <script>
+    // 간단한 태그 선택 예제 (hidden input으로 name="tags" 여러개 생성)
+    function addTag(tag) {
+        const selectedTags = document.getElementById('selected-tags');
+        // 중복 체크
+        if (selectedTags.innerHTML.includes(tag)) return;
+        // 표시
+        const tagDiv = document.createElement('div');
+        tagDiv.className = 'tag';
+        tagDiv.innerHTML = tag + ' <button type="button" onclick="removeTag(this, \'' + tag + '\')">X</button>';
+        selectedTags.appendChild(tagDiv);
+        // hidden input 추가
+        const hiddenTags = document.getElementById('hidden-tags');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'tags';
+        input.value = tag;
+        input.id = 'hidden_' + tag;
+        hiddenTags.appendChild(input);
+    }
+    function removeTag(btn, tag) {
+        btn.parentElement.remove();
+        const input = document.getElementById('hidden_' + tag);
+        if (input) input.remove();
+    }
+    </script>
 </body>
 </html>

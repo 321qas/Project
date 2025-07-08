@@ -96,6 +96,15 @@
                 <img src="clipboard-check.png" alt="Verification icon">
             </div>
 
+            <!-- Django messages 안내 -->
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                    <li style="color: green;">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
             <p><strong>You're almost done!</strong></p>
             <p>
                 We sent you a verification email. Please check your inbox and log in after you verify your email.<br>
@@ -106,7 +115,13 @@
                 If you still can't find the verification email, please sign up again with a Gmail account.
             </p>
 
-            <a href="/login" class="button">Log in</a>
+            <!-- 인증 메일 재발송: POST로 view에 요청 -->
+            <form method="post" action="">
+                {% csrf_token %}
+                <button type="submit" class="button">Resend Verification Email</button>
+            </form>
+
+            <a href="{% url 'accounts:login' %}" class="button" style="margin-left: 10px;">Log in</a>
         </div>
     </div>
 </body>
