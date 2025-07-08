@@ -48,7 +48,7 @@ def view(request,id):
     return render(request, 'festival/view.html', content)
 
 def list(request):
-    qs = Festival.objects.all()
+    qs = Festival.objects.all().order_by('?')
     content = {'list': qs}
     return render(request, 'festival/fest_list.html', content)
 
@@ -57,7 +57,7 @@ def search(request):
     start_date_str = request.GET.get('startDate')
     end_date_str = request.GET.get('endDate')
 
-    qs = Festival.objects.all()
+    qs = Festival.objects.all().order_by('?')
 
     if region: qs = qs.filter(region=region)
 
