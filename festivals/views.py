@@ -49,16 +49,7 @@ def view(request,id):
 
 def list(request):
     qs = Festival.objects.all()
-    festival_data = []
-    for festival in qs:
-        festival_data.append({
-            'id': festival.id,
-            'name': festival.name,
-    })
-    json_string_data = json.dumps(festival_data, ensure_ascii=False)
-    content = {
-        'json_fest_data': json_string_data# JSON 문자열을 템플릿으로 전달
-    }
+    content = {'list': qs}
     return render(request, 'festival/fest_list.html', content)
 
 def search(request):
