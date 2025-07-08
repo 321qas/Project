@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  font-family: 'Pretendard', sans-serif;    /* 사이트 기본 폰트 */
+  font-family: "Poppins", "Noto Sans KR", sans-serif;    /* 사이트 기본 폰트 */
   /* background-color: var(--bg-color); */
   /* color: var(--text-color); */
   line-height: 1.6;
@@ -46,6 +46,7 @@ button {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.4;
+  font-family: "Poppins", sans-serif;
 }
 
 ul, ol {

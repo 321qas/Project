@@ -1,10 +1,11 @@
 # festivals/management/commands/import_festivals.py
-# 사용법 : 터미널에 => python manage.py import_festivals --file=F_Data.csv
+# 사용법 : python manage.py import_festivals --file=F_Data.csv
+
 import pandas as pd
 from django.core.management.base import BaseCommand
 from festivals.models import Festival
+from tags.models import Tag    # <-- [1] Tag import
 import os
-import re
 
 class Command(BaseCommand):
     help = 'CSV 파일 데이터를 Festival 테이블에 일괄 삽입합니다.'
@@ -19,16 +20,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = options['file']
-
-        # 1. 파일 존재 여부 체크
         if not os.path.exists(file_path):
             self.stdout.write(self.style.ERROR(f"파일을 찾을 수 없습니다: {file_path}"))
             return
 
-        # 2. CSV 파일 읽어오기
         df = pd.read_csv(file_path, encoding='utf-8-sig')
-
-        # 3. 컬럼명 매핑 (한글 → 모델 필드명)
+        df = df.dropna(how='all')
         col_map = {
             'name(이름)': 'name',
             'description(설명)': 'description',
@@ -43,10 +40,10 @@ class Command(BaseCommand):
             'contact_phone(연락처)': 'contact_phone',
             'website_url(공식홈페이지)': 'website_url',
             'visitor_count(방문객수)': 'visitor_count',
+            'Tag': 'Tag',         # [2] Tag 컬럼 추가
         }
         df = df.rename(columns=col_map)
 
-        # 4. 한글 지역명을 영문키로 변환
         region_display_to_key = {
             '서울': 'SEOUL', '부산': 'BUSAN', '제주': 'JEJU', '인천': 'INCHEON', '광주': 'GWANGJU',
             '대구': 'Daegu', '대전': 'Daejeon', '울산': 'Ulsan', '세종': 'Sejong', '경기': 'Gyeonggi',
@@ -54,12 +51,10 @@ class Command(BaseCommand):
             '강원': 'Gangwon', '전북': 'jeonbuk'
         }
         if 'region' in df.columns:
-            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')  # 미매핑시 'SEOUL'
+            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')
 
-        # 5. 날짜/숫자 포맷 맞추기
         for c in ['start_date', 'end_date']:
             if c in df.columns:
-                # "2025.03.23" -> "2025-03-23"로 변환
                 df[c] = df[c].astype(str).str.replace(r'[.]', '-', regex=True)
                 df[c] = pd.to_datetime(df[c], errors='coerce').dt.strftime('%Y-%m-%d')
 
@@ -69,13 +64,14 @@ class Command(BaseCommand):
         if 'visitor_count' in df.columns:
             df['visitor_count'] = pd.to_numeric(df['visitor_count'], errors='coerce').fillna(0).astype(int)
 
-        # 6. 연락처 하이픈 제거
         if 'contact_phone' in df.columns:
             df['contact_phone'] = df['contact_phone'].astype(str).str.replace('-', '', regex=False)
 
-        # 9. Festival 객체로 변환
-        objs = []
-        for _, row in df.iterrows():
+        objs, skipped, row_idx_map = [], 0, {}
+        for i, row in df.iterrows():
+            if Festival.objects.filter(name=row['name'], start_date=row['start_date']).exists():
+                skipped += 1
+                continue
             obj = Festival(
                 name=row['name'],
                 description=row['description'],
@@ -92,7 +88,26 @@ class Command(BaseCommand):
                 visitor_count=row['visitor_count']
             )
             objs.append(obj)
+            row_idx_map[len(objs)-1] = i  # [3] objs 인덱스 <-> df 인덱스 매핑
 
-        # 10. DB에 일괄 저장
         Festival.objects.bulk_create(objs)
-        self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료!'))
+
+        # [4] 방금 bulk_create된 객체들 가져와서 Tag 연결
+        if objs and 'Tag' in df.columns:
+            inserted_fests = list(Festival.objects.filter(
+                name__in=[o.name for o in objs],
+                start_date__in=[o.start_date for o in objs]
+            ))
+
+            for idx, fest in enumerate(inserted_fests):
+                i = row_idx_map.get(idx)
+                if i is not None:
+                    tags_str = df.loc[i, 'Tag']
+                    if pd.notnull(tags_str):
+                        tag_names = [t.strip() for t in str(tags_str).split(',') if t.strip()]
+                        for tag_name in tag_names:
+                            tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
+                            fest.tags.add(tag_obj)
+
+        self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료! (중복 {skipped}건 제외)'))
+
