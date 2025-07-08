@@ -8,4 +8,5 @@ urlpatterns = [
     path('region_interest_chart/', views.region_interest_chart, name='region_interest_chart'),
     path('view/<int:id>/', views.view, name='view'),
     path('list/', views.list, name='list'),
+    path('search/',views.search,name='search')
 ]

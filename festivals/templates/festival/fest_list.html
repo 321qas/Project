@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Document</title>
     <style>
       * {margin:0; padding: 0; box-sizing: border-box;}
@@ -232,7 +233,7 @@
 
         <div id="banner_blur">
             <h1>여행지를 검색해보세요</h1>
-            <form action="#" method="GET">
+            <form id='searchForm' action="#" method="GET">
                 <div id="searchBlocks">
                     <div class="searchBlock region">
                     <h3>지역검색</h3>
@@ -255,7 +256,7 @@
                     </div>
 
                     <div class="searchBlock button">
-                    <button type="submit"><a href="/festivals/resultlist/">검색</a></button>
+                    <button type="submit"><a href="/festivals/search/">검색</a></button>
                     </div>
                 </div>
             </form>
@@ -269,47 +270,112 @@
         </div>
     </div>
     <script>
-      // 🚨 여기서 'safe' 대신 'escapejs'를 사용합니다!
-      // 'json_fest_data'는 이미 JSON 문자열이므로, 이를 JavaScript 문자열 리터럴 내에 안전하게 삽입하기 위해 'escapejs'를 사용합니다.
-      const allFestData = JSON.parse('{{ json_fest_data|escapejs }}');
+        let allFestivalData = []; // AJAX 검색 결과를 저장할 배열
+        let loadedCount = 0;      // 현재까지 로드된 카드 수
+        const LOAD_COUNT = 8;     // 초기 로드 개수 (검색 시)
+        const LOAD_MORE_COUNT = 4; // '더보기' 클릭 시 추가 로드 개수
 
-      // 이제 allFestData는 JavaScript에서 사용할 수 있는 배열이 됩니다.
-      console.log(allFestData);
+        // DOM 요소 캐싱 (자주 사용하므로 변수에 저장)
+        const festList = document.getElementById('festList');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const searchForm = $('#searchForm'); // jQuery 객체로 캐싱
 
-      // 이후 JavaScript 로직은 이전과 동일합니다.
-      const festList = document.getElementById('festList');
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
-      let loadedCount = 0;
-      const LOAD_COUNT = 8; // 초기 로드 개수
-      const LOAD_MORE_COUNT = 4; // '더보기' 클릭 시 추가 로드 개수
+        function appendCards(dataArray, count) {
+            // '검색 결과가 없습니다.' 메시지가 있다면 제거
+            $('#no-results-message').remove();
 
-      function appendCards(dataArray, count) {
-          for (let i = 0; i < count; i++) {
-              if (loadedCount >= dataArray.length) {
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-                  break;
-              }
-              const data = dataArray[loadedCount];
-              const card = document.createElement('div');
-              card.className = 'festCard';
-              card.innerHTML = `<a href="/festivals/view/${data.id}">
-                                    <img src="" alt="축제${data.id}">
-                                </a>
-                                <p>${data.name}</p>`;
-              festList.appendChild(card);
-              loadedCount++;
-          }
-      }
+            let appendedThisCall = 0; // 이번 호출에서 실제로 추가된 카드 수
 
-      document.addEventListener('DOMContentLoaded', () => {
-          appendCards(allFestData, LOAD_COUNT);
-      });
+            for (let i = 0; i < count; i++) {
+                if (loadedCount >= dataArray.length) {
+                    break; // 더 이상 데이터가 없으면 반복 중단
+                }
+                const data = dataArray[loadedCount];
+                const card = document.createElement('div');
+                card.className = 'festCard';
+                card.innerHTML = `
+                    <a href="/festivals/view/${data.id}">
+                        <img src="${data.image_url || '/static/images/default_festival_image.jpg'}" alt="${data.name}">
+                    </a>
+                    <p>${data.name}</p>
+                    <p class="region-info">지역: ${data.region}</p>
+                    <p class="date-info">기간: ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                `;
+                festList.appendChild(card);
+                loadedCount++;
+                appendedThisCall++;
+            }
 
-      if (loadMoreBtn) {
-          loadMoreBtn.addEventListener('click', () => {
-              appendCards(allFestData, LOAD_MORE_COUNT);
-          });
-      }
+            // '더보기' 버튼 표시 여부 업데이트
+            if (loadMoreBtn) { // 버튼 요소가 존재할 때만 처리
+                if (loadedCount < dataArray.length) {
+                    loadMoreBtn.style.display = 'block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+
+            // 데이터가 아예 없거나, 이번 호출에서 아무것도 추가되지 않았고, 이미 모든 데이터를 다 로드했음에도 불구하고 데이터가 없는 경우
+            if (loadedCount === 0 && dataArray.length === 0) {
+                // 메시지가 아직 없다면 추가
+                if (!$('#no-results-message').length) {
+                    festList.innerHTML = '<p id="no-results-message">검색 결과가 없습니다.</p>';
+                }
+            }
+        }
+
+        // 초기화 및 데이터 로딩을 담당하는 함수
+        function loadAndDisplayFestivals(isSearch = false) {
+            // 검색 요청이거나 첫 로드가 아닐 때만 기존 결과 초기화
+            if (isSearch) {
+                festList.innerHTML = ''; // 이전 결과 모두 지우기
+                loadedCount = 0;         // 로드 카운트 초기화
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none'; // 버튼 숨김
+                allFestivalData = []; // 새로운 검색을 위해 데이터 배열 초기화
+            }
+
+            // 폼 데이터 가져오기 (초기 로드 시에는 모두 빈 문자열이 될 것임)
+            const region = $('#region').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+
+            const queryParams = {
+                region: region,
+                startDate: startDate,
+                endDate: endDate
+            };
+
+            $.ajax({
+                url: '/festivals/search-ajax/',
+                type: 'GET',
+                data: queryParams,
+                dataType: 'json',
+                success: function(data) {
+                    allFestivalData = data; // AJAX 검색 결과를 allFestivalData에 저장
+                    appendCards(allFestivalData, LOAD_COUNT); // 첫 카드 묶음 출력
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error: " + textStatus, errorThrown, jqXHR.responseText);
+                    festList.innerHTML = '<p id="no-results-message">검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>';
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', () => {
+                    appendCards(allFestivalData, LOAD_MORE_COUNT);
+                });
+            }
+
+            searchForm.on('submit', function(event) {
+                event.preventDefault(); // 폼 기본 제출 동작 방지
+                loadAndDisplayFestivals(true); // 검색임을 알리고 데이터 로드
+            });
+
+            searchForm.submit();
+        });
     </script>
 
     <div id="footer">
