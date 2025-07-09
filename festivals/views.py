@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Festival, RegionInterest,FestivalImage, Tag
+from .models import Festival, RegionInterest,FestivalImage
 from django.db.models import Prefetch, F
 from django.http import JsonResponse
 import json
@@ -29,28 +29,15 @@ def region_interest_chart(request): # 지역별 관심도 통계 페이지
 
 def view(request,id):
     qs = get_object_or_404(
-        Festival.objects.prefetch_related(
-            Prefetch(
-                'images',
-                queryset=FestivalImage.objects.order_by('uploaded_at')
-            )
-        ),
-        id=id
-    )
+    Festival.objects.prefetch_related(
+    Prefetch(
+        'images',
+        queryset=FestivalImage.objects.order_by('uploaded_at') # 이미지를 업로드된 시간 순으로 정렬
+    )),
+    id=id)
 
-    tags_to_update = []
-    for tag in qs.tags.all():
-        tag.count = F('count')
-        tags_to_update.append(tag)
-
-    if tags_to_update:
-        Tag.objects.bulk_update(tags_to_update, ['count'])
-    
-    tags_list = [{'name': tag.name, 'count': tag.count} for tag in qs.tags.all()]
-
-    content = {'list': qs, 'tags': tags_list}
-    
-    print(content) 
+    tags_list = [{'name': tag.name} for tag in qs.tags.all()]
+    content = {'list':qs,'tags': tags_list}
     return render(request, 'festival/view.html', content)
 
 def list(request):
