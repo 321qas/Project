@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin, BaseUserManager)
 from tags.models import Tag
-import uuid
+from django.utils import timezone
+import uuid, datetime
 
 # 소셜로그인 시 회원의 아이디 자동생성 함수
 def generate_social_user_id(login_type):
@@ -96,3 +97,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "회원"
         verbose_name_plural = "회원"
+
+# 이메일 인증 모델
+class EmailVerification(models.Model):
+    email = models.EmailField(unique=True)
+    token = models.CharField(max_length=64, unique=True)
+    user_id = models.CharField(max_length=32)
+    password = models.CharField(max_length=128)
+    real_name = models.CharField(max_length=32)
+    nickname = models.CharField(max_length=32)
+    gender = models.CharField(max_length=10, blank=True, null=True)
+    dob = models.CharField(max_length=16, blank=True, null=True)
+    tags = models.CharField(max_length=255, blank=True)  # 예: "여행,음악,사진"
+    created_at = models.DateTimeField(auto_now_add=True)
