@@ -427,175 +427,127 @@
   </style>
 </head>
 <script>
-  // 이미지 업로드
-  document.addEventListener("DOMContentLoaded", function () {
-    const imageUploadContainer = document.getElementById('imageUploadContainer');
-    const shorts = document.getElementById('shorts');
-    
-    generateImageUploadBoxes();
-
-    function resetAllImages() {
-      imageUploadContainer.innerHTML = '';
-      generateImageUploadBoxes();
-
-      // 기본 이미지로 초기화
-      shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
-    }
-
-    function generateImageUploadBoxes() {
-      const imageCount = 6; // 6칸
-  
-      for (let i = 0; i < imageCount; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'shorts_img';
-
-        const img = document.createElement('img');
-        img.style.width = '100%';
-        img.style.height = '100%';
-
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.name = `image_${i}`;
-        input.style.display = 'none';
-
-        wrapper.appendChild(img);
-        wrapper.appendChild(input);
-
-        if (i === imageCount - 1) { // 마지막 칸
-          wrapper.classList.add('add-new');
-          img.src = '/static/image/delete.jpg'; // 현재 해당 이미지 없음, 추가 필요
-          img.alt = '전체 삭제';
-          wrapper.addEventListener('click', (e) => {
-            e.preventDefault();
-            resetAllImages();
-          });
-        } else {
-          img.src = 'static/image/envelope-check_1.png'; 
-          img.alt = '클릭하고 추가하기';
-
-          img.addEventListener('click', () => {
-            if (!img.src.includes('static/image/envelope-check_1.png')) { // static/image/envelope-check_1.png 미포함 시
-              shorts.style.backgroundImage = `url(${img.src})`;
-            } else {
-              input.click();
-            }
-          });
-
-          input.addEventListener('change', (e) => {
-            const file = e.target.files[0]; // 업로드한 파일 중 첫 번째(사실상 선택한 파일)
-            if (file && file.type.startsWith('image/')) { // 이미지 파일로서 존재하는 지 체크
-              const reader = new FileReader(); // 파일을 브라우저에서 읽을 수 있게 하기
-              reader.onload = (event) => {
-                 // 선택된 파일이 이미지 태그에서 보여짐
-                img.src = event.target.result;
-                shorts.style.backgroundImage = `url(${event.target.result})`;
-                shorts.style.backgroundSize = 'cover';
-                shorts.style.backgroundPosition = 'center';
-                shorts.style.backgroundRepeat = 'no-repeat';
-              };
-              reader.readAsDataURL(file);
-            }
-          });
-        }
-        imageUploadContainer.appendChild(wrapper);
-      }
-    }
-  });
-
-
-  // 검색페이지로 이동
-  function searchBtn() {
-  const value = document.getElementById('shorts_festname').value;
-  const url = `/shortforms/list/?keyWord=${encodeURIComponent(value)}`; // 파라미터로 키워드 전달
-  window.open(url, 'festivalSearch', 'width=600,height=500'); // 창 열기
-}
-
-
 document.addEventListener("DOMContentLoaded", function () {
-  const searchedTagsContainer = document.querySelector('.searchedTags div'); // 받은 정보 숏폼에디터에 반영
-  const shortsTagContainers = document.querySelectorAll("#shortsMeta .tags"); // 숏폼에디터 정보 숏폼에 반영
-  });
+  // 1. 이미지 업로드 박스 생성 및 배경 반영
+  const imageUploadContainer = document.getElementById('imageUploadContainer');
+  const shorts = document.getElementById('shorts');
+  generateImageUploadBoxes();
 
+  function generateImageUploadBoxes() {
+    const imageCount = 6;
 
+    for (let i = 0; i < imageCount; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'shorts_img';
 
-document.addEventListener("DOMContentLoaded", function () { // 오디오파일 업로드
-    const audioInput = document.getElementById('audioFile_upload');
-    const fileNameDisplay = document.getElementById('audioFileName');
+      const img = document.createElement('img');
+      img.style.width = '100%';
+      img.style.height = '100%';
 
-    audioInput.addEventListener('change', function () {
-      const file = audioInput.files[0];
-      if (file) {
-        fileNameDisplay.textContent = `선택된 파일: ${file.name}`;
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.name = `image_${i}`;
+      input.style.display = 'none';
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(input);
+
+      if (i === imageCount - 1) {
+        // 마지막 칸: 전체 이미지 초기화 버튼
+        wrapper.classList.add('add-new');
+        img.src = '/static/image/delete.jpg';
+        img.alt = '전체 삭제';
+        wrapper.addEventListener('click', (e) => {
+          e.preventDefault();
+          resetAllImages();
+        });
       } else {
-        fileNameDisplay.textContent = '선택된 파일 없음';
+        // 기본 상태
+        img.src = 'static/image/envelope-check_1.png';
+        img.alt = '클릭하고 추가하기';
+
+        // 클릭 시 파일 선택 또는 프리뷰 반영
+        img.addEventListener('click', () => {
+          if (!img.src.includes('envelope-check_1.png')) {
+            shorts.style.backgroundImage = `url(${img.src})`;
+          } else {
+            input.click();
+          }
+        });
+
+        // 파일 선택 시 이미지 미리보기 및 반영
+        input.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              img.src = event.target.result;
+              shorts.style.backgroundImage = `url(${event.target.result})`;
+              shorts.style.backgroundSize = 'cover';
+              shorts.style.backgroundPosition = 'center';
+              shorts.style.backgroundRepeat = 'no-repeat';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
       }
+    
+      imageUploadContainer.appendChild(wrapper);    
+    }
+  }
+
+  function resetAllImages() {
+    imageUploadContainer.innerHTML = '';
+    generateImageUploadBoxes();
+    shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
+  }
+});
+
+
+// 2. 프레임 색상 선택 및 저장
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll('.color-btn');
+  const previewBox = document.getElementById('shortsBorder');
+  const savedColor = localStorage.getItem('frameColor');
+
+  if (savedColor) {
+    previewBox.style.backgroundColor = savedColor;
+    buttons.forEach(btn => {
+      if (btn.dataset.color === savedColor) btn.classList.add('selected');
+    });
+  }
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      buttons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+      const selectedColor = button.dataset.color;
+      previewBox.style.backgroundColor = selectedColor;
+      localStorage.setItem('frameColor', selectedColor);
     });
   });
+});
 
 
-
-    let j=0;
-    function openOverlay() { // 오버레이 열기
-        document.getElementById("overlay").style.display = "flex";
-        const color = localStorage.getItem('frameColor') || "#39555e";
-        document.querySelector("#overlay #shortsBorder").style.backgroundColor = color;
-
-        preview();
-    }
-
-    // 오버레이 닫기
-    function closeOverlay() {
-        document.getElementById("overlay").style.display = "none"; // 오버레이 숨기기
-    }
-
-    document.addEventListener("DOMContentLoaded", function () { 
-      const buttons = document.querySelectorAll('.color-btn');
-      const previewBox = document.getElementById('shortsBorder');
-
-      // 페이지 로드 시 저장된 색상 적용
-      const savedColor = localStorage.getItem('frameColor');
-      if (savedColor) {
-        previewBox.style.backgroundColor = savedColor;
-        buttons.forEach(btn => {
-          if (btn.dataset.color === savedColor) btn.classList.add('selected');
-        });
-      }
-
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          buttons.forEach(btn => btn.classList.remove('selected'));
-          button.classList.add('selected');
-
-          const selectedColor = button.dataset.color;
-          previewBox.style.backgroundColor = selectedColor;
-          // 선택한 색상 저장
-          localStorage.setItem('frameColor', selectedColor);
-        });
-        });
-      });
-    
-
-    document.addEventListener("DOMContentLoaded", function () {
+// 3. 제목, 축제명, 태그 실시간 반영
+document.addEventListener("DOMContentLoaded", function () {
   const titleInput = document.getElementById("shorts_title");
   const festnameInput = document.getElementById("shorts_festname");
   const searchedTagsContainer = document.querySelector(".searchedTags div");
 
-  // 제목 입력
-  titleInput.addEventListener("input", function () {
+  titleInput.addEventListener("input", () => {
     document.querySelectorAll(".shorts_title").forEach(el => {
       el.textContent = titleInput.value || "요즘 입소문 탄다는 축제";
     });
   });
 
-  // 축제 이름 입력
-  festnameInput.addEventListener("input", function () {
+  festnameInput.addEventListener("input", () => {
     document.querySelectorAll(".festNameInShorts").forEach(el => {
       el.textContent = festnameInput.value || "서울 불꽃축제";
     });
   });
 
-  // 태그 정보 반영 함수
   const updateTagsInPreview = () => {
     const tags = [...searchedTagsContainer.querySelectorAll("span")].map(el =>
       el.textContent.trim()
@@ -611,36 +563,99 @@ document.addEventListener("DOMContentLoaded", function () { // 오디오파일 �
     });
   };
 
-  // 태그 DOM 변화 감지 → 자동 반영
   const observer = new MutationObserver(updateTagsInPreview);
   observer.observe(searchedTagsContainer, { childList: true, subtree: true });
-
-  // 초기 반영
   updateTagsInPreview();
 });
 
-    function preview(){
-      const originalShorts = document.querySelector('#shorts');         // 메인 shorts
-      const overlayShorts = document.querySelector('#overlay .over');   // 오버레이 shorts
 
-      // 1. 배경 이미지 복사
-      overlayShorts.style.backgroundImage = originalShorts.style.backgroundImage;
-      overlayShorts.style.backgroundSize = originalShorts.style.backgroundSize || 'cover';
-      overlayShorts.style.backgroundPosition = originalShorts.style.backgroundPosition || 'center';
-      overlayShorts.style.backgroundRepeat = originalShorts.style.backgroundRepeat || 'no-repeat';
+// 4. 오디오 파일명 표시
+document.addEventListener("DOMContentLoaded", function () {
+  const audioInput = document.getElementById('audioFile_upload');
+  const fileNameDisplay = document.getElementById('audioFileName');
 
-      // 2. 텍스트 복사
-      overlayShorts.querySelector('.shorts_title').textContent =
-        originalShorts.querySelector('.shorts_title').textContent;
+  audioInput.addEventListener('change', function () {
+    const file = audioInput.files[0];
+    fileNameDisplay.textContent = file
+      ? `선택된 파일: ${file.name}`
+      : '선택된 파일 없음';
+  });
+});
 
-      document.querySelector("#overlay .festNameInShorts").textContent =
-      document.querySelectorAll(".festNameInShorts")[0].textContent;
-  }
-    
-    
-    
 
+// 5. 프리뷰 오버레이 동작 (이미지 + 텍스트 반영)
+function preview() {
+  const original = document.querySelector('#shorts');
+  const overlay = document.querySelector('#overlay .over');
+
+  overlay.style.backgroundImage = original.style.backgroundImage;
+  overlay.style.backgroundSize = original.style.backgroundSize || 'cover';
+  overlay.style.backgroundPosition = original.style.backgroundPosition || 'center';
+  overlay.style.backgroundRepeat = original.style.backgroundRepeat || 'no-repeat';
+
+  overlay.querySelector('.shorts_title').textContent =
+    original.querySelector('.shorts_title').textContent;
+
+  document.querySelector("#overlay .festNameInShorts").textContent =
+    document.querySelectorAll(".festNameInShorts")[0].textContent;
+}
+
+
+// 6. 오버레이 열기/닫기 + 슬라이드쇼 시작/중지
+let slideshowInterval;
+let currentSlideIndex = 0;
+
+function openOverlay() {
+  document.getElementById("overlay").style.display = "flex";
+
+  const color = localStorage.getItem('frameColor') || "#39555e";
+  document.querySelector("#overlay #shortsBorder").style.backgroundColor = color;
+
+  preview();
+  startSlideshow();
+}
+
+function closeOverlay() {
+  document.getElementById("overlay").style.display = "none";
+  stopSlideshow();
+}
+
+
+// 7. 슬라이드쇼 애니메이션 (2초 간격)
+function startSlideshow() {
+  const overlayShorts = document.querySelector('#overlay .over');
+  const images = [];
+
+  document.querySelectorAll('#imageUploadContainer .shorts_img img').forEach(img => {
+    if (img.src && !img.src.includes('delete.jpg')) {
+      images.push(img.src);
+    }
+  });
+
+  if (images.length === 0) return;
+
+  currentSlideIndex = 0;
+  overlayShorts.style.background = `url(${images[0]}) center/cover no-repeat`;
+
+  slideshowInterval = setInterval(() => {
+    currentSlideIndex = (currentSlideIndex + 1) % images.length;
+    overlayShorts.style.background = `url(${images[currentSlideIndex]}) center/cover no-repeat`;
+  }, 2000);
+}
+
+function stopSlideshow() {
+  clearInterval(slideshowInterval);
+}
+
+
+// 8. 축제 검색창 열기 (새 창)
+function searchBtn() {
+  const value = document.getElementById('shorts_festname').value;
+  const url = `/shortforms/list/?keyWord=${encodeURIComponent(value)}`;
+  window.open(url, 'festivalSearch', 'width=600,height=500');
+}
 </script>
+
 <body>
   <div class="contents">
       <div id="shortsContainer"> 
