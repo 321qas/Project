@@ -49,11 +49,13 @@ def signup_account(request):
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
         tag_names = request.POST.getlist('tags')  # ② 선택된 태그 리스트
+        tag_ids = request.POST.getlist('tags')
 
         # 선택된 태그 유지 (폼에 다시 랜더링하기 위해)
+        selected_tags = Tag.objects.filter(id__in=tag_ids)
         context = {
             'tags': tags,
-            'selected_tags': tag_names
+            'selected_tags': selected_tags,
         }
         
         if not all([user_id, password, password2, real_name, nickname, email]):
@@ -86,11 +88,12 @@ def signup_account(request):
             nickname=nickname,
             gender=gender,
             dob=dob,
-            tags=tag_names,
+            tags=",".join(tag_ids),
             created_at=timezone.now()
         )
         request.session['signup_email'] = email  # 인증대기 이메일 session (OPTIONAL)
         return redirect('accounts:signup_verify')
+    
     return render(request, 'signup2_account.html', {
         'tags': tags,
         'selected_tags': []
@@ -114,6 +117,7 @@ def signup_verify(request):
         subject = "FastFest 이메일 인증"
         html = f"""
             <h2>FastFest 이메일 인증</h2>
+            <br>
             <p>아래 버튼을 눌러 이메일 인증을 완료하세요.</p>
             <a href="{verify_url}" style="padding:10px 20px; background:#2563eb; color:white; border-radius:5px; text-decoration:none;">이메일 인증하기</a>
         """
@@ -154,12 +158,14 @@ def verify_email(request):
         gender=ver.gender,
         dob=ver.dob   
     )
+    tag_ids = [tid.strip() for tid in ver.tags.split(',') if tid.strip()]
     # 관심 태그 저장
-    for tag_name in ver.tags.split(','):
-        tag_name = tag_name.strip()
-        if tag_name:
-            tag, _ = Tag.objects.get_or_create(name=tag_name)
+    for tag_id in tag_ids:
+        try:
+            tag = Tag.objects.get(id=int(tag_id))
             user.interest_tags.add(tag)
+        except Tag.DoesNotExist:
+            continue
     user.save()
 
     ver.delete()
