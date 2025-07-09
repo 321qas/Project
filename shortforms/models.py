@@ -57,7 +57,7 @@ class ShortFormImage(models.Model):
     )
 
     def clean(self):
-        # 이미지가 1~6장 사이인지 유효성 검사
+        # 이미지가 1~5장 사이인지 유효성 검사
         if not self.shortform_id:
             return
         current_count = ShortFormImage.objects.filter(shortform=self.shortform).count()
@@ -65,8 +65,8 @@ class ShortFormImage(models.Model):
             current_count += 1
         if current_count < 1:
             raise ValidationError("최소 1장의 이미지를 등록해야 합니다.")
-        if current_count > 6:
-            raise ValidationError("최대 6장까지만 등록할 수 있습니다.")
+        if current_count > 5:
+            raise ValidationError("최대 5장까지만 등록할 수 있습니다.")
 
     def __str__(self):
         return f"Image {self.id} for ShortForm {self.shortform.id}"
