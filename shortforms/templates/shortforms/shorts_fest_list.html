@@ -551,7 +551,7 @@ function selectFestival(name, tags) {
     const hiddenTagInput = window.opener.document.getElementById("selected_tags");
     if (hiddenTagInput) {
       hiddenTagInput.value = tags.map(tag => tag).join(",");
-    }
+    }   
 
     window.close();
   }
