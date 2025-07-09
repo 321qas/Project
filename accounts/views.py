@@ -137,7 +137,9 @@ def verify_email(request):
         email=ver.email,
         password=ver.password,
         real_name=ver.real_name,
-        nickname=ver.nickname
+        nickname=ver.nickname,
+        gender=ver.gender,
+        dob=ver.dob   
     )
     # 관심 태그 저장
     for tag_name in ver.tags:
