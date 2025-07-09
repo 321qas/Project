@@ -353,14 +353,14 @@
         <div class="contents"> 
           
             <div id="festList">
-                <a href="#"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+                <div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div>
+                <div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div>
+                <div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div>
+                <div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div>
+                <div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div>
+                <div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div>
+                <div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div>
+                <div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div>
             </div>
             
             
@@ -404,6 +404,10 @@ function renderFestCards(dataArr, start = 0, end = loadedCount) {
       <p>${data.name}</p>
       <div>${tagsHtml}</div>
     `;
+    card.addEventListener('click', () => {
+      selectFestival(data.name, data.tag);
+    });
+
     festList.appendChild(card);
   });
   
@@ -526,6 +530,33 @@ function resetFilter() {
   history.replaceState(null, '', location.pathname);
 
 }
+
+function selectFestival(name, tags) {
+  if (window.opener) {
+    // 축제명 넘기기
+    window.opener.document.getElementById("shorts_festname").value = name;
+
+    // 태그 전달
+    const tagWrapper = window.opener.document.querySelector(".searchedTags > div");
+    if (tagWrapper) {
+      tagWrapper.innerHTML = ""; // 기존 태그 지우기
+      tags.forEach(tag => {
+        const span = window.opener.document.createElement("span");
+        span.className = "tag-badge";
+        span.textContent = "#" + tag + " ";
+        tagWrapper.appendChild(span); 
+      });
+    }
+
+    const hiddenTagInput = window.opener.document.getElementById("selected_tags");
+    if (hiddenTagInput) {
+      hiddenTagInput.value = tags.map(tag => tag).join(",");
+    }
+
+    window.close();
+  }
+}
+
 
 
 
