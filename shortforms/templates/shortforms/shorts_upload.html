@@ -1,3 +1,4 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,13 +18,13 @@
 
     #wrap {
       flex: 1;
-    }
+    } 
     
-    .contents::selection{   /* 마우스 포인터로 드래그 시 배경 색 */
+    .contents::selection{   /* 마우스 포인터로 드래그 시 배경 색 */  
       background-color: #4fc3f7;
     }
 
-    .contents {
+    .contents {  
       width: 111px;
       height: 111px;
       height: 1000px;
@@ -58,6 +59,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      
     }
 
     #shorts {
@@ -65,35 +67,42 @@
       height: 650px;
       /*background: #fff;*/
       margin-top: 25px;
-      background: url('https://picsum.photos/410/650?random') center/cover no-repeat;
+      background: url('static/image/envelope-check_1.png') center/cover no-repeat; {% comment %} 기본이미지 {% endcomment %}
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;              
+      gap: 8px;   
     }
 
     .creator {
-      position: absolute;
-      top: 653px;
-      left:557px;
-      z-index: 2;
-      background: #fff;
-      color: #222;
+      font-size: 16px;
+    }
+
+    .shorts_title {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      font-size: 17px;
+    }
+
+    .creator, .shorts_title {
+      padding: 6px 12px;
       font-weight: bold;
-      padding: 6px 18px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      font-size: 1.08rem;
-      border: 1px solid #ddd;
-      opacity: 0.95;
+      color: #fff;
+      max-width: fit-content;
     }
 
 
     #shortsMeta {
       width: 405px; /*90%*/
-      padding-top: 18px;
+      padding-top: 15px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 18px;
+      gap: 12px;
       font-size: 1.08rem;
       color: #222;
+      flex-wrap: nowrap;
     }
 
     #shortsMeta a {
@@ -112,6 +121,13 @@
       background: #ffffff;
       box-shadow:  0 2px 2px rgba(0, 0, 0, 1);
     }
+
+    .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 10px;   /* [row-gap column-gap] 형식 */
+  max-width: 100%;  /* 필요 시 줄바꿈 조건 설정 */
+}
     
     #shortsEditor {
       /*max-width: 800px;*/
@@ -153,31 +169,21 @@
       margin-bottom: 20px;
     }
 
-    .shorts_img {
-      width: 111px;
-      height:111px;
-      aspect-ratio: 1; /* 정사각형 유지 */
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: #666;
-      background-color: #f9f9f9;
-    }
+     .shorts_img {
+    width: 111px;
+    height: 111px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    overflow: hidden;
+  }
 
-    .shorts_img.add-new {
-      cursor: pointer;
-      color: #888;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .shorts_img.add-new:hover {
-      background-color: #eee;
-      border-color: #aaa;
-    }
+  .shorts_img input[type="file"] {
+    display: none;
+  }
 
     /* 코멘트 작성 영역 */
     #shorts_title {
@@ -191,9 +197,13 @@
       margin-bottom: 20px;
     }
 
+    .goToSearch {
+      display: flex;
+    }
+
     #shorts_festname {
-      width: 100%;
-      height: 100px;
+      width: 80%;
+      height: 40px;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -202,18 +212,82 @@
       margin-bottom: 20px;
     }
 
-    
+    .searchBtn {
+  background-color: green;
+  width: 15%;
+  height: 40px;
+  margin-left: 5%;
+  text-align: center;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  
+  cursor: pointer;
+  font-size: 12px;
+}
 
-    .file_upload label {
-      font-size: 14px;
-      color: #333;
-    }
+.searchedTags {
+  display: flex;
+  width: 100%;
+  
+  margin-bottom: 20px;
+  gap: 10px;
+  
+}
 
-    .file_upload input[type="file"] {
-      flex: 1;
-      padding: 5px;
-      font-size: 14px;
-    }
+.searchedTags div {
+  border: 1px solid black;
+  width: 100%;
+  height: 68px;
+  flex-wrap: nowrap;
+}
+
+.tag-badge {
+  display: inline-block;
+  margin: 2px 5px 2px 0;
+  background: #f5f5f5;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+
+.audioFile_upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f3f4f6;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 16px;
+  
+  font-size: 14px;
+}
+
+.audioFile_upload label {
+  font-weight: 500;
+  white-space: nowrap;
+  color: #333;
+}
+
+.audioFile_upload input[type="file"] {
+  flex: 1; /* 남는 영역 꽉 채움 */
+  height: 36px;
+  padding: 4px 8px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+#audioFileName {
+  margin-bottom: 20px;
+  border: 1px solid black;
+}
+
 
     /* 버튼 */
     .action_buttons {
@@ -314,7 +388,7 @@
       background: #1f1f1f; /* 어두운 테마 배경 */
       color: #fff;
       border-radius: 16px;
-      padding: 24px;
+      padding: 0 24px 24px 24px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
@@ -323,22 +397,6 @@
       position: relative;
     }
 
-      .creator2{
-        position: absolute;
-        left: 28%;
-        bottom: 185px;
-        transform: translateX(-50%);
-        z-index: 2;
-        background: #fff;
-        color: #222 !important;;
-        font-weight: bold;
-        padding: 8px 22px;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        font-size: 1.08rem;
-        border: 1px solid #ddd;
-        opacity: 0.95;
-              }
 
       #xs{
         align-self: center;
@@ -370,91 +428,120 @@
 </head>
 <script>
   // 이미지 업로드
-  
   document.addEventListener("DOMContentLoaded", function () {
-  const imageUploadContainer = document.getElementById('imageUploadContainer');
-  generateImageUploadBoxes();
-
-  function resetAllImages() {
-    imageUploadContainer.innerHTML = '';
+    const imageUploadContainer = document.getElementById('imageUploadContainer');
+    const shorts = document.getElementById('shorts');
+    
     generateImageUploadBoxes();
-  }
 
-  function generateImageUploadBoxes() {
-    const imageCount = 6;
+    function resetAllImages() {
+      imageUploadContainer.innerHTML = '';
+      generateImageUploadBoxes();
 
-    for (let i = 0; i < imageCount; i++) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'shorts_img';
-
-      const img = document.createElement('img');
-      img.style.width = '100%';
-      img.style.height = '100%';
-
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.name = `image_${i}`;
-      input.style.display = 'none';
-
-      wrapper.appendChild(img);
-      wrapper.appendChild(input);
-
-      if (i === imageCount - 1) {
-        // 전체 삭제 버튼
-        wrapper.classList.add('add-new');
-        img.src = '/static/images/delete_icon.png';
-        img.alt = '전체 삭제';
-        wrapper.addEventListener('click', (e) => {
-          e.preventDefault();
-          resetAllImages();
-        });
-      } else {
-        // 초기 이미지
-        img.src = `/static/images/3${i}.jpg`;
-
-        // ✅ input 클릭 → 파일 탐색기
-        img.addEventListener('click', (e) => {
-        // 업로드된 이미지가 있을 경우 → #shorts에 반영
-        if (img.src && !img.src.includes('/static/images/3')) {
-          document.getElementById('shorts').innerHTML =
-            `<img src="${img.src}" width="100%" height="100%">`;
-        } else {
-          // 기본 이미지거나 아직 업로드 안 된 경우 → 파일 선택 창 열기
-          input.click();
-        }
-      });
-
-        // ✅ 이미지 선택 시: 미리보기 + shorts 반영
-        input.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              img.src = event.target.result;
-
-              // shorts 영역에 이미지 반영
-              document.getElementById('shorts').innerHTML =
-                `<img src="${event.target.result}" width="100%" height="100%">`;
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
-
-      imageUploadContainer.appendChild(wrapper);
+      // 기본 이미지로 초기화
+      shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
     }
-  }
-});
+
+    function generateImageUploadBoxes() {
+      const imageCount = 6; // 6칸
+  
+      for (let i = 0; i < imageCount; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'shorts_img';
+
+        const img = document.createElement('img');
+        img.style.width = '100%';
+        img.style.height = '100%';
+
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.name = `image_${i}`;
+        input.style.display = 'none';
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(input);
+
+        if (i === imageCount - 1) { // 마지막 칸
+          wrapper.classList.add('add-new');
+          img.src = '/static/image/delete.jpg'; // 현재 해당 이미지 없음, 추가 필요
+          img.alt = '전체 삭제';
+          wrapper.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetAllImages();
+          });
+        } else {
+          img.src = 'static/image/envelope-check_1.png'; 
+          img.alt = '클릭하고 추가하기';
+
+          img.addEventListener('click', () => {
+            if (!img.src.includes('static/image/envelope-check_1.png')) { // static/image/envelope-check_1.png 미포함 시
+              shorts.style.backgroundImage = `url(${img.src})`;
+            } else {
+              input.click();
+            }
+          });
+
+          input.addEventListener('change', (e) => {
+            const file = e.target.files[0]; // 업로드한 파일 중 첫 번째(사실상 선택한 파일)
+            if (file && file.type.startsWith('image/')) { // 이미지 파일로서 존재하는 지 체크
+              const reader = new FileReader(); // 파일을 브라우저에서 읽을 수 있게 하기
+              reader.onload = (event) => {
+                 // 선택된 파일이 이미지 태그에서 보여짐
+                img.src = event.target.result;
+                shorts.style.backgroundImage = `url(${event.target.result})`;
+                shorts.style.backgroundSize = 'cover';
+                shorts.style.backgroundPosition = 'center';
+                shorts.style.backgroundRepeat = 'no-repeat';
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+        imageUploadContainer.appendChild(wrapper);
+      }
+    }
+  });
+
+
+  // 검색페이지로 이동
+  function searchBtn() {
+  const value = document.getElementById('shorts_festname').value;
+  const url = `/shortforms/list/?keyWord=${encodeURIComponent(value)}`; // 파라미터로 키워드 전달
+  window.open(url, 'festivalSearch', 'width=600,height=500'); // 창 열기
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const searchedTagsContainer = document.querySelector('.searchedTags div'); // 받은 정보 숏폼에디터에 반영
+  const shortsTagContainers = document.querySelectorAll("#shortsMeta .tags"); // 숏폼에디터 정보 숏폼에 반영
+  });
+
+
+
+document.addEventListener("DOMContentLoaded", function () { // 오디오파일 업로드
+    const audioInput = document.getElementById('audioFile_upload');
+    const fileNameDisplay = document.getElementById('audioFileName');
+
+    audioInput.addEventListener('change', function () {
+      const file = audioInput.files[0];
+      if (file) {
+        fileNameDisplay.textContent = `선택된 파일: ${file.name}`;
+      } else {
+        fileNameDisplay.textContent = '선택된 파일 없음';
+      }
+    });
+  });
 
 
 
     let j=0;
-    function openOverlay() {
-        document.getElementById("overlay").style.display = "flex"; // 오버레이를 보이도록 설정
-        // 프리뷰 오버레이의 프레임 색상 적용
+    function openOverlay() { // 오버레이 열기
+        document.getElementById("overlay").style.display = "flex";
         const color = localStorage.getItem('frameColor') || "#39555e";
         document.querySelector("#overlay #shortsBorder").style.backgroundColor = color;
+
+        preview();
     }
 
     // 오버레이 닫기
@@ -462,7 +549,7 @@
         document.getElementById("overlay").style.display = "none"; // 오버레이 숨기기
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () { 
       const buttons = document.querySelectorAll('.color-btn');
       const previewBox = document.getElementById('shortsBorder');
 
@@ -489,17 +576,69 @@
       });
     
 
-    function changeBtn(num) {
-      hdata=`<img src="/static/images/3${num}.jpg" width='100%' height='100%'>`;
-      $('#shorts').html(hdata);  
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+  const titleInput = document.getElementById("shorts_title");
+  const festnameInput = document.getElementById("shorts_festname");
+  const searchedTagsContainer = document.querySelector(".searchedTags div");
+
+  // 제목 입력
+  titleInput.addEventListener("input", function () {
+    document.querySelectorAll(".shorts_title").forEach(el => {
+      el.textContent = titleInput.value || "요즘 입소문 탄다는 축제";
+    });
+  });
+
+  // 축제 이름 입력
+  festnameInput.addEventListener("input", function () {
+    document.querySelectorAll(".festNameInShorts").forEach(el => {
+      el.textContent = festnameInput.value || "서울 불꽃축제";
+    });
+  });
+
+  // 태그 정보 반영 함수
+  const updateTagsInPreview = () => {
+    const tags = [...searchedTagsContainer.querySelectorAll("span")].map(el =>
+      el.textContent.trim()
+    );
+
+    document.querySelectorAll("#shortsMeta .tags").forEach(container => {
+      container.innerHTML = "";
+      tags.forEach(tag => {
+        const a = document.createElement("a");
+        a.textContent = tag;
+        container.appendChild(a);
+      });
+    });
+  };
+
+  // 태그 DOM 변화 감지 → 자동 반영
+  const observer = new MutationObserver(updateTagsInPreview);
+  observer.observe(searchedTagsContainer, { childList: true, subtree: true });
+
+  // 초기 반영
+  updateTagsInPreview();
+});
 
     function preview(){
-      pdata=`<img src="/static/images/3${j}.jpg" width='100%' height='100%'>`;
-      $('.over').html(hdata);  
-    }
+      const originalShorts = document.querySelector('#shorts');         // 메인 shorts
+      const overlayShorts = document.querySelector('#overlay .over');   // 오버레이 shorts
+
+      // 1. 배경 이미지 복사
+      overlayShorts.style.backgroundImage = originalShorts.style.backgroundImage;
+      overlayShorts.style.backgroundSize = originalShorts.style.backgroundSize || 'cover';
+      overlayShorts.style.backgroundPosition = originalShorts.style.backgroundPosition || 'center';
+      overlayShorts.style.backgroundRepeat = originalShorts.style.backgroundRepeat || 'no-repeat';
+
+      // 2. 텍스트 복사
+      overlayShorts.querySelector('.shorts_title').textContent =
+        originalShorts.querySelector('.shorts_title').textContent;
+
+      document.querySelector("#overlay .festNameInShorts").textContent =
+      document.querySelectorAll(".festNameInShorts")[0].textContent;
+  }
     
-    setInterval(preview, 5000);
+    
+    
 
 </script>
 <body>
@@ -508,14 +647,19 @@
         <div id="shortsBorder"> 
           <data id="shorts">
             <a class="creator">@축제모아</a>
+            <a class="shorts_title">요즘 입소문 탄다는 축제</a>
           </data>
           <div id="shortsMeta">
-          <!-- <a href="mypage1.html" class="creator">@크리에이터닉네임</a> -->
           <a class="festNameInShorts">서울 불꽃축제</a>
-          <span class="tags" style="font-size: 15px;">
+          <span class="tags" style="font-size: 12px;">
             <a >#불꽃</a>
             <a >#서울</a>
             <a >#여름</a>
+            <a >#축제</a>
+            <a >#밤</a>
+            <a >#야경</a>
+            <a >#예쁨</a>
+            <a >#감성</a>
           </span>
         </div>
         </div>
@@ -527,14 +671,22 @@
                 <div id="shortsContainer"> 
                     <div id="shortsBorder"> 
                         <data id="shorts" class='over'>
+                          <a class="creator">@축제모아</a>
+                          <a class="shorts_title">요즘 입소문 탄다는 축제</a>
                         </data>
                         <div id="shortsMeta">
-                        <a class="creator2">@축제모아</a>
-                            <a class="festNameInShorts">서울 불꽃축제</a>
-                              <span class="tags" style="font-size: 15px;">
-                                <a >#불꽃</a>
-                                <a >#서울</a>
-                                <a >#여름</a>
+                          <a class="festNameInShorts">서울 불꽃축제</a>
+                              <span class="tags" style="font-size: 13px;">
+                                <span class="tags" style="font-size: 12px;">
+                                  <a >#불꽃</a>
+                                  <a >#서울</a>
+                                  <a >#여름</a>
+                                  <a >#축제</a>
+                                  <a >#밤</a>
+                                  <a >#야경</a>
+                                  <a >#예쁨</a>
+                                  <a >#감성</a>
+                                </span>
                               </span>
                         </div>
                     </div>
@@ -542,10 +694,11 @@
         </div>
       </div>
       <div id="shortsEditor">
-        <form action="#" method="post">
+        <form action="#" name="myShorts" method="post">
+          {% csrf_token %}
           <!-- 프레임 색상 선택 -->
           <div class="color_frame box">
-            <button type="button" data-color ="#f9d835" class="color-btn yellow"></button>
+            <button type="button" data-color ="#f9d835" class="color-btn yellow" ></button>
             <button type="button" data-color ="#8c6df0" class="color-btn purple"></button>
             <button type="button" data-color ="#4aa3f9" class="color-btn blue"></button>
             <button type="button" data-color ="#f78fb3" class="color-btn pink"></button>
@@ -557,13 +710,24 @@
 
           <!-- 코멘트 작성 -->
           <textarea name="shorts_title" id="shorts_title" placeholder="제목을 정하세요."></textarea>
-          <textarea name="shorts_festname" id="shorts_festname" placeholder="축제 이름을 입력해주세요."></textarea>
-
-          <!-- 파일 업로드 -->
-          <div class="file_upload">
-            <label for="file_upload">음악 업로드</label>
-            <input type="file" id="file_upload" name="audio_file" accept="audio/*">
+          <div class="goToSearch">
+            <input name="shorts_festname" id="shorts_festname" placeholder="축제 이름을 입력해주세요."></input>
+            <button type="button" onclick="searchBtn()" class="searchBtn">search</button>
           </div>
+          <div class="searchedTags">
+            <span>tag:</span>
+            <div></div>
+            <input type="hidden" name="selected_tags" id="selected_tags">
+          </div>
+          
+          
+
+          <!-- 음악 파일 업로드 -->
+          <div class="audioFile_upload">
+            <label for="audioFile_upload">🎵 음악 업로드</label>
+            <input type="file" id="audioFile_upload" name="audio_file" accept="audio/*">
+          </div>
+          <div id="audioFileName">선택된 파일 없음</div>
 
           <!-- 버튼 -->
           <div class="action_buttons">

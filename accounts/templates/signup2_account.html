@@ -1,67 +1,52 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/signup.css">
     <title>Membership Registration</title>
     <style>
-        h1 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-
-        /* 회원가입 step 진행상황 */
-        .steps {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-        .step {
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        .step span {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            border-radius: 50%;
-            background-color: #f97316;
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .step.current span {
-            background-color: #2563eb;
-        }
-
         /* 회원가입 폼 */
 
         form {
             margin-top: 20px;
         }
-        label {
+        .checkbox {
+            display:flex;
+            align-items: center;
+            gap: 10px; /* input과 버튼 사이 간격 */
+        }
+        .checkbox .clickBtn {
+            padding: 10px 15px;
+        }
+        section > label {
             display: block;
-            margin: 5px 0;
+            margin: 40px 0 5px 0;
             font-weight: bold;
         }
+        label:first-child {
+            margin-top: 0;
+        }
         input[type="text"],
+        input[type="email"],
         input[type="password"],
-        input[type="date"],
-        select {
+        input[type="date"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 10px 10px 10px 15px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 1rem;
         }
+        .email-sub {
+            margin: 5px 0;
+        }
         .radio-group {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            gap: 5px;
         }
         .radio-group label {
             flex: 1;
@@ -71,26 +56,29 @@
             border-radius: 4px;
             cursor: pointer;
             background-color: #f9f9f9;
+            font-weight: bold;
         }
         .radio-group input {
             display: none;
         }
         .radio-group input:checked + label {
-            background-color: #2563eb;
+            background-color: var(--color-primary);
             color: #ffffff;
-            border-color: #2563eb;
+            border-color: var(--color-primary);
         }
 
         /* 관심태그 선택 */
 
         .tags-container {
-            max-width: 600px;
+            max-width: 100%;
             margin: 20px auto;
             padding: 20px;
             background-color: #ffffff;
-            border: 2px solid #fde68a;
+            border: 2px solid var(--color-gray); /* light gray border */
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tags-container hr {
+            margin-top: 20px;
         }
         .tag-search {
             display: flex;
@@ -98,64 +86,24 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        .tag-search input {
-            width: 60%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .tag-search p {
+            font-weight: 600;
+            color: #4B5563;
         }
-        .my-tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb; /* 연회색, 더 부드러운 톤 (#e5e7eb = tailwind gray-200) */
+            margin: 20px 0;
         }
-        .whole-tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tag {
-            border: 1px solid #2563eb;
-            border-radius: 4px;
-            padding: 5px 10px;
-            background-color: #f0f9ff;
-            color: #2563eb;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .tag button {
+        .tag button {  /* my tag의 X버튼 */
             margin-left: 5px;
             border: none;
             background: transparent;
             cursor: pointer;
-            color: #f97316;
+            color: var(--color-primary);
             font-weight: bold;
+            font-size:14px;
         }
-
-        /*  관심사 설정 (카드 이미지)
-        .interests {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .interest {
-            flex: 1 1 calc(33.333% - 10px);
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            text-align: center;
-            cursor: pointer;
-            background-color: #f9f9f9;
-        }
-        .interest img {
-            width: 100%;
-            height: auto;
-        }
-        .interest.selected {
-            border-color: #2563eb;
-            background-color: #e8f0fe;
-        }
-        */
 
         /* 버튼, 전송버튼 */
 
@@ -188,10 +136,12 @@
                     <span>1</span>
                     Membership Agreement
                 </div>
+                <span class="next">></span>
                 <div class="step current">
                     <span>2</span>
                     Enter Basic Information
                 </div>
+                <span class="next">></span>
                 <div class="step">
                     <span>3</span>
                     Verification
@@ -210,78 +160,98 @@
             <!-- form 시작 -->
             <form action="" method="post">
                 {% csrf_token %}
+                <section class="section-card padding">
 
-                <label for="id">ID *</label>
-                <input type="text" id="id" name="id" placeholder="Enter your ID" required>
-                <!-- 중복확인: 실제 동작은 JS/AJAX 필요, 여기선 버튼만 보여줌 -->
-                <button class="button id_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
-                
-                <label for="password">Password *</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-
-                <label for="confirm-password">Confirm password *</label>
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-
-                <label for="name">Name *</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required>
-
-                <label for="nickname">Nickname *</label>
-                <input type="text" id="nickname" name="nickname" placeholder="10 characters maximum" maxlength="10" required>
-                <button class="button nname_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
-
-                <label for="email">E-mail *</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                <button class="button mail_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
-
-                <p>Would you like to subscribe to FastFest email notifications?</p>
-                <div class="radio-group">
-                    <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
-                    <label for="subscribe-yes">Yes!</label>
-
-                    <input type="radio" id="subscribe-no" name="subscribe" value="no">
-                    <label for="subscribe-no">No thanks.</label>
-                </div>
-                <p>By subscribing to FastFest email notifications, you will receive updates on FastFest announcements, events, content, and more.<br>
-                Non-subscribers will still receive email notifications on important policy updates, individual winner announcement, etc.</p>
-
-                <label>Gender</label>
-                <div class="radio-group">
-                    <input type="radio" id="gender-male" name="gender" value="male">
-                    <label for="gender-male">Male</label>
-
-                    <input type="radio" id="gender-female" name="gender" value="female">
-                    <label for="gender-female">Female</label>
-                </div>
-                
-                <label for="dob">Date of birth</label>
-                <input type="date" id="dob" name="dob">
-
-                <!-- 관심 태그 -->
-                <label>Interest Tags</label>
-                <div class="tags-container">
-                    <div class="tag-search">
-                        <p>My Interest Tags</p>
+                    <label for="id">ID *</label>
+                    <div class="checkbox">
+                        <input type="text" id="id" name="id" placeholder="Enter your ID" required>
+                        <!-- 중복확인: 실제 동작은 JS/AJAX 필요, 여기선 버튼만 보여줌 -->
+                        <button class="clickBtn orange id_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
                     </div>
-                    <!-- 선택된 태그 표시 예시 (실제 구현은 JS 필요) -->
-                    <div class="my-tag-list" id="selected-tags">
-                        <!-- <div class="tag">Tag1 <button>X</button></div> -->
-                    </div>
-                    <hr>
-                    <!-- 전체 태그 목록 (예시) -->
-                    <div class="whole-tag-list" id="all-tags">
-                        <!-- 실제 구현시 아래 태그를 클릭하면 위에 추가되고, name="tags"로 hidden input 추가 JS 필요 -->
-                        <div class="tag" onclick="addTag('문화예술')">문화예술</div>
-                        <div class="tag" onclick="addTag('전통역사')">전통역사</div>
-                        <div class="tag" onclick="addTag('자연생태')">자연생태</div>
-                        <div class="tag" onclick="addTag('지역특산물')">지역특산물</div>
-                        <div class="tag" onclick="addTag('먹거리/푸드')">먹거리/푸드</div>
-                        <div class="tag" onclick="addTag('음악/공연')">음악/공연</div>
-                    </div>
-                </div>
 
-                <!-- 선택된 태그를 서버로 전송하는 hidden input -->
-                <div id="hidden-tags"></div>
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
+                    <label for="confirm-password">Confirm password *</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+                    <label for="nickname">Nickname *</label>
+                    <div class="checkbox">
+                        <input type="text" id="nickname" name="nickname" placeholder="10 characters maximum" maxlength="10" required>
+                        <button class="clickBtn orange nname_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
+                    </div>
+                    <label for="email">E-mail *</label>
+                    <div class="checkbox">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        <button class="clickBtn orange mail_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
+                    </div>
+                    <p class='email-sub'>Would you like to subscribe to FastFest email notifications?</p>
+                    <div class="radio-group">
+                        <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
+                        <label for="subscribe-yes">Yes!</label>
+
+                        <input type="radio" id="subscribe-no" name="subscribe" value="no">
+                        <label for="subscribe-no">No thanks.</label>
+                    </div>
+                    <p class='email-sub'>By subscribing to FastFest email notifications, you will receive updates on FastFest announcements, events, content, and more.<br>
+                    Non-subscribers will still receive email notifications on important policy updates, individual winner announcement, etc.</p>
+
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <input type="radio" id="gender-male" name="gender" value="male">
+                        <label for="gender-male">Male</label>
+
+                        <input type="radio" id="gender-female" name="gender" value="female">
+                        <label for="gender-female">Female</label>
+                    </div>
+                    
+                    <label for="dob">Date of birth</label>
+                    <input type="date" id="dob" name="dob">
+
+                    <!-- 관심 태그 -->
+                    <label>Interest Tags</label>
+
+                    <div class="tags-container">
+                        <div class="tag-search">
+                            <p>My Interest Tags</p>
+                        </div>
+                        <!-- 선택된 태그 표시 예시 (실제 구현은 JS 필요) -->
+                        <div class="tags mine" id="selected-tags">
+                            <span class="tag tag-secondary">태그1 <button>X</button></span>
+                            <span class="tag tag-secondary">태그2 <button>X</button></span>
+                            <span class="tag tag-secondary">태그3 <button>X</button></span>
+                        </div>
+                        <hr>
+                        <!-- 전체 태그 목록 (예시) -->
+                        <div class="tags whole" id="all-tags">
+                            <!-- 실제 구현시 아래 태그를 클릭하면 위에 추가되고, name="tags"로 hidden input 추가 JS 필요 -->
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Spring</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Summer</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Autumn</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Winter</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Nature</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Tradition & History</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Culture & Art</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Regional Product</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Food</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Music & Performance</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Experience</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Family</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Kids</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Teenagers</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Youth</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Adults</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">Elders</span>
+                            <span class="tag tag-secondary-hover" onclick="addTag('')">All ages</span>
+                        </div>
+                    </div>
+
+                    <!-- 선택된 태그를 서버로 전송하는 hidden input -->
+                    <div id="hidden-tags"></div>
+                </section>
                 <div class="actions">
                     <button type="submit" class="button signup">Sign up</button>
                 </div>
