@@ -539,7 +539,7 @@ function selectFestival(name, tags) {
     // 태그 전달
     const tagWrapper = window.opener.document.querySelector(".searchedTags > div");
     if (tagWrapper) {
-      tagWrapper.innerHTML = ""; // 기존 태그 지우기
+      tagWrapper.innerHTML = ""; // 기존 태그 지우기  
       tags.forEach(tag => {
         const span = window.opener.document.createElement("span");
         span.className = "tag-badge";
