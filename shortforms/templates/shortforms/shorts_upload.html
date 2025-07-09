@@ -1,3 +1,4 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,7 +67,7 @@
       height: 650px;
       /*background: #fff;*/
       margin-top: 25px;
-      background: url('/static/images/34.jpg') center/cover no-repeat; {% comment %} 기본이미지 {% endcomment %}
+      background: url('static/image/envelope-check_1.png') center/cover no-repeat; {% comment %} 기본이미지 {% endcomment %}
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -438,12 +439,12 @@
       generateImageUploadBoxes();
 
       // 기본 이미지로 초기화
-      shorts.style.backgroundImage = "url('/static/images/34.jpg')";
+      shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
     }
 
     function generateImageUploadBoxes() {
       const imageCount = 6; // 6칸
-
+  
       for (let i = 0; i < imageCount; i++) {
         const wrapper = document.createElement('div');
         wrapper.className = 'shorts_img';
@@ -463,18 +464,18 @@
 
         if (i === imageCount - 1) { // 마지막 칸
           wrapper.classList.add('add-new');
-          img.src = '/static/images/delete.jpg'; // 현재 해당 이미지 없음, 추가 필요
+          img.src = '/static/image/delete.jpg'; // 현재 해당 이미지 없음, 추가 필요
           img.alt = '전체 삭제';
           wrapper.addEventListener('click', (e) => {
             e.preventDefault();
             resetAllImages();
           });
         } else {
-          img.src = '/static/images/34.jpg'; 
+          img.src = 'static/image/envelope-check_1.png'; 
           img.alt = '클릭하고 추가하기';
 
           img.addEventListener('click', () => {
-            if (!img.src.includes('/static/images/34')) { // /static/images/304.jpg 미포함 시
+            if (!img.src.includes('static/image/envelope-check_1.png')) { // static/image/envelope-check_1.png 미포함 시
               shorts.style.backgroundImage = `url(${img.src})`;
             } else {
               input.click();
@@ -574,11 +575,6 @@ document.addEventListener("DOMContentLoaded", function () { // 오디오파일 �
         });
       });
     
-
-    function changeBtn(num) {
-      hdata=`<img src="/static/images/3${num}.jpg" width='100%' height='100%'>`;
-      $('#shorts').html(hdata);  
-    }
 
     document.addEventListener("DOMContentLoaded", function () {
   const titleInput = document.getElementById("shorts_title");
