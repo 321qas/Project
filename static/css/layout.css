@@ -19,16 +19,27 @@ body {
 }
 
 
-/* 섹션 별 카드 스타일 구성 > 축제 상세페이지에 사용됨 */ 
+/* 섹션 별 카드 스타일 구성 > 축제 상세페이지, 회원가입 페이지에 사용됨 */ 
 
 .section-card {
-    /*background: var(--card-bg);
-    border-radius:  1%;
-    box-shadow: 0 2px 8px var(--shadow)
-    margin-bottom: 20px;
-    */
-    overflow: hidden;
-  }
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.section-card.no-shadow {
+  box-shadow: none;
+}
+
+.section-card.bg-gray {
+  background-color: #f9fafb;
+}
+
+.section-card.padding {
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
 .section-header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 30px 0 20px;
