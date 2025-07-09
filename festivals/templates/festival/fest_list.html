@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
     <title>Document</title>
     <style>
 
@@ -300,26 +302,8 @@
         <div id="banner_blur">
           <div class="title-search-wrap">
             <h1>여행지를 검색해보세요</h1>
-            <div id="quickSearch">
-              <input type="text" id="quickSearchInput" placeholder="빠른 검색어 입력">
-              <button type="button" onclick="quickSearch()">검색</button>
-            </div>
-          </div>
-            
-              
-              <div id="searchBlocks">
-                <div class="searchBlock tag">
-                <h3>태그검색</h3>
-                <select id="tagSelect">
-                  <option value="">태그 선택</option>
-                  <option value="불꽃">불꽃</option>
-                  <option value="음악">음악</option>
-                  <option value="먹거리">먹거리</option>
-                  <option value="전통">전통</option>
-                  <option value="바다">바다</option>
-                  <option value="눈">눈</option>
-                </select>
-              </div>
+            <form action="#" method="GET">
+                <div id="searchBlocks">
                     <div class="searchBlock region">
                     <h3>지역검색</h3>
                     <input type="text" name="region" id="region" placeholder="예: 서울, 부산">
@@ -341,8 +325,7 @@
                     </div>
 
                     <div class="searchBlock button">
-                    <button type="button" id="resetBtn"onclick="resetFilter()">reset</button>
-                    <button type="button" id="searchBtn" onclick="runDetailedSearch()">검색</button>
+                    <button type="submit"><a href="/festivals/search/">검색</a></button>
                     </div>
                 </div>
             
@@ -360,183 +343,133 @@
 
             </div>
             <div id="festList">
-                <a href="#"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-                <a href="#"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>
+
             </div>
             
             
         </div> 
 
     </div>
-    <script>
-const festData = [
-  { img: "", name: "서울 불꽃축제", tag: ["불꽃", "서울"], region: "서울", date: "2025-10-07" },
-  { img: "", name: "부산 바다축제", tag: ["바다"], region: "부산", date: "2025-08-01" },
-  { img: "", name: "진주 남강유등축제", tag: ["전통"], region: "진주", date: "2025-10-10" },
-  { img: "", name: "화천 산천어축제", tag: ["눈"], region: "화천", date: "2025-01-10" },
-  { img: "", name: "안동 탈춤축제", tag: ["전통"], region: "안동", date: "2025-09-27" },
-  { img: "", name: "제주 들불축제", tag: ["불꽃"], region: "제주", date: "2025-03-08" },
-  { img: "", name: "대구 치맥페스티벌", tag: ["먹거리"], region: "대구", date: "2025-07-17" },
-  { img: "", name: "전주 한지문화축제", tag: ["전통"], region: "전주", date: "2025-05-05" },    
-  { img: "", name: "춘천 마임축제", tag: ["음악", "야외"], region: "춘천", date: "2025-05-25" },
-  { img: "", name: "광주 비엔날레", tag: ["음악"], region: "광주", date: "2025-09-06" },
-  { img: "", name: "포항 불빛축제", tag: ["불꽃", "야경"], region: "포항", date: "2025-07-31" },
-  { img: "", name: "여수 밤바다축제", tag: ["바다", "야경"], region: "여수", date: "2025-08-15" },
-  { img: "", name: "울산 고래축제", tag: ["먹거리"], region: "울산", date: "2025-06-10" },
-  { img: "", name: "인천 펜타포트", tag: ["음악"], region: "인천", date: "2025-08-09" },
-  { img: "", name: "수원 화성문화제", tag: ["전통"], region: "수원", date: "2025-10-03" },
-  { img: "", name: "청주 직지코리아", tag: ["전통"], region: "청주", date: "2025-09-01" }
-];
+        let allFestivalData = []; // AJAX 검색 결과를 저장할 배열
+        let loadedCount = 0;      // 현재까지 로드된 카드 수
+        const LOAD_COUNT = 8;     // 초기 로드 개수 (검색 시)
+        const LOAD_MORE_COUNT = 4; // '더보기' 클릭 시 추가 로드 개수
 
-const festList = document.getElementById('festList');
+        // DOM 요소 캐싱 (자주 사용하므로 변수에 저장)
+        const festList = document.getElementById('festList');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const searchForm = $('#searchForm'); // jQuery 객체로 캐싱
 
-let loadedCount = 8;
-const LOAD_COUNT = 4;
+        function appendCards(dataArray, count) {
+            // '검색 결과가 없습니다.' 메시지가 있다면 제거
+            $('#no-results-message').remove();
 
-// 카드 렌더링 함수
-function renderFestCards(dataArr, start = 0, end = loadedCount) {
-  festList.innerHTML = "";
-  dataArr.slice(0, end).forEach((data, idx) => {
-    const tagsHtml = (data.tag || []).map(t => `<span class="tag">${t}</span>`).join(' ');
-    const card = document.createElement('div');
-    card.className = 'festCard';
-    card.innerHTML = `
-      <a href="#"><img src="${data.img}" alt="축제${idx+1}"></a>
-      <p>${data.name}</p>
-      <div>${tagsHtml}</div>
-    `;
-    festList.appendChild(card);
-  });
-  
-}
+            let appendedThisCall = 0; // 이번 호출에서 실제로 추가된 카드 수
 
-// 페이지 로드 시 url 파라미터로 필터링
-function filterFestByUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tag = urlParams.get('tag');
-  const keyword = urlParams.get('keyWord');
+            for (let i = 0; i < count; i++) {
+                if (loadedCount >= dataArray.length) {
+                    break; // 더 이상 데이터가 없으면 반복 중단
+                }
+                const data = dataArray[loadedCount];
+                const card = document.createElement('div');
+                card.className = 'festCard';
+                card.innerHTML = `
+                    <a href="/festivals/view/${data.id}">
+                        <img src="${data.image_url || '/static/images/default_festival_image.jpg'}" alt="${data.name}">
+                    </a>
+                    <p>${data.name}</p>
+                    <p class="region-info">지역: ${data.region}</p>
+                    <p class="date-info">기간: ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                `;
+                festList.appendChild(card);
+                loadedCount++;
+                appendedThisCall++;
+            }
 
-  let filtered = festData;
+            // '더보기' 버튼 표시 여부 업데이트
+            if (loadMoreBtn) { // 버튼 요소가 존재할 때만 처리
+                if (loadedCount < dataArray.length) {
+                    loadMoreBtn.style.display = 'block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
 
-  // 태그 파라미터가 있으면 태그로 필터
-  if (tag) {
-    // 셀렉트에 옵션이 없으면 동적으로 추가
-    const tagSelect = document.getElementById('tagSelect');
-    let found = false;
-    for (let i = 0; i < tagSelect.options.length; i++) {
-      if (tagSelect.options[i].value === tag) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      const opt = document.createElement('option');
-      opt.value = tag;
-      opt.textContent = tag + ' (외부)';
-      tagSelect.appendChild(opt);
-    }
-    tagSelect.value = tag;
-    filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
-  }
+            // 데이터가 아예 없거나, 이번 호출에서 아무것도 추가되지 않았고, 이미 모든 데이터를 다 로드했음에도 불구하고 데이터가 없는 경우
+            if (loadedCount === 0 && dataArray.length === 0) {
+                // 메시지가 아직 없다면 추가
+                if (!$('#no-results-message').length) {
+                    festList.innerHTML = '<p id="no-results-message">검색 결과가 없습니다.</p>';
+                }
+            }
+        }
 
-  // 키워드 파라미터가 있으면 키워드로 추가 필터
-  if (keyword) {
-    document.getElementById('quickSearchInput').value = keyword;
-    filtered = filtered.filter(f =>
-      f.name.includes(keyword) ||
-      (f.region && f.region.includes(keyword)) ||
-      (Array.isArray(f.tag) ? f.tag.some(t => t.includes(keyword)) : (f.tag && f.tag.includes(keyword)))
-    );
-  }
+        // 초기화 및 데이터 로딩을 담당하는 함수
+        function loadAndDisplayFestivals(isSearch = false) {
+            // 검색 요청이거나 첫 로드가 아닐 때만 기존 결과 초기화
+            if (isSearch) {
+                festList.innerHTML = ''; // 이전 결과 모두 지우기
+                loadedCount = 0;         // 로드 카운트 초기화
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none'; // 버튼 숨김
+                allFestivalData = []; // 새로운 검색을 위해 데이터 배열 초기화
+            }
 
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  if (tag || keyword) {
-    festList.scrollIntoView({ behavior: "smooth", block: "start" });
-    festList.setAttribute('tabindex', '-1');
-  }
-}
+            // 폼 데이터 가져오기 (초기 로드 시에는 모두 빈 문자열이 될 것임)
+            const region = $('#region').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
 
-// 페이지 최초 로딩 시 url 파라미터로만 필터링
-window.addEventListener('DOMContentLoaded', function() {
-  filterFestByUrl();
-});
+            const queryParams = {
+                region: region,
+                startDate: startDate,
+                endDate: endDate
+            };
 
-// 페이지 최초 로딩 시
-renderFestCards(festData.slice(0, loadedCount));
+            $.ajax({
+                url: '/festivals/search/',
+                type: 'GET',
+                data: queryParams,
+                dataType: 'json',
+                success: function(data) {
+                    allFestivalData = data; // AJAX 검색 결과를 allFestivalData에 저장
+                    appendCards(allFestivalData, LOAD_COUNT); // 첫 카드 묶음 출력
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error: " + textStatus, errorThrown, jqXHR.responseText);
+                    festList.innerHTML = '<p id="no-results-message">검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>';
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                }
+            });
+        }
 
+        $(document).ready(function() {
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', () => {
+                    appendCards(allFestivalData, LOAD_MORE_COUNT);
+                });
+            }
 
+            searchForm.on('submit', function(event) {
+                event.preventDefault(); // 폼 기본 제출 동작 방지
+                loadAndDisplayFestivals(true); // 검색임을 알리고 데이터 로드
+            });
 
+            searchForm.submit();
+        });
+    </script>
 
-
-// 빠른 검색
-function quickSearch() {
-  const keyword = document.getElementById('quickSearchInput').value.trim();
-  if (!keyword) {
-    renderFestCards(festData.slice(0, loadedCount));
-    // URL 파라미터 제거
-    history.replaceState(null, '', location.pathname);
-    return;
-  } 
-  const filtered = festData.filter(f =>
-    f.name.includes(keyword) ||
-    (f.region && f.region.includes(keyword)) ||
-    (Array.isArray(f.tag) ? f.tag.some(t => t.includes(keyword)) : (f.tag && f.tag.includes(keyword)))
-  );
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  festList.scrollIntoView({ behavior: "smooth", block: "start" });
-  festList.setAttribute('tabindex', '-1');
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-  
-}
-
-// 상세 검색
-function runDetailedSearch() {
-  const tag = document.getElementById('tagSelect').value;
-  const region = document.getElementById('region').value.trim();
-  const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
-
-  let filtered = festData;
-
-  if (tag) filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
-  if (region) filtered = filtered.filter(f => f.region.includes(region));
-  if (startDate) filtered = filtered.filter(f => f.date >= startDate);
-  if (endDate) filtered = filtered.filter(f => f.date <= endDate);
-
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  festList.scrollIntoView({ behavior: "smooth", block: "start" });
-  festList.setAttribute('tabindex', '-1');
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-}
-
-// 필터링 초기화
-function resetFilter() {
-  document.getElementById('tagSelect').value = '';
-  document.getElementById('region').value = '';
-  document.getElementById('startDate').value = '';
-  document.getElementById('endDate').value = '';
-  document.getElementById('quickSearchInput').value = '';
-
-  renderFestCards(festData.slice(0, loadedCount))
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-
-}
-
-
-
-
-</script>
+    <div id="footer">
+      <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
+      <ul class="footer-links">
+        <li><a href="#">개인정보처리방침</a></li>
+        <li><a href="#">이용약관</a></li>
+        <li><a href="#">관리자페이지 이동</a></li>
+        <li>
+          <div id="ldMode">
+            <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
+          </div>
+        </li>
+      </ul>
+    </div>
 </body>
 </html>
