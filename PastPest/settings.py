@@ -16,7 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_URL = "http://localhost:8000"  # 실제 배포시 도메인으로 수정 # Gmail 인증 링크에서 사용할 URL
 # Application definition
 
 INSTALLED_APPS = [
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts', # 앱추가
+    'accounts',
     'festivals.apps.FestivalsConfig', # festivals 앱 설정 추가
     'shortforms.apps.ShortformsConfig', # shortforms 앱 설정 추가
     'reviews.apps.ReviewsConfig', # reviews 앱 설정 추가
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'PastPest.wsgi.application'
 DATABASES = { # Oracle 데이터베이스 설정
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'xe',  # 'orcl' or 'xe'
+        'NAME': 'orcl',  # 'orcl' or 'xe'
         'USER': 'ora_user2',
         'PASSWORD': '1111',
         'HOST': 'localhost',

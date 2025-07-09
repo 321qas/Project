@@ -1,0 +1,139 @@
+
+@import url('./base.css');
+
+/* 버튼 */
+/* <button> 태그의 class명으로 넣을 것 */
+/* 버튼을 div박스 안에 넣어서 활용 */
+
+.clickBtn {
+    font-size: 16px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.moreBtn {
+    padding: 8px 15px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+
+
+
+/*
+.Btn-dummy {
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+
+.status-btn {
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.email-btn {
+    background: #007bff;
+    color: white;
+}
+
+.wishlist-btn {
+    background: #eee;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+*/
+
+/* 버튼 색상 */
+
+.orange, .orange-n {
+    background-color: #f97316;
+    color: #ffffff;
+}
+
+.orange-n {
+    cursor:default;
+}
+
+.orange:active {
+    background-color: #e1620d;
+}
+
+
+.white-orange, .white-orange-active {
+    border: 1px solid #f97316;
+    background-color: #fff;
+    color: #f97316;
+    font-weight: bold;
+}
+
+.white-orange-active:hover {
+    background-color: #f97316;
+    color: #fff;
+}
+
+
+
+/* 태그 */
+/* 상위 div 클래스명 ="tags", span이 태그 */
+
+/* .tags span {
+    display: inline-block;
+    background-color: #f97316;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+} */
+
+/* ================================
+   Tags
+   ================================ */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* 🔶 Tag Color Variants */
+
+.tag-primary {
+  background-color: #f97316;
+  color: #fff;
+}
+
+.tag-secondary, .tag-secondary-hover {
+  background-color: #E6F5FF;
+  color: #4fc3f7;
+}
+
+.tag-secondary-hover:hover {
+    background-color: #DFEDF7;  /* Brightness 3% 낮춤 */
+    cursor:pointer;
+}
+
+.tag-third {
+  background-color: #d1fae5; /* 민트 배경 */
+  color: #10b981; /* 민트 텍스트 */
+}

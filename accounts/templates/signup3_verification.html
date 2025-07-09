@@ -1,45 +1,21 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/signup.css">
     <title>Member Verification</title>
     <style>
         .contents {
             text-align: center;
         }
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-        .steps {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-        .step {
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        .step span {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            border-radius: 50%;
-            background-color: #ddd;
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .step.current span {
-            background-color: #f97316;
-        }
         .icon {
-            margin: 20px auto;
-            width: 100px;
-            height: 100px;
+            margin: 60px auto;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             background-color: #e8f0fe;
             display: flex;
@@ -47,8 +23,10 @@
             align-items: center;
         }
         .icon img {
-            width: 50px;
-            height: 50px;
+            width: 75px;
+            height: 75px;
+            margin-top: 5px;
+            filter: brightness(0) saturate(0%) invert(50%);
         }
         p {
             font-size: 1rem;
@@ -58,7 +36,7 @@
         }
         .button {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 50px;
             padding: 10px 20px;
             background-color: #2563eb;
             color: #ffffff;
@@ -69,6 +47,11 @@
         }
         .button:hover {
             background-color: #333;
+        }
+        .button-box {
+            display:flex;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -82,31 +65,49 @@
                     <span>1</span>
                     Membership Agreement
                 </div>
-                <div class="step">
+                <span class="next">></span>
+                <div class="step current">
                     <span>2</span>
                     Enter Basic Information
                 </div>
-                <div class="step current">
+                <span class="next">></span>
+                <div class="step">
                     <span>3</span>
                     Verification
                 </div>
             </div>
 
             <div class="icon">
-                <img src="clipboard-check.png" alt="Verification icon">
+                <img src="/static/image/envelope-check_1.png" alt="Verification icon">
             </div>
+
+            <!-- Django messages 안내 -->
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                    <li style="color: green;">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
 
             <p><strong>You're almost done!</strong></p>
             <p>
-                We sent you a verification email. Please check your inbox and log in after you verify your email.<br>
-                Please check your inbox and verify your email within 10 minutes.
+                Please click the button below to receive a verification email.<br>
+                After you receive the email, check your inbox and verify your email within 10 minutes. Once you have verified your email, you can log in.
             </p>
             <p>
-                If you don't receive your verification email, please check your Spam or Junk folder.<br>
-                If you still can't find the verification email, please sign up again with a Gmail account.
+                If you dont receive the verification email, please check your Spam or Junk folder.<br>
+                If you still cant find the email, please try signing up again using a Gmail account.
             </p>
 
-            <a href="/login" class="button">Log in</a>
+            <!-- 인증 메일 재발송: POST로 view에 요청 -->
+            <div class='button-box'> 
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="button">Resend Email</button>
+                </form>
+                <a href="{% url 'accounts:login' %}" class="button" style="margin-left: 10px;">Log in</a>
+            </div>
         </div>
     </div>
 </body>

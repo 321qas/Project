@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  font-family: 'Pretendard', sans-serif;    /* 사이트 기본 폰트 */
+  font-family: "Poppins", "Noto Sans KR", sans-serif;    /* 사이트 기본 폰트 */
   /* background-color: var(--bg-color); */
   /* color: var(--text-color); */
   line-height: 1.6;
@@ -35,6 +35,7 @@ button, input, textarea, select {
   border: none;
   background: none;
   outline: none;
+  resize: none;
 }
 
 button {
@@ -46,9 +47,41 @@ button {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.4;
+  font-family: "Poppins", sans-serif;
 }
 
 ul, ol {
   list-style: none;
   padding-left: 0;
+}
+
+/* 색상 변수 지정 */
+
+:root {
+  /* Primary Brand Color */
+  --color-primary: #f97316; /* orange */
+
+  /* Primary Dark (active) */
+  --color-primary-dark: #e1620d;
+
+  /* Secondary Color (연보라 예시) */
+  --color-secondary: #f3e8ff;
+  --color-secondary-dark: #e9d5ff;
+  --color-secondary-text: #a855f7;
+  --color-secondary-text-dark: #9333ea;
+
+  /* Mint Secondary Example */
+  --color-mint: #d1fae5;
+  --color-mint-dark: #a7f3d0;
+  --color-mint-text: #10b981;
+  --color-mint-text-dark: #059669;
+
+  /* Neutral Grays */
+  --color-gray-light: #f9f9f9;
+  --color-gray: #e5e7eb;
+  --color-gray-dark: #6b7280;
+
+  /* yellow */
+  --color-yellow-light:#FCF8F5;
+  --color-yellow: #FCEEE3;
 }
