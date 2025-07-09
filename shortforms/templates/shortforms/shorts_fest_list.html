@@ -5,279 +5,275 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+      * {margin:0; padding: 0; box-sizing: border-box;}
+      ul, li {list-style: none;}
+      a {text-decoration: none; color: inherit;}
 
-    * {margin:0; padding: 0; box-sizing: border-box;}
-    ul, li {list-style: none;}
-    a {text-decoration: none; color: inherit;}
+      #wrap {flex: 1;}
 
-    #wrap {flex: 1;}
+      #nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #ddd;
+        gap: 40px;
+        height: 180px;
+        flex-wrap: wrap;
+      }
 
-    #nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 30px;
-      background-color: #f8f8f8;
-      border-bottom: 1px solid #ddd;
-      gap: 40px;
-      height: 180px;
-      flex-wrap: wrap;
-    }
+      #logo .logoBtn {
+        font-size: 40px;
+        font-weight: bold;
+        background: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        border: none;
+      }
 
-    #logo .logoBtn {
-    font-size: 40px;
-    font-weight: bold;
-    background: none;
-    cursor: pointer;
-    padding: 10px 20px;
-    border: none;
-    }
+      #pageMove ul {
+        display: flex;
+        gap: 20px;  
+        flex-wrap: wrap;
+      }
 
-    #pageMove ul {
-    display: flex;
-    gap: 20px;  
-    flex-wrap: wrap;
-    }
+      #pageMove a {
+        color: #333;
+        font-weight: 500;
+      }
 
-    #pageMove a {
-    color: #333;
-    font-weight: 500;
-    }
+      #pageMove a:hover {color: #007bff;}    
+      .contents {
+        max-width: 100%;
+        margin: 32px auto;
+        padding: 0 16px;
+      }
 
-    #pageMove a:hover {color: #007bff;}    
-    .contents {
-    max-width: 100%;
-    margin: 32px auto;
-    padding: 0 16px;
-    }
+      #banner_blur {
+        height: 400px;
+        border: 1px solid black;
+                  
+        justify-content: center;    
+        align-items: center;       
+        background: #f0f0f0;     
+      }
 
-   #banner_blur {
-  height: 400px;
-  border: 1px solid black;
-            
-  justify-content: center;    
-  align-items: center;       
-  background: #f0f0f0;     
-}
+      #banner_blur h1 {
+        font-size: 40px;
+        display: inline-block;
+        width: 50%;
+        text-align: center;
+      }
 
-#banner_blur h1 {
-    font-size: 40px;
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-}
+      .title-search-wrap {
+        display: flex;
+        width: 52%;
+        height: 150px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 40px 20px 0 20px; /* 상단 여백만 약간 */
+        flex-wrap: wrap; /* 화면 작을 때 줄바꿈 허용 */
+      }
 
-.title-search-wrap {
-  display: flex;
-  width: 52%;
-  height: 150px;
-  margin: 0 auto;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 40px 20px 0 20px; /* 상단 여백만 약간 */
-  flex-wrap: wrap; /* 화면 작을 때 줄바꿈 허용 */
-}
+      #quickSearch {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
 
-#quickSearch {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  
-  
-}
+      #quickSearch input {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 270px;
+      }
 
-#quickSearch input {
-  padding: 10px 12px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 270px;
-}
+      #quickSearch button {
+        padding: 10px 16px;
+        font-size: 15px;
+        
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-#quickSearch button {
-  padding: 10px 16px;
-  font-size: 15px;
-  
-  background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+      #searchBlocks {
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: stretch;
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        gap: 5px;
+        width: 50%;
+        height: 150px;
+        
+      }
 
+      .searchBlock {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-#searchBlocks {
-  display: flex;
-  margin: 0 auto;
-  justify-content: space-between;
-  align-items: stretch;
-  background-color: #fff;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  gap: 5px;
-  width: 50%;
-  height: 150px;
-  
-}
+      .searchBlock.tag select {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        width: 100%;
+        margin-top: 25px;
+      }  
 
-  .searchBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+      .searchBlock.tag { width: 18%; }
 
-  .searchBlock.tag select {
-    padding: 10px 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    height: 45px;
-    width: 100%;
-    margin-top: 25px;
-  }  
+      .region { width: 18%; }
 
-  .searchBlock.tag { width: 18%; }
+      .date { width: 46%; }
 
-  .region { width: 18%; }
+      .button { width: 8%; }
 
-  .date { width: 46%; }
+      .searchBlock h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+        min-height: 22px;
+      }
 
-  .button { width: 8%; }
+      .region input {
+        margin-top: auto; /* input을 아래로 밀기 */
+        }
 
-  .searchBlock h3 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    color: #333;
-    min-height: 22px;
-  }
+      .searchBlock input[type="text"],
+      .searchBlock input[type="date"] {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        width: 100%;
 
-  .region input {
-    margin-top: auto; /* input을 아래로 밀기 */
-    }
+      }    
 
-  .searchBlock input[type="text"],
-  .searchBlock input[type="date"] {
-    padding: 10px 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    height: 45px;
-    width: 100%;
+      .date .stardToEnd {
+        display: flex;
+        width: 90%;
+        align-items: center;
+        gap: 10px;
+      }
 
-  }    
+      .date .stardToEnd > div {
+        flex: 1;
+      }
 
-  .date .stardToEnd {
-    display: flex;
-    width: 90%;
-    align-items: center;
-    gap: 10px;
-  }
+      .date label {
+        font-size: 13px;
+        margin-bottom: 5px;
+        display: block;
+      }
 
-  .date .stardToEnd > div {
-    flex: 1;
-  }
+      #searchBtn {
+        margin-top: auto;
+        padding: 12px;
+        font-size: 15px;
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-  .date label {
-    font-size: 13px;
-    margin-bottom: 5px;
-    display: block;
-  }
+      #resetBtn {
+        width: 60%;
+        height: 18px;
+        margin: 0 auto;
+        background-color: rgb(180, 7, 7);
+        color: white;
+        border: none;
+        border-radius: 3px;
+      }
 
-  #searchBtn {
-    margin-top: auto;
-    padding: 12px;
-    font-size: 15px;
-    background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+      #resetBtn:hover {
+        background-color: #0056b3;
+      }
 
-  #resetBtn {
-    width: 60%;
-    height: 18px;
-    margin: 0 auto;
-    background-color: rgb(180, 7, 7);
-    color: white;
-    border: none;
-    border-radius: 3px;
-  }
+      #bannerList {
+        width: 60%;
+        margin: 0 auto;
+        display: flex;
+        border: 1px solid black;
+        overflow: hidden;
+        justify-content: space-evenly;
+        flex-wrap: nowrap;
+        gap: 20px;
 
-  #resetBtn:hover {
-    background-color: #0056b3;
-  }
+      }
 
-  #bannerList {
-    width: 60%;
-    margin: 0 auto;
-    display: flex;
-    border: 1px solid black;
-    overflow: hidden;
-    justify-content: space-evenly;
-    flex-wrap: nowrap;
-    gap: 20px;
-
-  }
-
-  .smallBanner {
-    height: 200px;
-    width: 300px;
-    background-color: #e09e9e;
-    border: 1px solid black;
-    flex-shrink: 0;
-  }
+      .smallBanner {
+        height: 200px;
+        width: 300px;
+        background-color: #e09e9e;
+        border: 1px solid black;
+        flex-shrink: 0;
+      }
 
 
-    #festList {
-      width: 60%;
-      margin: 50px auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      /*border-top: 1px solid #ccc;*/
-      padding-top: 30px;
-    }
+      #festList {
+        width: 60%;
+        margin: 50px auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        /*border-top: 1px solid #ccc;*/
+        padding-top: 30px;
+      }
 
-    .festCard {
-      width: 200px;
-      height: 250px;
-      border-radius: 5px;
-      overflow: hidden;
-      text-align: center;
-      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-      background-color: white;
-    }
+      .festCard {
+        width: 200px;
+        height: 250px;
+        border-radius: 5px;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        background-color: white;
+      }
 
 
-    #footer {
-    padding: 20px;
-    background-color: #f1f1f1;
-    font-size: 14.4px;
-    color: #666;
-    text-align: center;
-    }
+      #footer {
+        padding: 20px;
+        background-color: #f1f1f1;
+        font-size: 14.4px;
+        color: #666;
+        text-align: center;
+      }
 
-    .footer-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    list-style: none;
-    margin-top: 10px;
-    }
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        list-style: none;
+        margin-top: 10px;
+      }
 
-    .footer-links a {
-    text-decoration: none;
-    color: #666;
-    }
+      .footer-links a {
+        text-decoration: none;
+        color: #666;
+      }
 
-    .footer-links a:hover {text-decoration: underline;}
+      .footer-links a:hover {text-decoration: underline;}
 
     </style>
 </head>
