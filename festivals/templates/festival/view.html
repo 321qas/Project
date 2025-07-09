@@ -232,28 +232,26 @@
             <span class="festival-period">{{list.start_date}} ~ {{list.end_date}}</span>
           </div>
         </div>
-        <div id="banner"></div>        
+        <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
       </section>
 
       <section id="info-container" class="section-card">
         <div class="info-left">
           <div class="tags">
-            <!-- <span>문화예술</span><span>여름</span><span>전연령</span><span>체험/참여</span> -->
-            <div class="tag">Summer </div>
-            <div class="tag">Nature </div>
-            <div class="tag">All ages </div>
-            <div class="tag">Experience </div>
+            {% for tag in tags %}
+              <div class="tag">{{tag.name}}</div>
+            {% endfor %}
           </div>
           <div class="section-header">
             <h3>Festival Info</h3>
           </div>
           <div class="txtBox">
             <div class="info-list">
-              <div class="info-line"><div class="info-icon">📅</div> <span>{{list.start_date}} ~ {{list.end_date}}</span></div>
-              <div class="info-line"><div class="info-icon">📍</div> <span>{{list.region}}<br>{{list.detail_region}}</span></div>
-              <div class="info-line"><div class="info-icon">💰</div> <span>{{list.fee}}</span></div>
-              <div class="info-line"><div class="info-icon">📞</div> <span>{{list.contact_phone}}</span></div>
-              <div class="info-line"><div class="info-icon">🦶</div> <span>{{list.visitor_count}}</span></div>
+              <div class="info-line"><div class="info-icon">📅 <span>{{list.start_date}} ~ {{list.end_date}}</span></div></div>
+              <div class="info-line"><div class="info-icon">📍  <span>{{list.region}} {{list.detail_region}}</span></div></div>
+              <div class="info-line"><div class="info-icon">💰 <span>{{list.fee}}</span></div></div>
+              <div class="info-line"><div class="info-icon">📞 <span>{{list.contact_phone}}</span></div></div>
+              <div class="info-line"><div class="info-icon">🦶 <span>{{list.visitor_count}}</span></div> </div>
               <!-- <li>📷 boryengfestival_official</li> -->
               <div class="info-line"><button class="white-orange moreBtn">{{list.website_url}}</button></div>
             </div>
