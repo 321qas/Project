@@ -13,10 +13,12 @@ class Festival(models.Model):
     end_date = models.DateField(
         help_text="축제 종료 날짜를 선택하세요. (예: 2025-05-12)")
     REGION_CHOICES = [
-        ('SEOUL', '서울'), ('BUSAN', '부산'), ('JEJU', '제주'), ('INCHEON', '인천'), ('GWANGJU', '광주'),
-        ('Daegu', '대구'), ('Daejeon', '대전'), ('Ulsan', '울산'), ('Sejong', '세종'), ('Gyeonggi', '경기'),
-        ('Chungbuk', '충북'), ('Chungnam', '충남'), ('jeonnam', '전남'),
-        ('Gyeongbuk', '경북'), ('Gyeongnam', '경남'), ('Gangwon', '강원'), ('jeonbuk', '전북'),
+        ('Seoul', 'Seoul'),('Busan', 'Busan'),('Jeju', 'Jeju'),
+        ('Incheon', 'Incheon'),('Gwangju', 'Gwangju'),('Daegu', 'Daegu'),
+        ('Daejeon', 'Daejeon'),('Ulsan', 'Ulsan'),('Sejong', 'Sejong'),
+        ('Gyeonggi', 'Gyeonggi'),('Chungbuk', 'Chungbuk'),('Chungnam', 'Chungnam'),
+        ('Jeonnam', 'Jeonnam'),('Gyeongbuk', 'Gyeongbuk'),('Gyeongnam', 'Gyeongnam'),
+        ('Gangwon', 'Gangwon'),('Jeonbuk', 'Jeonbuk'),
     ]
     region = models.CharField(
         max_length=20, choices=REGION_CHOICES, default='SEOUL',

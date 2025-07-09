@@ -1,10 +1,10 @@
 # festivals/management/commands/import_festivals.py
-# 사용법 : python manage.py import_festivals --file=F_Data.csv
+# 사용법: python manage.py import_festivals --file=F_Data.csv
 
 import pandas as pd
 from django.core.management.base import BaseCommand
 from festivals.models import Festival
-from tags.models import Tag    # <-- [1] Tag import
+from tags.models import Tag
 import os
 
 class Command(BaseCommand):
@@ -26,6 +26,8 @@ class Command(BaseCommand):
 
         df = pd.read_csv(file_path, encoding='utf-8-sig')
         df = df.dropna(how='all')
+
+        # (한글컬럼명 있을 때만 rename, 이미 영문이면 영향 없음)
         col_map = {
             'name(이름)': 'name',
             'description(설명)': 'description',
@@ -40,19 +42,15 @@ class Command(BaseCommand):
             'contact_phone(연락처)': 'contact_phone',
             'website_url(공식홈페이지)': 'website_url',
             'visitor_count(방문객수)': 'visitor_count',
-            'Tag': 'Tag',         # [2] Tag 컬럼 추가
+            'Tag': 'Tag',
         }
         df = df.rename(columns=col_map)
 
-        region_display_to_key = {
-            '서울': 'SEOUL', '부산': 'BUSAN', '제주': 'JEJU', '인천': 'INCHEON', '광주': 'GWANGJU',
-            '대구': 'Daegu', '대전': 'Daejeon', '울산': 'Ulsan', '세종': 'Sejong', '경기': 'Gyeonggi',
-            '충북': 'Chungbuk', '충남': 'Chungnam', '전남': 'jeonnam', '경북': 'Gyeongbuk', '경남': 'Gyeongnam',
-            '강원': 'Gangwon', '전북': 'jeonbuk'
-        }
+        # region값은 그냥 빈 값이면 'SEOUL'만 넣고 변환 없음
         if 'region' in df.columns:
-            df['region'] = df['region'].map(region_display_to_key).fillna('SEOUL')
+            df['region'] = df['region'].fillna('SEOUL')
 
+        # 날짜, 숫자, 연락처 등 처리
         for c in ['start_date', 'end_date']:
             if c in df.columns:
                 df[c] = df[c].astype(str).str.replace(r'[.]', '-', regex=True)
@@ -77,7 +75,7 @@ class Command(BaseCommand):
                 description=row['description'],
                 start_date=row['start_date'],
                 end_date=row['end_date'],
-                region=row['region'],
+                region=row['region'],  # << 변환/매핑 없이 값 그대로
                 detail_region=row['detail_region'],
                 latitude=row['latitude'] if not pd.isnull(row['latitude']) else None,
                 longitude=row['longitude'] if not pd.isnull(row['longitude']) else None,
@@ -88,11 +86,11 @@ class Command(BaseCommand):
                 visitor_count=row['visitor_count']
             )
             objs.append(obj)
-            row_idx_map[len(objs)-1] = i  # [3] objs 인덱스 <-> df 인덱스 매핑
+            row_idx_map[len(objs)-1] = i
 
         Festival.objects.bulk_create(objs)
 
-        # [4] 방금 bulk_create된 객체들 가져와서 Tag 연결
+        # Tag ManyToMany 연결
         if objs and 'Tag' in df.columns:
             inserted_fests = list(Festival.objects.filter(
                 name__in=[o.name for o in objs],
@@ -109,5 +107,6 @@ class Command(BaseCommand):
                             tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
                             fest.tags.add(tag_obj)
 
-        self.stdout.write(self.style.SUCCESS(f'{len(objs)}개 레코드 삽입 완료! (중복 {skipped}건 제외)'))
-
+        self.stdout.write(self.style.SUCCESS(
+            f'{len(objs)}개 레코드 삽입 완료! (중복 {skipped}건 제외)'
+        ))

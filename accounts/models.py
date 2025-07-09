@@ -44,46 +44,42 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     user_id = models.CharField(
         max_length=30, unique=True,
-        help_text="서비스 내 회원 아이디. (소셜회원은 자동생성)"
-    )
+        help_text="서비스 내 회원 아이디. (소셜회원은 자동생성)")
     email = models.EmailField(
         unique=True,
-        help_text="로그인/알림용 이메일 주소 (중복 불가)"
-    )
+        help_text="로그인/알림용 이메일 주소 (중복 불가)")
     nickname = models.CharField(
         max_length=30, unique=True, default="",
-        help_text="닉네임(중복 불가, 필수)"
-    )
+        help_text="닉네임(중복 불가, 필수)")
     real_name = models.CharField(
         max_length=30,
-        help_text="사용자 본명(필수)"
-    )
+        help_text="사용자 본명(필수)")
     phone_number = models.CharField(
         max_length=15, blank=True,
-        help_text="연락처(선택)"
-    )
+        help_text="연락처(선택)")
     interest_tags = models.ManyToManyField(
         Tag, blank=True,
-        help_text="관심 태그"
-    )
+        help_text="관심 태그")
     is_active = models.BooleanField(default=True, help_text="계정 활성화 여부")
     is_staff = models.BooleanField(default=False, help_text="관리자 권한 여부")
 
     LOGIN_CHOICES = (
         ('local', '일반가입'),
         ('kakao', 'kakao'),
-        ('naver', 'naver'),
-    )
+        ('naver', 'naver'),)
     login_type = models.CharField(
         max_length=10,
         choices=LOGIN_CHOICES,
         default='local',
-        help_text='계정 생성 방식 (local, kakao, naver 등)'
-    )
+        help_text='계정 생성 방식 (local, kakao, naver 등)')
     social_id = models.CharField(
         max_length=100, blank=True, null=True,
-        help_text='소셜로그인 회원 고유ID'
-    )
+        help_text='소셜로그인 회원 고유ID')
+    GENDER_CHOICES = (
+        ('male', '남자'),
+        ('female', '여자'),)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
+    dob = models.CharField(max_length=16, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True, help_text="회원 가입일")
 
     objects = UserManager()
