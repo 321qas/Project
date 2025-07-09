@@ -215,37 +215,36 @@
                     <label>Interest Tags</label>
 
                     <div class="tags-container">
+                        <!-- 관심 태그 영역 제목 -->
                         <div class="tag-search">
                             <p>My Interest Tags</p>
                         </div>
-                        <!-- 선택된 태그 표시 예시 (실제 구현은 JS 필요) -->
+
+                        <!-- 사용자가 선택한 태그(관심 태그) 표시 영역 -->
                         <div class="tags mine" id="selected-tags">
-                            <span class="tag tag-secondary">태그1 <button>X</button></span>
-                            <span class="tag tag-secondary">태그2 <button>X</button></span>
-                            <span class="tag tag-secondary">태그3 <button>X</button></span>
+                            {% if selected_tags %}
+                                {% for tag in selected_tags %}
+                                    <!-- 선택된 태그 하나씩 반복해서 표시.
+                                         X 버튼 클릭시 removeTag 함수 호출하여 삭제 -->
+                                    <span class="tag tag-secondary">
+                                        {{ tag }} 
+                                        <button type="button" onclick="removeTag(this, '{{ tag }}')">X</button>
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
                         </div>
+
                         <hr>
-                        <!-- 전체 태그 목록 (예시) -->
+
+                        <!-- 전체 태그 목록 (DB에서 가져온 모든 태그) 출력 영역 -->
                         <div class="tags whole" id="all-tags">
-                            <!-- 실제 구현시 아래 태그를 클릭하면 위에 추가되고, name="tags"로 hidden input 추가 JS 필요 -->
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Spring</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Summer</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Autumn</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Winter</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Nature</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Tradition & History</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Culture & Art</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Regional Product</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Food</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Music & Performance</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Experience</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Family</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Kids</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Teenagers</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Youth</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Adults</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Elders</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">All ages</span>
+                            {% for tag in tags %}
+                                <!-- 각 태그 클릭 시 addTag 함수 호출(선택된 태그에 추가) -->
+                                <span class="tag tag-secondary-hover"
+                                      onclick="addTag('{{ tag.name|escapejs }}')">
+                                    {{ tag.name }}
+                                </span>
+                            {% endfor %}
                         </div>
                     </div>
 

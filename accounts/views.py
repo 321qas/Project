@@ -36,6 +36,9 @@ def signup_terms(request):
 def signup_account(request):
     if not request.session.get('signup_terms'):
         return redirect('accounts:signup_terms')
+
+    tags = Tag.objects.all()  # ① 태그 전체 쿼리
+
     if request.method == "POST":
         user_id = request.POST.get('id')
         password = request.POST.get('password')
@@ -45,7 +48,14 @@ def signup_account(request):
         email = request.POST.get('email')
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
-        tag_names = request.POST.getlist('tags')
+        tag_names = request.POST.getlist('tags')  # ② 선택된 태그 리스트
+
+        # 선택된 태그 유지 (폼에 다시 랜더링하기 위해)
+        context = {
+            'tags': tags,
+            'selected_tags': tag_names
+        }
+        
         if not all([user_id, password, password2, real_name, nickname, email]):
             messages.error(request, "필수 정보를 모두 입력하세요.")
             return render(request, 'signup2_account.html')
@@ -81,7 +91,10 @@ def signup_account(request):
         )
         request.session['signup_email'] = email  # 인증대기 이메일 session (OPTIONAL)
         return redirect('accounts:signup_verify')
-    return render(request, 'signup2_account.html')
+    return render(request, 'signup2_account.html', {
+        'tags': tags,
+        'selected_tags': []
+    })
 
 
 # 5. 회원가입 Step3: 이메일 인증 안내 및 실제 인증 메일 발송
@@ -142,10 +155,13 @@ def verify_email(request):
         dob=ver.dob   
     )
     # 관심 태그 저장
-    for tag_name in ver.tags:
-        tag, _ = Tag.objects.get_or_create(name=tag_name)
-        user.interest_tags.add(tag)
+    for tag_name in ver.tags.split(','):
+        tag_name = tag_name.strip()
+        if tag_name:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            user.interest_tags.add(tag)
     user.save()
+
     ver.delete()
     if 'signup_email' in request.session:
         del request.session['signup_email']

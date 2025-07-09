@@ -58,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=15, blank=True,
         help_text="연락처(선택)")
     interest_tags = models.ManyToManyField(
-        Tag, blank=True,
+        Tag, blank=True,related_name='user_set',
         help_text="관심 태그")
     is_active = models.BooleanField(default=True, help_text="계정 활성화 여부")
     is_staff = models.BooleanField(default=False, help_text="관리자 권한 여부")
