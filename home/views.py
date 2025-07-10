@@ -40,3 +40,4 @@ def jlist(request):
         
     print(festival_data)
     return JsonResponse(festival_data, safe=False)
+    
