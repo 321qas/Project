@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
@@ -223,6 +224,37 @@ def signup_account(request):
         'tags': tags,
         'selected_tags': []
     })
+<<<<<<< HEAD
+=======
+    
+# 프론트엔드 자바스크립트용 실시간 ID 중복 확인 함수
+def id_check(request):
+    user_id = request.GET.get('id')
+    
+    if User.objects.filter(user_id=user_id).exists():
+        return JsonResponse({'msg': 'id_exist'})
+    else:
+        return JsonResponse({'msg': 'id_available'})
+    
+# 프론트엔드 자바스크립트용 실시간 닉네임 중복 확인 함수
+def nick_check(request):
+    user_nick = request.GET.get('nickname')
+    
+    if User.objects.filter(nickname=user_nick).exists():
+        return JsonResponse({'msg': 'nick_exist'})
+    else:
+        return JsonResponse({'msg': 'nick_available'})
+    
+# 프론트엔드 자바스크립트용 실시간 이메일 중복 확인 함수
+def mail_check(request):
+    user_mail = request.GET.get('email')
+    
+    if User.objects.filter(email=user_mail).exists():
+        return JsonResponse({'msg': 'mail_exist'})
+    else:
+        return JsonResponse({'msg': 'mail_available'})
+    
+>>>>>>> b7ca45e6c1e210ec3837f2d78292a0b9f9f509f9
 
 # 5. 회원가입 Step3: 이메일 인증 안내 및 실제 인증 메일 발송
 def signup_verify(request):
