@@ -104,5 +104,5 @@ class EmailVerification(models.Model):
     nickname = models.CharField(max_length=32)
     gender = models.CharField(max_length=10, blank=True, null=True)
     dob = models.CharField(max_length=16, blank=True, null=True)
-    tags = models.CharField(max_length=255, blank=True)  # 예: "여행,음악,사진"
+    tags = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
