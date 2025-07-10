@@ -22,6 +22,7 @@
     
     .contents::selection{   /* 마우스 포인터로 드래그 시 배경 색 */  
       background-color: #4fc3f7;
+      background: url('https://picsum.photos/1000/300?random') center/cover no-repeat;
     }
 
     .contents {  
@@ -123,11 +124,11 @@
     }
 
     .tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 10px;   /* [row-gap column-gap] 형식 */
-  max-width: 100%;  /* 필요 시 줄바꿈 조건 설정 */
-}
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 10px;   /* [row-gap column-gap] 형식 */
+      max-width: 100%;  /* 필요 시 줄바꿈 조건 설정 */
+    }
     
     #shortsEditor {
       /*max-width: 800px;*/
@@ -170,20 +171,20 @@
     }
 
      .shorts_img {
-    width: 111px;
-    height: 111px;
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f9f9f9;
-    overflow: hidden;
-  }
+      width: 111px;
+      height: 111px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9f9f9;
+      overflow: hidden;
+    }
 
-  .shorts_img input[type="file"] {
-    display: none;
-  }
+    .shorts_img input[type="file"] {
+      display: none;
+    }
 
     /* 코멘트 작성 영역 */
     #shorts_title {
@@ -213,80 +214,80 @@
     }
 
     .searchBtn {
-  background-color: green;
-  width: 15%;
-  height: 40px;
-  margin-left: 5%;
-  text-align: center;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  
-  cursor: pointer;
-  font-size: 12px;
-}
+      background-color: green;
+      width: 15%;
+      height: 40px;
+      margin-left: 5%;
+      text-align: center;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      
+      cursor: pointer;
+      font-size: 12px;
+    }
 
-.searchedTags {
-  display: flex;
-  width: 100%;
-  
-  margin-bottom: 20px;
-  gap: 10px;
-  
-}
+    .searchedTags {
+      display: flex;
+      width: 100%;
+      
+      margin-bottom: 20px;
+      gap: 10px;
+      
+    }
 
-.searchedTags div {
-  border: 1px solid black;
-  width: 100%;
-  height: 68px;
-  flex-wrap: nowrap;
-}
+    .searchedTags div {
+      border: 1px solid black;
+      width: 100%;
+      height: 68px;
+      flex-wrap: nowrap;
+    }
 
-.tag-badge {
-  display: inline-block;
-  margin: 2px 5px 2px 0;
-  background: #f5f5f5;
-  color: #333;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-}
+    .tag-badge {
+      display: inline-block;
+      margin: 2px 5px 2px 0;
+      background: #f5f5f5;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
 
 
-.audioFile_upload {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: #f3f4f6;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px 16px;
-  
-  font-size: 14px;
-}
+    .audioFile_upload {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #f3f4f6;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 16px;
+      
+      font-size: 14px;
+    }
 
-.audioFile_upload label {
-  font-weight: 500;
-  white-space: nowrap;
-  color: #333;
-}
+    .audioFile_upload label {
+      font-weight: 500;
+      white-space: nowrap;
+      color: #333;
+    }
 
-.audioFile_upload input[type="file"] {
-  flex: 1; /* 남는 영역 꽉 채움 */
-  height: 36px;
-  padding: 4px 8px;
-  border: 1px solid #aaa;
-  border-radius: 6px;
-  font-size: 13px;
-  background-color: #fff;
-  color: #333;
-  cursor: pointer;
-}
+    .audioFile_upload input[type="file"] {
+      flex: 1; /* 남는 영역 꽉 채움 */
+      height: 36px;
+      padding: 4px 8px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-size: 13px;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+    }
 
-#audioFileName {
-  margin-bottom: 20px;
-  border: 1px solid black;
-}
+    #audioFileName {
+      margin-bottom: 20px;
+      border: 1px solid black;
+    }
 
 
     /* 버튼 */
@@ -369,22 +370,22 @@
 
 
    .overlay {
-        position: fixed;
-        backdrop-filter: blur(4px); /* 흐림 효과 추가 */
-        transition: all 0.3s ease-in-out;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);  /* 반투명한 어두운 배경 */
-        display: none;  /* 기본적으로 숨김 */
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        }
+      position: fixed;
+      backdrop-filter: blur(4px); /* 흐림 효과 추가 */
+      transition: all 0.3s ease-in-out;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);  /* 반투명한 어두운 배경 */
+      display: none;  /* 기본적으로 숨김 */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
       /* 팝업 콘텐츠 스타일 */
-      .popup-content {
+    .popup-content {
       background: #1f1f1f; /* 어두운 테마 배경 */
       color: #fff;
       border-radius: 16px;
@@ -398,262 +399,256 @@
     }
 
 
-      #xs{
-        align-self: center;
-        margin: 10px;
-        padding: 4px 10px;
-        background: transparent;
-        color: #fff;
-        font-size: 20px;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
+    #xs{
+      align-self: center;
+      margin: 10px;
+      padding: 4px 10px;
+      background: transparent;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
 
-      #xs:hover {
+    #xs:hover {
       color:rgb(249, 188, 22);
     }
 
-
     input[type="file"] {
-  opacity: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
 
   </style>
 </head>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
   // 1. 이미지 업로드 박스 생성 및 배경 반영
-  const imageUploadContainer = document.getElementById('imageUploadContainer');
-  const shorts = document.getElementById('shorts');
-  generateImageUploadBoxes();
-
-  function generateImageUploadBoxes() {
-    const imageCount = 6;
-
-    for (let i = 0; i < imageCount; i++) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'shorts_img';
-
-      const img = document.createElement('img');
-      img.style.width = '100%';
-      img.style.height = '100%';
-
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.name = `image_${i}`;
-      input.style.display = 'none';
-
-      wrapper.appendChild(img);
-      wrapper.appendChild(input);
-
-      if (i === imageCount - 1) {
-        // 마지막 칸: 전체 이미지 초기화 버튼
-        wrapper.classList.add('add-new');
-        img.src = '/static/image/delete.jpg';
-        img.alt = '전체 삭제';
-        wrapper.addEventListener('click', (e) => {
-          e.preventDefault();
-          resetAllImages();
-        });
-      } else {
-        // 기본 상태
-        img.src = 'static/image/envelope-check_1.png';
-        img.alt = '클릭하고 추가하기';
-
-        // 클릭 시 파일 선택 또는 프리뷰 반영
-        img.addEventListener('click', () => {
-          if (!img.src.includes('envelope-check_1.png')) {
-            shorts.style.backgroundImage = `url(${img.src})`;
-          } else {
-            input.click();
-          }
-        });
-
-        // 파일 선택 시 이미지 미리보기 및 반영
-        input.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              img.src = event.target.result;
-              shorts.style.backgroundImage = `url(${event.target.result})`;
-              shorts.style.backgroundSize = 'cover';
-              shorts.style.backgroundPosition = 'center';
-              shorts.style.backgroundRepeat = 'no-repeat';
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
-    
-      imageUploadContainer.appendChild(wrapper);    
-    }
-  }
-
-  function resetAllImages() {
-    imageUploadContainer.innerHTML = '';
+    const imageUploadContainer = document.getElementById('imageUploadContainer');
+    const shorts = document.getElementById('shorts');
     generateImageUploadBoxes();
-    shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
-  }
-});
 
+    function generateImageUploadBoxes() {
+      const imageCount = 6;
 
-// 2. 프레임 색상 선택 및 저장
-document.addEventListener("DOMContentLoaded", function () {
-  const buttons = document.querySelectorAll('.color-btn');
-  const previewBox = document.getElementById('shortsBorder');
-  const savedColor = localStorage.getItem('frameColor');
+      for (let i = 0; i < imageCount; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'shorts_img';
 
-  if (savedColor) {
-    previewBox.style.backgroundColor = savedColor;
-    buttons.forEach(btn => {
-      if (btn.dataset.color === savedColor) btn.classList.add('selected');
-    });
-  }
+        const img = document.createElement('img');
+        img.style.width = '100%';
+        img.style.height = '100%';
 
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      buttons.forEach(btn => btn.classList.remove('selected'));
-      button.classList.add('selected');
-      const selectedColor = button.dataset.color;
-      previewBox.style.backgroundColor = selectedColor;
-      localStorage.setItem('frameColor', selectedColor);
-    });
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.name = `image_${i}`;
+        input.style.display = 'none';
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(input);
+
+        if (i === imageCount - 1) {
+          // 마지막 칸: 전체 이미지 초기화 버튼
+          wrapper.classList.add('add-new');
+          img.src = '/static/image/delete.jpg';
+          img.alt = '전체 삭제';
+          wrapper.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetAllImages();
+          });
+        } else {
+          // 기본 상태
+          img.src = 'static/image/envelope-check_1.png';
+          img.alt = '클릭하고 추가하기';
+
+          // 클릭 시 파일 선택 또는 프리뷰 반영
+          img.addEventListener('click', () => {
+            if (!img.src.includes('envelope-check_1.png')) {
+              shorts.style.backgroundImage = `url(${img.src})`;
+            } else {
+              input.click();
+            }
+          });
+
+          // 파일 선택 시 이미지 미리보기 및 반영
+          input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                img.src = event.target.result;
+                shorts.style.backgroundImage = `url(${event.target.result})`;
+                shorts.style.backgroundSize = 'cover';
+                shorts.style.backgroundPosition = 'center';
+                shorts.style.backgroundRepeat = 'no-repeat';
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+      
+        imageUploadContainer.appendChild(wrapper);    
+      }
+    }
+
+    function resetAllImages() {
+      imageUploadContainer.innerHTML = '';
+      generateImageUploadBoxes();
+      shorts.style.backgroundImage = "url('static/image/envelope-check_1.png')";
+    }
   });
-});
 
 
-// 3. 제목, 축제명, 태그 실시간 반영
-document.addEventListener("DOMContentLoaded", function () {
-  const titleInput = document.getElementById("shorts_title");
-  const festnameInput = document.getElementById("shorts_festname");
-  const searchedTagsContainer = document.querySelector(".searchedTags div");
+  // 2. 프레임 색상 선택 및 저장
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll('.color-btn');
+    const previewBox = document.getElementById('shortsBorder');
+    const savedColor = localStorage.getItem('frameColor');
 
-  titleInput.addEventListener("input", () => {
-    document.querySelectorAll(".shorts_title").forEach(el => {
-      el.textContent = titleInput.value || "요즘 입소문 탄다는 축제";
-    });
-  });
+    if (savedColor) {
+      previewBox.style.backgroundColor = savedColor;
+      buttons.forEach(btn => {
+        if (btn.dataset.color === savedColor) btn.classList.add('selected');
+      });
+    }
 
-  festnameInput.addEventListener("input", () => {
-    document.querySelectorAll(".festNameInShorts").forEach(el => {
-      el.textContent = festnameInput.value || "서울 불꽃축제";
-    });
-  });
-
-  const updateTagsInPreview = () => {
-    const tags = [...searchedTagsContainer.querySelectorAll("span")].map(el =>
-      el.textContent.trim()
-    );
-
-    document.querySelectorAll("#shortsMeta .tags").forEach(container => {
-      container.innerHTML = "";
-      tags.forEach(tag => {
-        const a = document.createElement("a");
-        a.textContent = tag;
-        container.appendChild(a);
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+        const selectedColor = button.dataset.color;
+        previewBox.style.backgroundColor = selectedColor;
+        localStorage.setItem('frameColor', selectedColor);
       });
     });
-  };
-
-  const observer = new MutationObserver(updateTagsInPreview);
-  observer.observe(searchedTagsContainer, { childList: true, subtree: true });
-  updateTagsInPreview();
-});
-
-
-// 4. 오디오 파일명 표시
-document.addEventListener("DOMContentLoaded", function () {
-  const audioInput = document.getElementById('audioFile_upload');
-  const fileNameDisplay = document.getElementById('audioFileName');
-
-  audioInput.addEventListener('change', function () {
-    const file = audioInput.files[0];
-    fileNameDisplay.textContent = file
-      ? `선택된 파일: ${file.name}`
-      : '선택된 파일 없음';
   });
-});
 
 
-// 5. 프리뷰 오버레이 동작 (이미지 + 텍스트 반영)
-function preview() {
-  const original = document.querySelector('#shorts');
-  const overlay = document.querySelector('#overlay .over');
+  // 3. 제목, 축제명, 태그 실시간 반영
+  document.addEventListener("DOMContentLoaded", function () {
+    const titleInput = document.getElementById("shorts_title");
+    const festnameInput = document.getElementById("shorts_festname");
+    const searchedTagsContainer = document.querySelector(".searchedTags div");
 
-  overlay.style.backgroundImage = original.style.backgroundImage;
-  overlay.style.backgroundSize = original.style.backgroundSize || 'cover';
-  overlay.style.backgroundPosition = original.style.backgroundPosition || 'center';
-  overlay.style.backgroundRepeat = original.style.backgroundRepeat || 'no-repeat';
+    titleInput.addEventListener("input", () => {
+      document.querySelectorAll(".shorts_title").forEach(el => {
+        el.textContent = titleInput.value || "요즘 입소문 탄다는 축제";
+      });
+    });
 
-  overlay.querySelector('.shorts_title').textContent =
+    festnameInput.addEventListener("input", () => {
+      document.querySelectorAll(".festNameInShorts").forEach(el => {
+        el.textContent = festnameInput.value || "서울 불꽃축제";
+      });
+    });
+
+    const updateTagsInPreview = () => {
+      const tags = [...searchedTagsContainer.querySelectorAll("span")].map(el =>
+        el.textContent.trim()
+      );
+
+      document.querySelectorAll("#shortsMeta .tags").forEach(container => {
+        container.innerHTML = "";
+        tags.forEach(tag => {
+          const a = document.createElement("a");
+          a.textContent = tag;
+          container.appendChild(a);
+        });
+      });
+    };
+
+    const observer = new MutationObserver(updateTagsInPreview);
+    observer.observe(searchedTagsContainer, { childList: true, subtree: true });
+    updateTagsInPreview();
+  });
+
+  // 4. 오디오 파일명 표시
+  document.addEventListener("DOMContentLoaded", function () {
+    const audioInput = document.getElementById('audioFile_upload');
+    const fileNameDisplay = document.getElementById('audioFileName');
+
+    audioInput.addEventListener('change', function () {
+      const file = audioInput.files[0];
+      fileNameDisplay.textContent = file
+        ? `선택된 파일: ${file.name}`
+        : '선택된 파일 없음';
+    });
+  });
+
+  // 5. 프리뷰 오버레이 동작 (이미지 + 텍스트 반영)
+  function preview() {
+    const original = document.querySelector('#shorts');
+    const overlay = document.querySelector('#overlay .over');
+
+    overlay.style.backgroundImage = original.style.backgroundImage;
+    overlay.style.backgroundSize = original.style.backgroundSize || 'cover';
+    overlay.style.backgroundPosition = original.style.backgroundPosition || 'center';
+    overlay.style.backgroundRepeat = original.style.backgroundRepeat || 'no-repeat';
+
+    overlay.querySelector('.shorts_title').textContent =
     original.querySelector('.shorts_title').textContent;
 
-  document.querySelector("#overlay .festNameInShorts").textContent =
+    document.querySelector("#overlay .festNameInShorts").textContent =
     document.querySelectorAll(".festNameInShorts")[0].textContent;
-}
+  }
 
+  // 6. 오버레이 열기/닫기 + 슬라이드쇼 시작/중지
+  let slideshowInterval;
+  let currentSlideIndex = 0;
 
-// 6. 오버레이 열기/닫기 + 슬라이드쇼 시작/중지
-let slideshowInterval;
-let currentSlideIndex = 0;
+  function openOverlay() {
+    document.getElementById("overlay").style.display = "flex";
 
-function openOverlay() {
-  document.getElementById("overlay").style.display = "flex";
+    const color = localStorage.getItem('frameColor') || "#39555e";
+    document.querySelector("#overlay #shortsBorder").style.backgroundColor = color;
 
-  const color = localStorage.getItem('frameColor') || "#39555e";
-  document.querySelector("#overlay #shortsBorder").style.backgroundColor = color;
+    preview();
+    startSlideshow();
+  }
 
-  preview();
-  startSlideshow();
-}
+  function closeOverlay() {
+    document.getElementById("overlay").style.display = "none";
+    stopSlideshow();
+  }
 
-function closeOverlay() {
-  document.getElementById("overlay").style.display = "none";
-  stopSlideshow();
-}
+  // 7. 슬라이드쇼 애니메이션 (2초 간격)
+  function startSlideshow() {
+    const overlayShorts = document.querySelector('#overlay .over');
+    const images = [];
 
+    document.querySelectorAll('#imageUploadContainer .shorts_img img').forEach(img => {
+      if (img.src && !img.src.includes('delete.jpg')) {
+        images.push(img.src);
+      }
+    });
 
-// 7. 슬라이드쇼 애니메이션 (2초 간격)
-function startSlideshow() {
-  const overlayShorts = document.querySelector('#overlay .over');
-  const images = [];
+    if (images.length === 0) return;
 
-  document.querySelectorAll('#imageUploadContainer .shorts_img img').forEach(img => {
-    if (img.src && !img.src.includes('delete.jpg')) {
-      images.push(img.src);
-    }
-  });
+    currentSlideIndex = 0;
+    overlayShorts.style.background = `url(${images[0]}) center/cover no-repeat`;
 
-  if (images.length === 0) return;
+    slideshowInterval = setInterval(() => {
+      currentSlideIndex = (currentSlideIndex + 1) % images.length;
+      overlayShorts.style.background = `url(${images[currentSlideIndex]}) center/cover no-repeat`;
+    }, 2000);
+  }
 
-  currentSlideIndex = 0;
-  overlayShorts.style.background = `url(${images[0]}) center/cover no-repeat`;
+  function stopSlideshow() {
+    clearInterval(slideshowInterval);
+  }
 
-  slideshowInterval = setInterval(() => {
-    currentSlideIndex = (currentSlideIndex + 1) % images.length;
-    overlayShorts.style.background = `url(${images[currentSlideIndex]}) center/cover no-repeat`;
-  }, 2000);
-}
-
-function stopSlideshow() {
-  clearInterval(slideshowInterval);
-}
-
-
-// 8. 축제 검색창 열기 (새 창)
-function searchBtn() {
-  const value = document.getElementById('shorts_festname').value;
-  const url = `/shortforms/list/?keyWord=${encodeURIComponent(value)}`;
-  window.open(url, 'festivalSearch', 'width=600,height=500');
-}
+  // 8. 축제 검색창 열기 (새 창)
+  function searchBtn() {
+    const value = document.getElementById('shorts_festname').value;
+    const url = `/shortforms/list/?keyWord=${encodeURIComponent(value)}`;
+    window.open(url, 'festivalSearch', 'width=600,height=500');
+  }
 </script>
 
 <body>
@@ -665,47 +660,47 @@ function searchBtn() {
             <a class="shorts_title">요즘 입소문 탄다는 축제</a>
           </data>
           <div id="shortsMeta">
-          <a class="festNameInShorts">서울 불꽃축제</a>
-          <span class="tags" style="font-size: 12px;">
-            <a >#불꽃</a>
-            <a >#서울</a>
-            <a >#여름</a>
-            <a >#축제</a>
-            <a >#밤</a>
-            <a >#야경</a>
-            <a >#예쁨</a>
-            <a >#감성</a>
-          </span>
+            <a class="festNameInShorts">서울 불꽃축제</a>
+            <span class="tags" style="font-size: 12px;">
+              <a>#불꽃</a>
+              <a>#서울</a>
+              <a>#여름</a>
+              <a>#축제</a>
+              <a>#밤</a>
+              <a>#야경</a>
+              <a>#예쁨</a>
+              <a>#감성</a>
+            </span>
+          </div>
         </div>
-        </div>
-
+      </div>
       <div id="overlay" class="overlay">
         <!-- 팝업 콘텐츠 -->
         <div class="popup-content">
           <button onclick="closeOverlay()" id='xs'>X</button>
-                <div id="shortsContainer"> 
-                    <div id="shortsBorder"> 
-                        <data id="shorts" class='over'>
-                          <a class="creator">@축제모아</a>
-                          <a class="shorts_title">요즘 입소문 탄다는 축제</a>
-                        </data>
-                        <div id="shortsMeta">
-                          <a class="festNameInShorts">서울 불꽃축제</a>
-                              <span class="tags" style="font-size: 13px;">
-                                <span class="tags" style="font-size: 12px;">
-                                  <a >#불꽃</a>
-                                  <a >#서울</a>
-                                  <a >#여름</a>
-                                  <a >#축제</a>
-                                  <a >#밤</a>
-                                  <a >#야경</a>
-                                  <a >#예쁨</a>
-                                  <a >#감성</a>
-                                </span>
-                              </span>
-                        </div>
+            <div id="shortsContainer"> 
+                <div id="shortsBorder"> 
+                    <data id="shorts" class='over'>
+                      <a class="creator">@축제모아</a>
+                      <a class="shorts_title">요즘 입소문 탄다는 축제</a>
+                    </data>
+                    <div id="shortsMeta">
+                      <a class="festNameInShorts">서울 불꽃축제</a>
+                        <span class="tags" style="font-size: 13px;">
+                          <span class="tags" style="font-size: 12px;">
+                            <a>#불꽃</a>
+                            <a>#서울</a>
+                            <a>#여름</a>
+                            <a>#축제</a>
+                            <a>#밤</a>
+                            <a>#야경</a>
+                            <a>#예쁨</a>
+                            <a>#감성</a>
+                          </span>
+                        </span>
                     </div>
                 </div>
+            </div>
         </div>
       </div>
       <div id="shortsEditor">
@@ -735,8 +730,6 @@ function searchBtn() {
             <input type="hidden" name="selected_tags" id="selected_tags">
           </div>
           
-          
-
           <!-- 음악 파일 업로드 -->
           <div class="audioFile_upload">
             <label for="audioFile_upload">🎵 음악 업로드</label>
@@ -751,7 +744,5 @@ function searchBtn() {
           </div>
         </form>
       </div> 
-    </div>      
   </div>
 </body>    
- 

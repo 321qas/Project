@@ -364,201 +364,196 @@
 
     </div>
     <script>
-const festData = [
-  { img: "", name: "서울 불꽃축제", tag: ["불꽃", "서울"], region: "서울", date: "2025-10-07" },
-  { img: "", name: "부산 바다축제", tag: ["바다"], region: "부산", date: "2025-08-01" },
-  { img: "", name: "진주 남강유등축제", tag: ["전통"], region: "진주", date: "2025-10-10" },
-  { img: "", name: "화천 산천어축제", tag: ["눈"], region: "화천", date: "2025-01-10" },
-  { img: "", name: "안동 탈춤축제", tag: ["전통"], region: "안동", date: "2025-09-27" },
-  { img: "", name: "제주 들불축제", tag: ["불꽃"], region: "제주", date: "2025-03-08" },
-  { img: "", name: "대구 치맥페스티벌", tag: ["먹거리"], region: "대구", date: "2025-07-17" },
-  { img: "", name: "전주 한지문화축제", tag: ["전통"], region: "전주", date: "2025-05-05" },    
-  { img: "", name: "춘천 마임축제", tag: ["음악", "야외"], region: "춘천", date: "2025-05-25" },
-  { img: "", name: "광주 비엔날레", tag: ["음악"], region: "광주", date: "2025-09-06" },
-  { img: "", name: "포항 불빛축제", tag: ["불꽃", "야경"], region: "포항", date: "2025-07-31" },
-  { img: "", name: "여수 밤바다축제", tag: ["바다", "야경"], region: "여수", date: "2025-08-15" },
-  { img: "", name: "울산 고래축제", tag: ["먹거리"], region: "울산", date: "2025-06-10" },
-  { img: "", name: "인천 펜타포트", tag: ["음악"], region: "인천", date: "2025-08-09" },
-  { img: "", name: "수원 화성문화제", tag: ["전통"], region: "수원", date: "2025-10-03" },
-  { img: "", name: "청주 직지코리아", tag: ["전통"], region: "청주", date: "2025-09-01" }
-];
+    const festData = [
+      { img: "", name: "서울 불꽃축제", tag: ["불꽃", "서울"], region: "서울", date: "2025-10-07" },
+      { img: "", name: "부산 바다축제", tag: ["바다"], region: "부산", date: "2025-08-01" },
+      { img: "", name: "진주 남강유등축제", tag: ["전통"], region: "진주", date: "2025-10-10" },
+      { img: "", name: "화천 산천어축제", tag: ["눈"], region: "화천", date: "2025-01-10" },
+      { img: "", name: "안동 탈춤축제", tag: ["전통"], region: "안동", date: "2025-09-27" },
+      { img: "", name: "제주 들불축제", tag: ["불꽃"], region: "제주", date: "2025-03-08" },
+      { img: "", name: "대구 치맥페스티벌", tag: ["먹거리"], region: "대구", date: "2025-07-17" },
+      { img: "", name: "전주 한지문화축제", tag: ["전통"], region: "전주", date: "2025-05-05" },
+      { img: "", name: "춘천 마임축제", tag: ["음악", "야외"], region: "춘천", date: "2025-05-25" },
+      { img: "", name: "광주 비엔날레", tag: ["음악"], region: "광주", date: "2025-09-06" },
+      { img: "", name: "포항 불빛축제", tag: ["불꽃", "야경"], region: "포항", date: "2025-07-31" },
+      { img: "", name: "여수 밤바다축제", tag: ["바다", "야경"], region: "여수", date: "2025-08-15" },
+      { img: "", name: "울산 고래축제", tag: ["먹거리"], region: "울산", date: "2025-06-10" },
+      { img: "", name: "인천 펜타포트", tag: ["음악"], region: "인천", date: "2025-08-09" },
+      { img: "", name: "수원 화성문화제", tag: ["전통"], region: "수원", date: "2025-10-03" },
+      { img: "", name: "청주 직지코리아", tag: ["전통"], region: "청주", date: "2025-09-01" }
+    ];
 
-const festList = document.getElementById('festList');
+    const festList = document.getElementById('festList');
+    const INITIAL_LOAD_COUNT = 8; // 초기 로드할 축제 개수
 
-let loadedCount = 8;
-const LOAD_COUNT = 4;
+    function getFilteredFestivals(festivals, { tag = null, keyword = null, region = null, startDate = null, endDate = null }) {
+        let filtered = festivals;
 
-// 카드 렌더링 함수
-function renderFestCards(dataArr, start = 0, end = loadedCount) {
-  festList.innerHTML = "";
-  dataArr.slice(0, end).forEach((data, idx) => {
-    const tagsHtml = (data.tag || []).map(t => `<span class="tag">${t}</span>`).join(' ');
-    const card = document.createElement('div');
-    card.className = 'festCard';
-    card.innerHTML = `
-      <a href="#"><img src="${data.img}" alt="축제${idx+1}"></a>
-      <p>${data.name}</p>
-      <div>${tagsHtml}</div>
-    `;
-    card.addEventListener('click', () => {
-      selectFestival(data.name, data.tag);
+        if (tag) {
+            filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
+        }
+        if (keyword) {
+            const lowerKeyword = keyword.toLowerCase();
+            filtered = filtered.filter(f =>
+                f.name.toLowerCase().includes(lowerKeyword) ||
+                (f.region && f.region.toLowerCase().includes(lowerKeyword)) ||
+                (Array.isArray(f.tag) ? f.tag.some(t => t.toLowerCase().includes(lowerKeyword)) : (f.tag && f.tag.toLowerCase().includes(lowerKeyword)))
+            );
+        }
+        if (region) {
+            const lowerRegion = region.toLowerCase();
+            filtered = filtered.filter(f => f.region && f.region.toLowerCase().includes(lowerRegion));
+        }
+        if (startDate) {
+            filtered = filtered.filter(f => f.date >= startDate);
+        }
+        if (endDate) {
+            filtered = filtered.filter(f => f.date <= endDate);
+        }
+        return filtered;
+    }
+
+    function updateUrlParams(params) {
+        const urlParams = new URLSearchParams();
+        for (const key in params) {
+            if (params[key]) { // 값이 있을 때만 추가
+                urlParams.set(key, params[key]);
+            }
+        }
+        history.replaceState(null, '', location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : ''));
+    }
+
+    function renderFestCards(dataArr, limit = dataArr.length) {
+        const fragment = document.createDocumentFragment(); // DocumentFragment 사용
+        
+        // 기존 자식 요소들을 효율적으로 제거
+        while (festList.firstChild) {
+            festList.removeChild(festList.firstChild);
+        }
+
+        // 접근성(Accessibility)을 위한 aria-busy 속성 토글
+        festList.setAttribute('aria-busy', 'true'); 
+
+        dataArr.slice(0, limit).forEach((data, idx) => {
+            const tagsHtml = (data.tag || []).map(t => `<span class="tag">${t}</span>`).join(' ');
+            const card = document.createElement('div');
+            card.className = 'festCard';
+            card.dataset.name = data.name;
+            card.dataset.tags = JSON.stringify(data.tag); // 배열을 문자열로 저장
+            card.innerHTML = `
+                <a href="#"><img src="${data.img}" alt="${data.name} 이미지"></a>
+                <p>${data.name}</p>
+                <div>${tagsHtml}</div>
+            `;
+            fragment.appendChild(card);
+        });
+        festList.appendChild(fragment); // 한 번에 DOM에 추가
+        festList.setAttribute('aria-busy', 'false'); // 렌더링 완료
+
+        // 렌더링 후 리스트로 스크롤 및 포커스
+        festList.scrollIntoView({ behavior: "smooth", block: "start" });
+        festList.setAttribute('tabindex', '-1'); // 포커스 가능하도록 설정
+        festList.focus(); // 포커스 이동
+    }
+
+    // --- 이벤트 핸들러 및 초기 로딩 로직 ---
+
+    // 페이지 로드 시 URL 파라미터에 따라 필터링 및 초기 렌더링
+    window.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tag = urlParams.get('tag');
+        const keyword = urlParams.get('keyWord');
+        const region = urlParams.get('region');
+        const startDate = urlParams.get('startDate');
+        const endDate = urlParams.get('endDate');
+
+        // 상세 검색 필드 값 설정 (URL 파라미터에 따라)
+        if (tag) {
+            const tagSelect = document.getElementById('tagSelect');
+            if (!Array.from(tagSelect.options).some(opt => opt.value === tag)) { // 기존 옵션에 없는 태그면 동적으로 추가
+                const opt = document.createElement('option');
+                opt.value = tag;
+                opt.textContent = tag + ' (외부)';
+                tagSelect.appendChild(opt);
+            }
+            tagSelect.value = tag;
+        }
+        if (keyword) document.getElementById('quickSearchInput').value = keyword;
+        if (region) document.getElementById('region').value = region;
+        if (startDate) document.getElementById('startDate').value = startDate;
+        if (endDate) document.getElementById('endDate').value = endDate;
+
+        
+        if (tag || keyword || region || startDate || endDate) { // URL 파라미터가 하나라도 있으면 해당 조건으로 필터링, 없으면 초기 로드 개수만큼만 렌더링
+            const filtered = getFilteredFestivals(festData, { tag, keyword, region, startDate, endDate });
+            renderFestCards(filtered, filtered.length); // 필터링 결과는 모두 렌더링
+        } else {
+            renderFestCards(festData, INITIAL_LOAD_COUNT); // 초기 로드 개수만큼 렌더링
+        }
     });
 
-    festList.appendChild(card);
-  });
-  
-}
+    festList.addEventListener('click', (event) => { // festList 컨테이너에 이벤트 위임 (카드를 선택했을 때)
+        const clickedCard = event.target.closest('.festCard');
+        if (clickedCard) {
+            const name = clickedCard.dataset.name;
+            const tags = JSON.parse(clickedCard.dataset.tags); // 문자열화된 배열을 다시 파싱
+            selectFestival(name, tags);
+        }
+    });
 
-// 페이지 로드 시 url 파라미터로 필터링
-function filterFestByUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tag = urlParams.get('tag');
-  const keyword = urlParams.get('keyWord');
-
-  let filtered = festData;
-
-  // 태그 파라미터가 있으면 태그로 필터
-  if (tag) {
-    // 셀렉트에 옵션이 없으면 동적으로 추가
-    const tagSelect = document.getElementById('tagSelect');
-    let found = false;
-    for (let i = 0; i < tagSelect.options.length; i++) {
-      if (tagSelect.options[i].value === tag) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      const opt = document.createElement('option');
-      opt.value = tag;
-      opt.textContent = tag + ' (외부)';
-      tagSelect.appendChild(opt);
-    }
-    tagSelect.value = tag;
-    filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
-  }
-
-  // 키워드 파라미터가 있으면 키워드로 추가 필터
-  if (keyword) {
-    document.getElementById('quickSearchInput').value = keyword;
-    filtered = filtered.filter(f =>
-      f.name.includes(keyword) ||
-      (f.region && f.region.includes(keyword)) ||
-      (Array.isArray(f.tag) ? f.tag.some(t => t.includes(keyword)) : (f.tag && f.tag.includes(keyword)))
-    );
-  }
-
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  if (tag || keyword) {
-    festList.scrollIntoView({ behavior: "smooth", block: "start" });
-    festList.setAttribute('tabindex', '-1');
-  }
-}
-
-// 페이지 최초 로딩 시 url 파라미터로만 필터링
-window.addEventListener('DOMContentLoaded', function() {
-  filterFestByUrl();
-});
-
-// 페이지 최초 로딩 시
-renderFestCards(festData.slice(0, loadedCount));
-
-
-
-
-
-// 빠른 검색
-function quickSearch() {
-  const keyword = document.getElementById('quickSearchInput').value.trim();
-  if (!keyword) {
-    renderFestCards(festData.slice(0, loadedCount));
-    // URL 파라미터 제거
-    history.replaceState(null, '', location.pathname);
-    return;
-  } 
-  const filtered = festData.filter(f =>
-    f.name.includes(keyword) ||
-    (f.region && f.region.includes(keyword)) ||
-    (Array.isArray(f.tag) ? f.tag.some(t => t.includes(keyword)) : (f.tag && f.tag.includes(keyword)))
-  );
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  festList.scrollIntoView({ behavior: "smooth", block: "start" });
-  festList.setAttribute('tabindex', '-1');
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-  
-}
-
-// 상세 검색
-function runDetailedSearch() {
-  const tag = document.getElementById('tagSelect').value;
-  const region = document.getElementById('region').value.trim();
-  const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
-
-  let filtered = festData;
-
-  if (tag) filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
-  if (region) filtered = filtered.filter(f => f.region.includes(region));
-  if (startDate) filtered = filtered.filter(f => f.date >= startDate);
-  if (endDate) filtered = filtered.filter(f => f.date <= endDate);
-
-  renderFestCards(filtered);
-  // 렌더링 후 리스트로 스크롤 및 포커스
-  festList.scrollIntoView({ behavior: "smooth", block: "start" });
-  festList.setAttribute('tabindex', '-1');
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-}
-
-// 필터링 초기화
-function resetFilter() {
-  document.getElementById('tagSelect').value = '';
-  document.getElementById('region').value = '';
-  document.getElementById('startDate').value = '';
-  document.getElementById('endDate').value = '';
-  document.getElementById('quickSearchInput').value = '';
-
-  renderFestCards(festData.slice(0, loadedCount))
-  // URL 파라미터 제거
-  history.replaceState(null, '', location.pathname);
-
-}
-
-function selectFestival(name, tags) {
-  if (window.opener) {
-    // 축제명 넘기기
-    window.opener.document.getElementById("shorts_festname").value = name;
-
-    // 태그 전달
-    const tagWrapper = window.opener.document.querySelector(".searchedTags > div");
-    if (tagWrapper) {
-      tagWrapper.innerHTML = ""; // 기존 태그 지우기  
-      tags.forEach(tag => {
-        const span = window.opener.document.createElement("span");
-        span.className = "tag-badge";
-        span.textContent = "#" + tag + " ";
-        tagWrapper.appendChild(span); 
-      });
+    function quickSearch() {
+        const keyword = document.getElementById('quickSearchInput').value.trim();
+        updateUrlParams({ keyWord: keyword });
+        const filtered = getFilteredFestivals(festData, { keyword });
+        renderFestCards(filtered, filtered.length); // 빠른 검색 결과는 모두 렌더링
     }
 
-    const hiddenTagInput = window.opener.document.getElementById("selected_tags");
-    if (hiddenTagInput) {
-      hiddenTagInput.value = tags.map(tag => tag).join(",");
-    }   
 
-    window.close();
-  }
-}
+    function runDetailedSearch() {
+        const tag = document.getElementById('tagSelect').value;
+        const region = document.getElementById('region').value.trim();
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
 
+        updateUrlParams({ tag, region, startDate, endDate });
+        const filtered = getFilteredFestivals(festData, { tag, region, startDate, endDate });
+        renderFestCards(filtered, filtered.length); // 상세 검색 결과는 모두 렌더링
+    }
 
+    function resetFilter() {
+        document.getElementById('tagSelect').value = '';
+        document.getElementById('region').value = '';
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        document.getElementById('quickSearchInput').value = '';
 
+        renderFestCards(festData, INITIAL_LOAD_COUNT); // 초기 로드 상태로 복원
+        updateUrlParams({}); // URL 파라미터 모두 제거
+    }
 
+    function selectFestival(name, tags) {
+        if (window.opener) {
+            window.opener.document.getElementById("shorts_festname").value = name;
 
+            const tagWrapper = window.opener.document.querySelector(".searchedTags > div");
+            if (tagWrapper) {
+                tagWrapper.innerHTML = ""; // 기존 태그 지우기
+                tags.forEach(tag => {
+                    const span = window.opener.document.createElement("span");
+                    span.className = "tag-badge";
+                    span.textContent = "#" + tag + " ";
+                    tagWrapper.appendChild(span);
+                });
+            }
+
+            const hiddenTagInput = window.opener.document.getElementById("selected_tags");
+            if (hiddenTagInput) {
+                hiddenTagInput.value = tags.join(",");
+            }
+            window.close();
+        }
+    }
 </script>
-
     <div id="footer">
     <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
     <ul class="footer-links">

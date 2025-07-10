@@ -58,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=15, blank=True,
         help_text="연락처(선택)")
     interest_tags = models.ManyToManyField(
-        Tag, blank=True,
+        Tag, blank=True,related_name='user_set',
         help_text="관심 태그")
     is_active = models.BooleanField(default=True, help_text="계정 활성화 여부")
     is_staff = models.BooleanField(default=False, help_text="관리자 권한 여부")
@@ -94,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = "회원"
         verbose_name_plural = "회원"
 
-# 이메일 인증 모델
+# 회원가입 시 이메일 인증 전 임시저장 테이블
 class EmailVerification(models.Model):
     email = models.EmailField(unique=True)
     token = models.CharField(max_length=64, unique=True)
@@ -104,5 +104,5 @@ class EmailVerification(models.Model):
     nickname = models.CharField(max_length=32)
     gender = models.CharField(max_length=10, blank=True, null=True)
     dob = models.CharField(max_length=16, blank=True, null=True)
-    tags = models.CharField(max_length=255, blank=True)  # 예: "여행,음악,사진"
+    tags = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
