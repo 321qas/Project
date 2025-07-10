@@ -218,36 +218,28 @@
                         <div class="tag-search">
                             <p>My Interest Tags</p>
                         </div>
-                        <!-- 선택된 태그 표시 예시 (실제 구현은 JS 필요) -->
                         <div class="tags mine" id="selected-tags">
-                            <span class="tag tag-secondary">태그1 <button>X</button></span>
-                            <span class="tag tag-secondary">태그2 <button>X</button></span>
-                            <span class="tag tag-secondary">태그3 <button>X</button></span>
+                            {% if selected_tags %}
+                                {% for tag in selected_tags %}
+                                    <span class="tag tag-secondary">
+                                        {{ tag.name }} 
+                                        <button type="button" onclick="removeTag(this, '{{ tag.id }}')">X</button>
+                                        <input type="hidden" name="tags" value="{{ tag.id }}">
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <hr>
-                        <!-- 전체 태그 목록 (예시) -->
                         <div class="tags whole" id="all-tags">
-                            <!-- 실제 구현시 아래 태그를 클릭하면 위에 추가되고, name="tags"로 hidden input 추가 JS 필요 -->
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Spring</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Summer</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Autumn</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Winter</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Nature</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Tradition & History</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Culture & Art</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Regional Product</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Food</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Music & Performance</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Experience</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Family</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Kids</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Teenagers</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Youth</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Adults</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">Elders</span>
-                            <span class="tag tag-secondary-hover" onclick="addTag('')">All ages</span>
+                            {% for tag in tags %}
+                                <span class="tag tag-secondary-hover"
+                                      onclick="addTag({{ tag.id }}, '{{ tag.name|escapejs }}')">
+                                    {{ tag.name }}
+                                </span>
+                            {% endfor %}
                         </div>
                     </div>
+
 
                     <!-- 선택된 태그를 서버로 전송하는 hidden input -->
                     <div id="hidden-tags"></div>
@@ -260,30 +252,22 @@
     </div>
     <!-- 관심 태그 JS (간단 데모, 실제 서비스는 고도화 필요) -->
     <script>
-    // 간단한 태그 선택 예제 (hidden input으로 name="tags" 여러개 생성)
-    function addTag(tag) {
+    // tagId: 태그 pk(id), tagName: 태그명
+    function addTag(tagId, tagName) {
         const selectedTags = document.getElementById('selected-tags');
-        // 중복 체크
-        if (selectedTags.innerHTML.includes(tag)) return;
-        // 표시
-        const tagDiv = document.createElement('div');
-        tagDiv.className = 'tag';
-        tagDiv.innerHTML = tag + ' <button type="button" onclick="removeTag(this, \'' + tag + '\')">X</button>';
-        selectedTags.appendChild(tagDiv);
-        // hidden input 추가
-        const hiddenTags = document.getElementById('hidden-tags');
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'tags';
-        input.value = tag;
-        input.id = 'hidden_' + tag;
-        hiddenTags.appendChild(input);
+        // 중복 체크 (같은 id의 hidden input이 이미 있으면 중복 추가 금지)
+        if (document.querySelector('input[name="tags"][value="' + tagId + '"]')) return;
+        // 표시(태그 영역에 추가)
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag tag-secondary';
+        tagSpan.innerHTML = tagName + ' <button type="button" onclick="removeTag(this, \'' + tagId + '\')">X</button>' +
+            '<input type="hidden" name="tags" value="' + tagId + '">';
+        selectedTags.appendChild(tagSpan);
     }
-    function removeTag(btn, tag) {
+
+    function removeTag(btn, tagId) {
         btn.parentElement.remove();
-        const input = document.getElementById('hidden_' + tag);
-        if (input) input.remove();
     }
-    </script>
+</script>
 </body>
 </html>

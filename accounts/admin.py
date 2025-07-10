@@ -3,11 +3,11 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    # 목록에서 보여줄 컬럼들 (gender, dob 추가)
+    # 목록에 보여줄 필드
     list_display = (
-        'id',               # PK
+        'id',               # DB PK (int형이라면 자동)
         'user_id',          # 회원 아이디
-        'display_nickname', # 닉네임
+        'display_nickname', # 닉네임 (별도 표시 함수)
         'real_name',        # 실명
         'email',            # 이메일
         'login_type',       # 가입 방식
@@ -19,19 +19,25 @@ class UserAdmin(admin.ModelAdmin):
         'date_joined',      # 가입일
     )
 
+    # 닉네임이 없으면 '탈퇴한 회원'으로 표시
     def display_nickname(self, obj):
-        # 닉네임 없으면 '탈퇴한 회원'로 표시
         return obj.nickname if obj.nickname else '탈퇴한 회원'
     display_nickname.short_description = '닉네임'
 
     # 검색 필드
-    search_fields = ('user_id', 'nickname', 'real_name', 'email', 'social_id', 'gender', 'dob')
-    # 필터 필드 (login_type은 이미 있음, 필요하다면 gender로도 필터 가능)
-    list_filter = ('login_type', 'gender', 'is_active', 'is_staff')
-    # 읽기전용 필드(상세에서)
+    search_fields = (
+        'user_id', 'nickname', 'real_name', 'email', 'social_id', 'gender', 'dob'
+    )
+
+    # 리스트 필터
+    list_filter = (
+        'login_type', 'gender', 'is_active', 'is_staff'
+    )
+
+    # 읽기전용 필드 (상세/수정 화면)
     readonly_fields = ('date_joined',)
 
-    # ManyToManyField(interest_tags)는 기본 위젯 제공
+    # 필드 그룹화
     fieldsets = (
         (None, {
             'fields': (
@@ -43,6 +49,3 @@ class UserAdmin(admin.ModelAdmin):
             'description': '회원 기본정보와 권한을 설정합니다.'
         }),
     )
-
-    def __str__(self):
-        return self.user_id
