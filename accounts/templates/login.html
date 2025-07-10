@@ -26,14 +26,16 @@
         {% endif %}
         <form action="/accounts/login/" method="POST">
             {% csrf_token %}
-            <input type="text" name="id" id='id' placeholder="ID" required>
-            <input type="password" name="password" id='password' placeholder="Password" required>
+            <input type="text" name="id" id="id" placeholder="ID" required autocomplete="new-password"> <!-- autocomplete="new-password" => 브라우저 자동입력 방지 --> 
+            <input type="password" name="password" id="password" placeholder="Password" required autocomplete="new-password">
             <div class="checkbox">
-                <label><input type="checkbox" name="remember"> Remember me</label>
+                <label>
+                    <input type="checkbox" name="remember_id" id="remember_id"> Remember ID
+                </label>
                 <a href="/forgot-password">Forgot ID / Password</a>
             </div>
             <button type="submit" class="clickBtn orange">LOG IN</button>
-            <button type="button" class="moreBtn white-orange">SIGN UP</button>
+            <button type="button" class="moreBtn white-orange" onclick="location.href='/accounts/signup/terms/'">SIGN UP</button>
         </form>
         <p>with</p>
         <div class="social-login">
@@ -43,5 +45,27 @@
             <img src="/static/image/apple-icon.png" alt="Apple">
         </div>
     </div>
+
+    <script>
+    // Remember ID 기능 구현
+    document.addEventListener('DOMContentLoaded', function() {
+        // 저장된 ID가 있으면 자동으로 입력란에 채움
+        const savedId = localStorage.getItem('saved_id');
+        if (savedId) {
+            document.getElementById('id').value = savedId;
+            document.getElementById('remember_id').checked = true;
+        }
+        // 로그인 폼 전송 시 체크 여부에 따라 저장/삭제
+        document.querySelector('form').addEventListener('submit', function() {
+            const idValue = document.getElementById('id').value;
+            const remember = document.getElementById('remember_id').checked;
+            if (remember) {
+                localStorage.setItem('saved_id', idValue);
+            } else {
+                localStorage.removeItem('saved_id');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
