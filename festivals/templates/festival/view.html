@@ -271,7 +271,9 @@
 
         </div>
         <div class="txtBox About">
+          {% autoescape off %} <!-- 문자열 HTML로 변환하기 -->
           <p>{{list.description}}</p>
+          {% endautoescape %}
         </div>
       </section>
       <section id="cont4" class="section-card">
