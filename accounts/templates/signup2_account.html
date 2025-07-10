@@ -5,10 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/signup.css">
     <title>Membership Registration</title>
     <style>
+
         /* 회원가입 폼 */
 
         form {
@@ -148,11 +150,11 @@
                 </div>
             </div>
 
-            <!-- Django 에러 메시지 출력 -->
+            <!-- Django 에러 메시지 출력: 제출용-->
             {% if messages %}
                 <ul class="messages">
                 {% for message in messages %}
-                    <li style="color: red;">{{ message }}</li>
+                    <li style="color: color: #a4161a; font-size: 15px; font-weight: bold; background-color: #ffe0e0; border: 1px solid #e63946; padding: 5px 10px;">{{ message }}</li>
                 {% endfor %}
                 </ul>
             {% endif %}
@@ -166,14 +168,16 @@
                     <div class="checkbox">
                         <input type="text" id="id" name="id" placeholder="Enter your ID" required>
                         <!-- 중복확인: 실제 동작은 JS/AJAX 필요, 여기선 버튼만 보여줌 -->
-                        <button class="clickBtn orange id_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
+                        <button class="clickBtn orange id_check" type="button">check for duplicates</button>
                     </div>
+                    <p id="id-msg" style="font-weight: bold; font-size: 14px; display: inline-block; margin-top: 5px; margin-left: 5px;"></p>
 
                     <label for="password">Password *</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
                     <label for="confirm-password">Confirm password *</label>
                     <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                    <p id="pw-msg" style="font-weight: bold; font-size: 14px; display: inline-block; margin-top: 5px; margin-left: 5px;"></p>
 
                     <label for="name">Name *</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -181,13 +185,17 @@
                     <label for="nickname">Nickname *</label>
                     <div class="checkbox">
                         <input type="text" id="nickname" name="nickname" placeholder="10 characters maximum" maxlength="10" required>
-                        <button class="clickBtn orange nname_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
+                        <button class="clickBtn orange nname_check" type="button">check for duplicates</button>
                     </div>
+                    <p id="nick-msg" style="font-weight: bold; font-size: 14px; display: inline-block; margin-top: 5px; margin-left: 5px;"></p>
+
                     <label for="email">E-mail *</label>
                     <div class="checkbox">
                         <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                        <button class="clickBtn orange mail_check" type="button" onclick="alert('중복확인은 개발 시 JS로 구현!')">check for duplicates</button>
+                        <button class="clickBtn orange mail_check" type="button">check for duplicates</button>
                     </div>
+                    <p id="mail-msg" style="font-weight: bold; font-size: 14px; display: inline-block; margin-top: 5px; margin-left: 5px;"></p>
+
                     <p class='email-sub'>Would you like to subscribe to FastFest email notifications?</p>
                     <div class="radio-group">
                         <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
@@ -252,6 +260,101 @@
     </div>
     <!-- 관심 태그 JS (간단 데모, 실제 서비스는 고도화 필요) -->
     <script>
+
+        // 아이디 중복 검사
+        document.querySelector('.id_check').addEventListener('click', id_check)
+        function id_check() {
+            const userId = document.getElementById('id').value.trim();
+            if (!userId) { // 입력 안 함
+                alert("아이디를 입력해주세요.");
+                return;
+            } else {
+                $.ajax({
+                    url: '/accounts/id_check/',
+                    type: 'GET',
+                    data: { id: userId },
+                    success: function(data) {
+                        if (data.msg === 'id_exist') {
+                        $('#id-msg').text('이미 존재하는 아이디입니다.').css('color','red');
+                        } else if (data.msg === 'id_available') {
+                        $('#id-msg').text('사용 가능한 아이디입니다.').css('color','green');
+                        }
+                    },
+                    error: function() {
+                        alert('서버 오류가 발생했습니다.');
+                    }
+                    });// ajax
+            }
+        }
+
+        // 비밀번호 일치 검사
+        $(document).ready(function() {
+        $('#confirm-password').on('input', function() {
+            const pw = $('#password').val();
+            const pw2 = $(this).val();
+
+            if (pw && pw2 && pw !== pw2) {
+                $('#pw-msg').text('비밀번호가 일치하지 않습니다.').css('color','red');
+                
+            } else {
+                $('#pw-msg').text('사용 가능한 비밀번호입니다').css('color','green');
+            }
+        });
+    }); // jquery
+    
+        // 닉네임 중복 검사
+        document.querySelector('.nname_check').addEventListener('click', nick_check)
+        function nick_check() {
+            const userNick = document.getElementById('nickname').value.trim();
+            if (!userNick) { // 입력 안 함
+                alert("닉네임을 입력해주세요.");
+                return;
+            } else {
+                $.ajax({
+                    url: '/accounts/nick_check/',
+                    type: 'GET',
+                    data: { nickname: userNick },
+                    success: function(data) {
+                        if (data.msg === 'nick_exist') {
+                        $('#nick-msg').text('이미 존재하는 닉네임입니다.').css('color','red');
+                        } else if (data.msg === 'nick_available') {
+                        $('#nick-msg').text('사용 가능한 닉네임입니다.').css('color','green');
+                        }
+                    },
+                    error: function() {
+                        alert('서버 오류가 발생했습니다.');
+                    }
+                    });// ajax
+            }
+        }
+
+        // 이메일 중복 검사
+        document.querySelector('.mail_check').addEventListener('click', mail_check)
+        function mail_check() {
+            const userMail = document.getElementById('email').value.trim();
+            if (!userMail) { // 입력 안 함
+                alert("이메일 주소를 입력해주세요.");
+                return;
+            } else {
+                $.ajax({
+                    url: '/accounts/mail_check/',
+                    type: 'GET',
+                    data: { email: userMail },
+                    success: function(data) {
+                        if (data.msg === 'mail_exist') {
+                        $('#mail-msg').text('이미 존재하는 이메일주소입니다.').css('color', 'red');
+                        } else if (data.msg === 'mail_available') {
+                        $('#mail-msg').text('사용 가능한 이메일주소입니다.').css('color', 'green');
+                        }
+                    },
+                    error: function() {
+                        alert('서버 오류가 발생했습니다.');
+                    }
+                    });// ajax
+            }
+        }
+
+
     // tagId: 태그 pk(id), tagName: 태그명
     function addTag(tagId, tagName) {
         const selectedTags = document.getElementById('selected-tags');
