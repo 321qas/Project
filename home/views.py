@@ -10,7 +10,6 @@ def index(request):
     return render(request, 'index.html', {
         'user_id': user_id,
         'nickname': nickname,
-<<<<<<< HEAD
     })
 
 def jlist(request):
@@ -42,6 +41,3 @@ def jlist(request):
     print(festival_data)
     return JsonResponse(festival_data, safe=False)
     
-=======
-    })
->>>>>>> b7ca45e6c1e210ec3837f2d78292a0b9f9f509f9
