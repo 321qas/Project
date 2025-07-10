@@ -224,8 +224,6 @@ def signup_account(request):
         'tags': tags,
         'selected_tags': []
     })
-<<<<<<< HEAD
-=======
     
 # 프론트엔드 자바스크립트용 실시간 ID 중복 확인 함수
 def id_check(request):
@@ -254,7 +252,6 @@ def mail_check(request):
     else:
         return JsonResponse({'msg': 'mail_available'})
     
->>>>>>> b7ca45e6c1e210ec3837f2d78292a0b9f9f509f9
 
 # 5. 회원가입 Step3: 이메일 인증 안내 및 실제 인증 메일 발송
 def signup_verify(request):
