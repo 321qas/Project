@@ -1,12 +1,11 @@
-
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/navigation.css?v=Y"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <title>HOME</title>
@@ -55,7 +54,6 @@
     .searchKey input:focus {
       outline: none;
       border: 2px solid #4fc3f7;
-      box-shadow: 0 0 0 2px #4fc3f73a;
     }
 
     .searchKey button {
@@ -75,7 +73,8 @@
 
     .contents {
       width: 100%;
-      height: 900px;
+      min-height: 1000px;
+      height:1600px;
       padding: 30px 0;
     }
 
@@ -86,6 +85,21 @@
       display: flex;
       justify-content: space-evenly;
       
+    }
+    
+    .creator {
+      position: absolute;
+      top: 630px;
+      left: -px;
+      z-index: 2;
+      background: #fff;
+      color: #222;
+      font-weight: bold;
+      padding: 6px 18px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-size: 1.08rem;
+      border: 1px solid #ddd;
     }
 
     #shortsBorder {
@@ -106,6 +120,7 @@
       height: 85%;
       background: #fff;
       display: flex; 
+      position: relative;
     }
 
     #shortsMeta {
@@ -172,15 +187,43 @@
       width: 100%;
     }
 
-    #recommendFestList {
+    .list::selection{
+      background-color: red;
+    }
+
+    .list {
+      width: 100%;
+      min-height: 1000px;
+
+      padding: 30px 0;
+    }
+
+    .listTitle {
       width: 60%;
-      margin: 50px auto;
+      height: 100px;
+      margin: 0 auto;
+      text-align: center;
+      border-top: rgba(0,0,0,0.1) 1px solid;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    .listTitle h3 {
+      margin: auto;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .recommendFestList {
+      width: 60%;
+      margin: 10px auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 40px;
-      border-top: 1px solid #ccc;
-      padding-top: 30px;
+      
+      padding: 20px 0 60px 0;
     }
 
     .festCard {
@@ -239,16 +282,27 @@
       color: #e0e0e0;
     }
 
-    /* 네비게이션, 푸터 등도 함께 스타일링 */
-    body.dark #nav, body.dark #pageMove a,
-    body.dark #footer {
-      background-color: #1f1f1f;
-      border-color: #333;
-      color: #ffff;
+    body.dark .contents {
+    background-color: #121212; /* 또는 #1a1a1a 등 어두운 회색 */
     }
 
-    body.dark #pageMove a:hover {
-      color: #6ef8f1;
+
+
+    /* 네비게이션, 푸터 등도 함께 스타일링 */
+    body.dark #nav,
+    body.dark #footer,
+    body.dark #pageMove,
+    body.dark #shortsBorder {
+      background-color: #1f1f1f;
+      color: #e0e0e0;
+      border-color: #333;
+    }
+
+    /* 버튼 호버 효과를 더 눈에 띄게 */
+    body.dark .searchKey button:hover,
+    body.dark .iconBtn:hover,
+    body.dark .ldBtn:hover {
+      filter: brightness(1.2);
     }
 
 
@@ -256,107 +310,216 @@
     body.dark .searchKey input,
     body.dark .festCard {
       background-color: #1e1e1e;
-      border-color: #333;
+      border: #333;
+      color: #f0f0f0;
+    }
+
+   
+   
+    /* 카드 내부 텍스트 */
+    body.dark .festCard p {
+      color: #ffffff;
+    }
+
+    /* tags */
+    body.dark #shortsMeta span a {
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+
+    /* 링크 hover */
+    body.dark a:hover {
+      color: #6ef8f1;
+      text-decoration: underline;
+    }
+
+    /* 다크모드에서 선택 영역 색상 변경 */
+    body.dark ::selection {
+      background-color: #4fc3f7;
+      color: #000;
     }
 
   </style>
   <script>
     let scrollTimer;
-    let i = 0; // 페이지 인덱스 초기화
-    let j = 0; // 콘텐츠 인덱스 초기화
+    let i = 0; // 현재 표시 중인 쇼츠의 인덱스 (alldata 배열 기준)
+    let j = 0; // 현재 쇼츠 내에서 이미지 순환을 위한 인덱스
     let startX, isDragging = false;
+    let alldata = []; // AJAX로 받아온 모든 축제 데이터를 저장할 전역 변수
 
     // DOM이 로드되면 바로 실행
     document.addEventListener('DOMContentLoaded', function() {
-      AOS.init({
-            duration: 1000,   // 기본 애니메이션 지속 시간
-            once: true,       // 애니메이션을 한 번만 실행
-      });  
-      addShortsupdown('bottom');
-      addlist();
+        AOS.init({
+            duration: 1000,   // 기본 애니메이션 지속 시간
+            once: true,       // 애니메이션을 한 번만 실행
+        });  
+
+        // ★ 1. 초기 UI 구조를 한 번만 설정
+        // 이 함수가 #shortsContainer와 .listTitle의 기본 틀을 잡습니다.
+        // 이 함수는 .contents의 내용을 '덮어쓰기' 때문에, Ajax보다 먼저 한 번만 호출하는 게 좋습니다.
+        setupInitialShortsUI('bottom'); 
+
+        $.ajax({
+            url: '/jlist/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // ★ 2. AJAX 데이터 성공 시 전역 변수 alldata에 저장
+                alldata = data; 
+
+                // 데이터 유효성 검사
+                if (!Array.isArray(alldata) || alldata.length === 0) {
+                    console.error("Error: No festival data received or data is not an array.");
+                    $('.listTitle').html('<p>축제 데이터를 불러올 수 없습니다.</p>');
+                    return;
+                }
+
+                // ★ 3. AJAX 데이터가 로드된 후 `addlist`와 `updateShortsContent` 호출
+                // `addlist`는 추천 축제 리스트를 채웁니다.
+                addlist(alldata); 
+                // 첫 번째 쇼츠 콘텐츠를 표시합니다.
+                updateShortsContent(alldata[i]); 
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("AJAX Error: " + textStatus, errorThrown, jqXHR.responseText);
+                $('.listTitle').html('<p>축제 정보를 불러오는 중 오류가 발생했습니다.</p>');
+            }
+        });
     });
 
+    // jQuery ready 함수 안의 휠 이벤트 처리 로직 (DOMContentLoaded 안으로 통합해도 됨)
     $(document).ready(function() {
-        // 휠 이벤트 처리
         $('#wrap').on('wheel', '#shortsContainer', function(e) {
             e.preventDefault();
             clearTimeout(scrollTimer);
 
-            if (e.originalEvent.deltaY > 0) {  // 휠을 내리면
-                if (i < 3) {
+            if (!alldata || alldata.length === 0) { // 데이터가 없으면 스크롤 동작 안 함
+                return;
+            }
+
+            if (e.originalEvent.deltaY > 0) {  // 휠을 내리면 (다음 쇼츠)
+                // 현재 인덱스가 전체 데이터의 마지막이 아니라면 이동
+                if (i < alldata.length - 1) { 
                     scrollTimer = setTimeout(function() {
                         i++;
-                        j = 0;
-                        addShortsupdown('up');
+                        j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
+                        applyAOSAnimation('up'); // 쇼츠 컨테이너 AOS 애니메이션
+                        updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
+                        // addlist(alldata); // ★ 여기서는 addlist 다시 호출할 필요 없음 (리스트는 고정)
+                                          // 만약 쇼츠마다 추천 리스트가 바뀐다면 필요하지만,
+                                          // 현재 로직상 아님
                     }, 500);
                 }
-            } else {  // 휠을 올리면
-                if (i > 0) {
+            } else {  // 휠을 올리면 (이전 쇼츠)
+                if (i > 0) { // 첫 번째 축제가 아니라면
                     scrollTimer = setTimeout(function() {
                         i--;
-                        j = 0;
-                        addShortsupdown('down');
+                        j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
+                        applyAOSAnimation('down'); // 쇼츠 컨테이너 AOS 애니메이션
+                        updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
+                        // addlist(alldata); // ★ 여기서는 addlist 다시 호출할 필요 없음
                     }, 500);
                 }
             }
         });
     });
-        // 콘텐츠 추가 함수
-    function addShortsupdown(animove){
-        // 새로운 콘텐츠 생성
-        hdata = `<div id="shortsContainer" data-aos="fade-${animove}"> 
-                    <div id="shortsBorder"> 
-                      <data id="shorts"><img src="/static/images/${i}${j}.jpg/" width='100%' height='100%'></data>
-                      <div id="shortsMeta">
-                      <a href="mypage1.html" class="creator">@크리에이터닉네임</a>
-                      <span class="tags" style="font-size: 15px;">
-                        <a href="result_list.html?tag=불꽃축제">#불꽃축제</a>
-                        <a href="result_list.html?tag=서울">#서울</a>
-                        <a href="result_list.html?tag=여름">#여름</a>
-                      </span>
-                      </div>
+
+    // --- 새로운/수정된 함수 정의 ---
+
+    // 초기 shortsContainer 및 listTitle HTML 구조를 설정하는 함수 (DOM 로드 시 한 번만 호출)
+    function setupInitialShortsUI(animove) {
+        const initialShortsHtml = `
+            <div id="shortsContainer" data-aos="fade-${animove}"> 
+                <div id="shortsBorder"> 
+                    <data id="shorts"><img src="" width='100%' height='100%' alt="쇼츠 이미지"></data>
+                    <div id="shortsMeta">
+                        <a href="#" class="festNameInShorts"></a>
+                        <span class="tags" style="font-size: 15px;"></span>
                     </div>
-                    <div id="shortsIcoContainer">
-                      <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-                      <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-                      <button class="iconBtn dislikeBtn" onclick="dislikeBtn()">💔</button>
-                      <button class="iconBtn wishBtn" onclick="wishBtn()">⭐</button>
-                      <button class="iconBtn replyBtn" onclick="replyBtn()">💬</button>
-                    </div>
-                  </div>`;
-        // #shortsContainer에 새로운 콘텐츠 추가
-        $('.contents').html(hdata);
-        // 애니메이션이 끝나면 애니메이션 클래스를 제거하여 다른 애니메이션을 추가할 수 있도록 함
+                </div>
+                <div id="shortsIcoContainer">
+                    <button class="iconBtn createBtn" onclick="createBtn()">+</button>
+                    <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
+                    <button class="iconBtn shareBtn" onclick="shareBtn()">🔄</button>
+                    <button class="iconBtn reviewBtn" onclick="reviewBtn()">📝</button>
+                    <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
+                </div>
+            </div>
+            <div class="listTitle"><h3> Festivals</h3></div>
+            <div class="recommendFestList">`;
+        $('.contents').html(initialShortsHtml);
+        AOS.refresh(); // AOS가 새로 생성된 요소들을 인식하도록 새로고침
     }
 
-    function skipphoto(){
-        // 새로운 콘텐츠 생성
-        hdata = `<img src="/static/images/${i}${j}.jpg/" width='100%' height='100%'>`;
-        $('#shorts').html(hdata);
+    // shortsContainer의 AOS 애니메이션만 적용하는 함수
+    function applyAOSAnimation(animove) {
+        $('#shortsContainer').attr('data-aos', `fade-${animove}`);
+        AOS.refresh(); // AOS 애니메이션 새로고침
     }
-        // 자동 콘텐츠 변경 (5초마다)
+
+    // shortsContainer 내부의 콘텐츠를 데이터에 맞춰 업데이트하는 함수
+    function updateShortsContent(festivalItem) {
+        if (!festivalItem) return;
+
+        // 이미지 업데이트 (festivalItem.sorted_images가 배열이고, j 인덱스가 유효한지 확인)
+        const imageUrl = festivalItem.sorted_images && festivalItem.sorted_images.length > j ? 
+                         festivalItem.sorted_images[j].image.url : '';
+        $('#shorts img').attr('src', imageUrl);
+        
+        // 축제 이름 업데이트
+        $('.festNameInShorts').text(festivalItem.name);
+        $('.festNameInShorts').attr('href', `/festivals/view/${festivalItem.id}/`); 
+
+        // 태그 업데이트 (tags가 배열 형태라고 가정)
+        // Django 쿼리셋에서 tags__name='spring'으로 필터링했으므로,
+        // festivalItem.tags는 배열 안에 태그 이름이 들어있다고 가정합니다.
+        const tagsHtml = (festivalItem.tags && Array.isArray(festivalItem.tags) && festivalItem.tags.length > 0) ?
+            festivalItem.tags.map(tag => `<a href="result_list.html?tag=${tag}">#${tag}</a>`).join(' ') : '';
+        $('.tags').html(tagsHtml); 
+    }
+
+    // 자동 콘텐츠 변경 (5초마다) - 현재 쇼츠 내에서 이미지 순환
     function changeContent() {
-        j++;
-        if (j > 4) { j = 0; }
-        skipphoto();
+        if (!alldata || alldata.length === 0) return; // 데이터 없으면 종료
+
+        const currentFestival = alldata[i]; // 현재 표시 중인 쇼츠 데이터
+        if (currentFestival && currentFestival.sorted_images) {
+            j++;
+            if (j >= currentFestival.sorted_images.length) { 
+                j = 0; // 현재 쇼츠의 모든 이미지를 봤으면 다시 첫 번째 이미지로
+            }
+            // 현재 쇼츠 (i)의 j번째 이미지로 업데이트
+            updateShortsContent(currentFestival); 
+        }
     }
 
-    // 5초마다 콘텐츠 변경
+    // 5초마다 콘텐츠 변경 타이머 시작
     setInterval(changeContent, 5000);
 
-    function addlist(){
-        hdata = `<a href="/festivals/view/"><div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div></a>
-          <a href="/festivals/view/"><div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div></a>`;
-        $('.recommendFestList').html(hdata);
+    // addlist 함수 (추천 축제 리스트를 동적으로 생성)
+    function addlist(data){ // data 인자로 alldata를 받습니다
+        // 데이터 반복 및 HTML 생성
+        jdata=``;
+        for (let k = 0; k < data.length && k < 8; k++) { // 최대 8개 또는 data.length 만큼
+            const festival = data[k];
+            // 이미지 alt 속성 개선 및 태그 표시 로직 추가
+            jdata += `<a href="/festivals/view/${festival.id}/"><div class="festCard"><img src="${festival.image}" alt="${festival.name} 축제 이미지"><p>${festival.name}</p></div></a>`;
+        }
+        jdata += `</div>`; // recommendFestList 닫기
+
+        $('.recommendFestList').html(jdata);
     }
-  </script>
+
+    // 기타 버튼 함수 (목록에 있는 것들)
+    function createBtn() { console.log('Create Button clicked'); }
+    function likeBtn() { console.log('Like Button clicked'); }
+    function shareBtn() { console.log('Share Button clicked'); }
+    function reviewBtn() { console.log('Review Button clicked'); }
+    function viewBtn() { console.log('View Button clicked'); }
+</script>
 </head>
+
 <body>
   <div id="wrap">
     <div id="nav">
@@ -365,32 +528,27 @@
       </div>
 
       <div id="searchAll">
-        <div class="searchIco"><img src="" alt="search"></div>
-          <form action="/festivals/list/" method="GET">
-            <div class="searchKey">
-              <input name="keyWord" type="text" placeholder="축제명, 지역, 태그 등으로 검색" />
-              <button type="submit">검색</button>
-            </div>
-          </form>
+        <div class="searchIco">🔍</div>
+        <form action="fest_list.html" method="GET">
+          <div class="searchKey">
+            <input name="keyWord" type="text" placeholder="축제명, 지역, 태그 등으로 검색" />
+            <button type="submit">검색</button>
+          </div>
+        </form>
       </div>
-
-        <div id="pageMove">     
-          <ul>
-            <li><a href="/festivals/list/">festivals</a></li>
-            <li><a href="/accounts/login/">login</a></li>
-            <li><a href="/accounts/signup/terms/">sign up</a></li> 
-            <li><a href="/inquiry/support/">support</a></li>  
-          </ul>
-        </div>
+      
+      <div id="pageMove">     
+        <ul>
+          <li><a href="#">festivals</a></li>
+          <li><a href="#">login</a></li>
+          <li><a href="#">sign up</a></li>   
+          <li><a href="#">support</a></li>  
+        </ul>
+      </div>
     </div>
+
     <div class="contents">
       
-    </div>
-      <div class="contents2">
-        <div id="recommendFestList">
-          
-        </div>
-      </div>
   </div>
  
   <div id="footer">
@@ -398,7 +556,7 @@
     <ul class="footer-links">
       <li><a href="#">개인정보처리방침</a></li>
       <li><a href="#">이용약관</a></li>
-      <li><a href="http://127.0.0.1:8000/admin/">관리자페이지 이동</a></li> 
+      <li><a href="#">관리자페이지 이동</a></li>
       <li>
         <div id="ldMode">
           <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
@@ -406,42 +564,37 @@
       </li>
     </ul>
   </div>
-
+</body>
   <script>
     function logoBtn() {
-      location.href='/';
+      alert('go home');
     }
 
-    function replyBtn() {
+    function viewBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
-    function wishBtn() {
+    function reviewBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
-    function dislikeBtn() {
+    function shareBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
     function likeBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/';
     }
 
     function createBtn() {
       alert('로그인 후 이용 가능');
-      location.href='/shortforms/upload/';
     }
 
     //JS: body.dark 클래스를 토글
     function ldBtn() {
-      document.body.classList.toggle('dark');
-      // (선택) 로컬 스토리지에 상태 저장
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('darkMode', isDark);
+    document.body.classList.toggle('dark');
+    // (선택) 로컬 스토리지에 상태 저장
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
     }
-</script>
+  </script>
