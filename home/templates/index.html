@@ -374,14 +374,21 @@
           </form>
       </div>
 
-        <div id="pageMove">     
-          <ul>
-            <li><a href="/festivals/list/">festivals</a></li>
-            <li><a href="/accounts/login/">login</a></li>
-            <li><a href="/accounts/signup/terms/">sign up</a></li> 
-            <li><a href="/inquiry/support/">support</a></li>  
-          </ul>
-        </div>
+      <div id="pageMove">     
+        <ul>
+          <li><a href="/festivals/list/">festivals</a></li>
+          {% if user_id %}
+              <li><span style="color:#2563eb;">{{ nickname }}님</span></li>
+              <li><a href="/accounts/logout/">logout</a></li>
+              <li><a href="/accounts/mypage/">my page</a></li>
+          {% else %}
+              <li><a href="/accounts/login/">login</a></li>
+              <li><a href="/accounts/signup/terms/">sign up</a></li>
+          {% endif %}
+          <li><a href="/inquiry/support/">support</a></li>  
+        </ul>
+      </div>
+
     </div>
     <div class="contents">
       

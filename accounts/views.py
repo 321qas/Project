@@ -1,17 +1,41 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import User, EmailVerification  # EmailVerification 모델 반드시 import!
-from tags.models import Tag
-from .utils import send_gmail
 from django.conf import settings
-import uuid
 from django.utils import timezone
-import datetime
+from django.contrib.auth.hashers import check_password
+from .models import User, EmailVerification
+from .utils import send_gmail
+from tags.models import Tag
+import uuid, datetime
 
-# 1. 로그인 화면
+# 0. 로그인 화면
 def login(request):
+    if request.method == "POST":
+        user_id = request.POST.get('id')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            messages.error(request, "존재하지 않는 ID입니다.")
+            return render(request, 'login.html')
+
+        # 비밀번호 검증 (해시 비교)
+        if not check_password(password, user.password):
+            messages.error(request, "비밀번호가 일치하지 않습니다.")
+            return render(request, 'login.html')
+
+        # 로그인 성공: 세션에 정보 저장 (필요에 따라)
+        request.session['user_id'] = user.user_id
+        request.session['nickname'] = user.nickname
+        return redirect('index')
+
     return render(request, 'login.html')
 
+# 1. 로그아웃
+def logout(request):
+    request.session.flush()
+    return redirect('index')
 
 # 2. 아이디/비밀번호 찾기 화면
 def lgfor(request):
@@ -30,7 +54,6 @@ def signup_terms(request):
         request.session['signup_terms'] = True
         return redirect('accounts:signup_account')
     return render(request, 'signup1_terms.html')
-
 
 # 4. 회원가입 Step2: 기본 정보 입력 화면 및 정보 유효성 검사
 def signup_account(request):
@@ -99,7 +122,6 @@ def signup_account(request):
         'selected_tags': []
     })
 
-
 # 5. 회원가입 Step3: 이메일 인증 안내 및 실제 인증 메일 발송
 def signup_verify(request):
     # 세션에서 이메일을 꺼내옴 (최신 가입대기자 기준)
@@ -125,7 +147,6 @@ def signup_verify(request):
         messages.info(request, "입력하신 이메일로 인증 메일을 전송했습니다. 이메일에서 인증을 완료하세요.")
         return render(request, 'signup3_verification.html')
     return render(request, 'signup3_verification.html')
-
 
 # 6. (이메일 링크 클릭시) 실제 회원가입 DB 저장 및 가입 완료 처리
 def verify_email(request):
