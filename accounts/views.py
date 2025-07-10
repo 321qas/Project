@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.hashers import check_password
 from .models import User, EmailVerification
 from .utils import send_gmail
 from tags.models import Tag
-import uuid, datetime
+import uuid, datetime, random, string
 
 # 0. 로그인 화면
 def login(request):
@@ -38,8 +39,109 @@ def logout(request):
     return redirect('index')
 
 # 2. 아이디/비밀번호 찾기 화면
-def lgfor(request):
-    return render(request, 'login_forgot.html')
+def find_id(request):
+    user_id = None
+    email_entered = None
+    not_found = False
+
+    if request.method == "POST":
+        email_entered = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email_entered)
+            user_id = user.user_id
+            # 2, 3번째 글자를 *로 마스킹
+            if len(user_id) >= 3:
+                masked_id = (
+                    user_id[0]
+                    + '*' * (min(2, len(user_id)-1))
+                    + user_id[3:]
+                )
+                if len(user_id) >= 3:
+                    masked_id = user_id[0] + '**' + user_id[3:]
+                elif len(user_id) == 2:
+                    masked_id = user_id[0] + '*'
+                else:
+                    masked_id = user_id[0]
+            else:
+                masked_id = user_id  # 1글자 아이디는 그대로 노출
+        except User.DoesNotExist:
+            not_found = True
+            masked_id = None
+
+        return render(request, 'find_id.html', {
+            'masked_id': masked_id,
+            'email_entered': email_entered,
+            'not_found': not_found,
+        })
+
+    return render(request, 'find_id.html')
+
+def generate_temp_password(length=10):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def find_password(request):
+    context = {}
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        email = request.POST.get('email')
+        context['user_id_entered'] = user_id
+        context['email_entered'] = email
+
+        try:
+            user = User.objects.get(user_id=user_id, email=email)
+        except User.DoesNotExist:
+            context['not_found'] = True
+            return render(request, 'find_password.html', context)
+
+        # 임시 비밀번호 생성 & 저장
+        temp_pw = generate_temp_password()
+        user.set_password(temp_pw)
+        user.save()
+
+        # 메일 발송 (Gmail API 활용)
+        subject = "FastFest Temporary Password"
+        html = f"""
+          <div style="max-width:480px;margin:0 auto;padding:40px 24px 28px 24px;background:#fff;border-radius:16px;border:1.5px solid #f97316;font-family:Arial,sans-serif;box-shadow:0 6px 32px #f9731622;">
+            <div style="text-align:center;margin-bottom:24px;">
+              <h2 style="color:#f97316;margin:0;">FastFest Password Reset</h2>
+            </div>
+            <p style="font-size:1.08rem;color:#222;margin-bottom:22px;">
+              Hello,<br>
+              A request to reset your FastFest password was received.<br>
+              Your temporary password is below.
+            </p>
+            <div style="background:#fff7ed;padding:18px 20px;margin:30px 0 28px 0;text-align:center;border-radius:7px;border:1.5px solid #f97316;font-size:1.23rem;letter-spacing:2px;font-weight:bold;color:#d97706;">
+              {temp_pw}
+            </div>
+            <p style="font-size:1.08rem;color:#555;text-align:center;">
+              Please <b>log in</b> with the above password,<br>
+              and change it immediately for your account's security.
+            </p>
+            <div style="text-align:center;margin:34px 0 0 0;">
+              <a href="https://yourdomain.com/accounts/login/"
+                 style="display:inline-block;padding:13px 34px;font-size:1.08rem;background:#f97316;color:#fff;border-radius:7px;text-decoration:none;font-weight:bold;letter-spacing:1px;box-shadow:0 2px 6px #f9731633;">
+                 🔒 Go to Login
+              </a>
+            </div>
+            <div style="margin:32px 0 18px 0;">
+              <p style="font-size:0.97rem;color:#888;text-align:center;">
+                If you did not request a password reset, please ignore this email.<br>
+                For help, contact: <b>support@fastfest.com</b>
+              </p>
+            </div>
+            <hr style="margin:28px 0 12px 0;border:none;border-top:1px solid #ffe7c2;">
+            <div style="font-size:0.88rem;color:#aaa;text-align:center;">
+              © 2025 FastFest<br>
+            </div>
+          </div>
+        """
+
+        send_gmail(email, subject, html)
+
+        context['sent_success'] = True
+        return render(request, 'find_password.html', context)
+
+    return render(request, 'find_password.html')
 
 
 # 3. 회원가입 Step1: 약관 동의 화면 및 동의 확인
@@ -138,11 +240,37 @@ def signup_verify(request):
         verify_url = f"{settings.SITE_URL}/accounts/verify-email/?token={token}&email={email}"
         subject = "FastFest 이메일 인증"
         html = f"""
-            <h2>FastFest 이메일 인증</h2>
-            <br>
-            <p>아래 버튼을 눌러 이메일 인증을 완료하세요.</p>
-            <a href="{verify_url}" style="padding:10px 20px; background:#2563eb; color:white; border-radius:5px; text-decoration:none;">이메일 인증하기</a>
+          <div style="max-width:480px;margin:0 auto;padding:40px 24px 28px 24px;background:#fff;border-radius:16px;border:1.5px solid #2563eb;font-family:Arial,sans-serif;box-shadow:0 6px 32px #2563eb22;">
+            <div style="text-align:center;margin-bottom:24px;">
+              <h2 style="color:#2563eb;margin:0;">FastFest 이메일 인증</h2>
+            </div>
+            <p style="font-size:1.08rem;color:#222;margin-bottom:22px;">
+              안녕하세요!<br>
+              FastFest에 회원가입해 주셔서 감사합니다.<br>
+              안전한 서비스 이용을 위해 이메일 인증이 필요합니다.<br>
+            </p>
+            <p style="text-align:center;margin:40px 0;">
+              <a href="{verify_url}"
+                 style="display:inline-block;padding:14px 36px;font-size:1.1rem;background:#2563eb;color:#fff;border-radius:7px;text-decoration:none;font-weight:bold;letter-spacing:1px;box-shadow:0 2px 6px #2563eb33;">
+                 ✉️ 이메일 인증하기
+              </a>
+            </p>
+            <div style="margin:30px 0 18px 0;">
+              <p style="font-size:0.98rem;color:#555;">위 버튼이 작동하지 않으면 아래 링크를 복사해 브라우저에 붙여넣어 주세요:</p>
+              <div style="background:#f1f5fb;padding:10px 15px;font-size:0.95rem;word-break:break-all;border-radius:4px;color:#2563eb;">{verify_url}</div>
+            </div>
+            <p style="font-size:0.95rem;color:#888;margin-top:18px;">
+              본 메일은 FastFest 회원가입을 위한 이메일 인증입니다.<br>
+              본인이 요청하지 않았다면 이 메일을 무시해 주세요.
+            </p>
+            <hr style="margin:28px 0 12px 0;border:none;border-top:1px solid #e5e7eb;">
+            <div style="font-size:0.88rem;color:#aaa;text-align:center;">
+              © 2025 FastFest<br>
+              문의: support@fastfest.com
+            </div>
+          </div>
         """
+
         send_gmail(email, subject, html)
         messages.info(request, "입력하신 이메일로 인증 메일을 전송했습니다. 이메일에서 인증을 완료하세요.")
         return render(request, 'signup3_verification.html')

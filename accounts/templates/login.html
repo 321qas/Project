@@ -10,7 +10,14 @@
     <title>Login</title>
     <style>
         .card img {
-            margin-bottom:20px;
+            margin-bottom:35px;
+        }
+        .divider-links {
+          font-size: 1em;
+          white-space: nowrap;
+        }
+        .divider-links * {
+          margin: 5px;
         }
     </style>
 </head>
@@ -32,7 +39,9 @@
                 <label>
                     <input type="checkbox" name="remember_id" id="remember_id"> Remember ID
                 </label>
-                <a href="/forgot-password">Forgot ID / Password</a>
+                <div class="divider-links">
+                <a href="/accounts/find_id/">Forgot ID</a><span class="divider">|</span><a href="/accounts/find_password/">Forgot Password</a>
+                </div>
             </div>
             <button type="submit" class="clickBtn orange">LOG IN</button>
             <button type="button" class="moreBtn white-orange" onclick="location.href='/accounts/signup/terms/'">SIGN UP</button>

@@ -1,0 +1,145 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <title>Find ID</title>
+    <style>
+        .card {
+            margin: 80px auto 100px auto;
+            max-width: 540px;
+            width: 96%;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(80,130,200,0.08);
+            padding: 48px 38px 40px 38px;
+        }
+        .card img {
+            width: 120px;
+            margin: 0 auto 18px auto;
+            display: block;
+        }
+        .card h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #f97316;
+            font-size: 1.8rem;
+        }
+        .login-forgot-info {
+            margin-bottom: 18px;
+        }
+        .login-forgot-info p {
+            color: #444;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        .card form {
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            justify-content: space-between;
+            margin: 24px 0 0 0;
+        }
+        .card input[type="email"] {
+            flex: 1;
+            padding: 14px 20px;
+            border: 1.5px solid #f97316;
+            border-radius: 6px;
+            font-size: 1.06rem;
+            transition: border 0.2s;
+        }
+        .card input[type="email"]:focus {
+            border: 2px solid #f97316;
+            outline: none;
+        }
+        .card button {
+            padding: 0 30px;
+            border-radius: 6px;
+            background: #f97316;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 48px;
+        }
+        .card button:hover {
+            background: #2563eb;
+        }
+        .result-message {
+            margin-top: 32px;
+            padding: 18px 0;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.2rem;
+        }
+        .result-message.success {
+            color: #178e44;
+            background: #ecfbe7;
+            border: 1px solid #a3e635;
+        }
+        .result-message.error {
+            color: #ea4747;
+            background: #fceeee;
+            border: 1px solid #fbbf24;
+        }
+        .go-login {
+            margin-top: 18px;
+            text-align: center;
+        }
+        .go-login a {
+            color: #2563eb;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px 8px 30px 8px;
+                max-width: 98%;
+            }
+            .card form {
+                flex-direction: column;
+            }
+            .card button {
+                width: 100%;
+                margin-top: 10px;
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="/static/image/logo_transparent.png" alt="Logo">
+        <h2>Find Your ID</h2>
+        <div class="login-forgot-info">
+            <p>Please enter your registered email address.<br>
+            We will show you your user ID with part of it hidden for security.</p>
+        </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter your email" required value="{{ email_entered|default_if_none:'' }}">
+            <button type="submit">Find ID</button>
+        </form>
+        {% if masked_id %}
+            <div class="result-message success">
+                Your ID: <b>{{ masked_id }}</b>
+            </div>
+            <div class="go-login">
+                <a href="{% url 'accounts:login' %}">Go to Login</a>
+            </div>
+        {% elif not_found %}
+            <div class="result-message error">
+                No user ID found for this email address.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
