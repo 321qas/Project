@@ -194,3 +194,7 @@ def verify_email(request):
         del request.session['signup_email']
     messages.success(request, "이메일 인증이 완료되었습니다. 로그인 해주세요.")
     return redirect('accounts:login')
+
+# 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
+def pw_reset(request):
+    return render(request, 'login_password_reset.html')

@@ -11,4 +11,5 @@ urlpatterns = [
     path('signup/account/', views.signup_account, name='signup_account'),
     path('signup/verify/', views.signup_verify, name='signup_verify'),
     path('verify-email/', views.verify_email, name='verify_email'),  # 인증링크 콜백용
+    path('pw_reset/', views.pw_reset, name='pw_reset'), # get방식 호출 불가
 ]

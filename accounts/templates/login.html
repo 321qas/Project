@@ -1,99 +1,22 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/login.css">
     <title>Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .card {
-            width: 350px;
-            padding: 20px;
-            border: 2px solid #2563eb;
-            border-radius: 12px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
         .card img {
-            width: 100%;
-            max-width: 250px;
-            margin: 0 auto 20px;
-        }
-        
-        .card form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .card input[type="text"],
-        .card input[type="password"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        .card .checkbox {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.9rem;
-        }
-        .card button {
-            padding: 10px;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        .card button:hover {
-            background-color: #174ea6;
-        }
-        .card .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .card .social-login img {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-        }
-        /*
-        .card .signup {
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        */
-        .card .signup {
-            color: #2563eb;
-            background-color: white;
-            padding: 10px;
-            border: 1px solid #2563eb;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        .card .signup:hover {
-            background-color: #B2CCFF;
+            margin-bottom:20px;
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <img src="logo-placeholder.png" alt="Logo">
+        <img src="/static/image/logo_transparent_cut.png" alt="Logo">
         {% if messages %}
             <ul style="color:red;">
                 {% for message in messages %}
@@ -101,25 +24,23 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-        <!-- 로그인 폼 HTML -->
         <form action="/accounts/login/" method="POST">
             {% csrf_token %}
-            <input type="text" name="id" placeholder="ID" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="id" id='id' placeholder="ID" required>
+            <input type="password" name="password" id='password' placeholder="Password" required>
             <div class="checkbox">
-                <label><input type="checkbox" name="remember">Remember me</label>
-                <a href="/forgot-password" style="color: #2563eb; text-decoration: none;">Forgot ID / password?</a>
+                <label><input type="checkbox" name="remember"> Remember me</label>
+                <a href="/forgot-password">Forgot ID / Password</a>
             </div>
-            <button type="submit">LOG IN</button>
-            <button type="button" class="signup">SIGN UP</button>
+            <button type="submit" class="clickBtn orange">LOG IN</button>
+            <button type="button" class="moreBtn white-orange">SIGN UP</button>
         </form>
-        
         <p>with</p>
         <div class="social-login">
-            <img src="google-icon.png" alt="Google">
-            <img src="naver-icon.png" alt="NAVER">
-            <img src="apple-icon.png" alt="Kakao">
+            <img src="/static/image/google-icon.png" alt="Google">
+            <img src="/static/image/facebook-icon.png" alt="Facebook">
+            <img src="/static/image/line-icon.png" alt="LINE">
+            <img src="/static/image/apple-icon.png" alt="Apple">
         </div>
     </div>
 </body>
