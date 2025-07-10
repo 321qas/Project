@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import User
+from .models import EmailVerification
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -49,3 +50,10 @@ class UserAdmin(admin.ModelAdmin):
             'description': '회원 기본정보와 권한을 설정합니다.'
         }),
     )
+
+# 회원가입 시 이메일 인증 전 임시저장 테이블
+# @admin.register(EmailVerification)
+# class EmailVerificationAdmin(admin.ModelAdmin):
+#     list_display = ('email', 'user_id', 'created_at', 'token')
+#     search_fields = ('email', 'user_id', 'token')
+#     list_filter = ('created_at',)

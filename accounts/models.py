@@ -94,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = "회원"
         verbose_name_plural = "회원"
 
-# 이메일 인증 모델
+# 회원가입 시 이메일 인증 전 임시저장 테이블
 class EmailVerification(models.Model):
     email = models.EmailField(unique=True)
     token = models.CharField(max_length=64, unique=True)
