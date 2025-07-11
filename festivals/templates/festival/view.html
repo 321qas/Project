@@ -8,6 +8,8 @@
   <title>Detailed view</title>
   <link rel="stylesheet" href="/static/css/main.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1ae8ecdbe59bd236260a1e3d89dc0a51"></script> <!-- 카카오맵 API 불러오기 -->
+
   <style>
 
     /* 배너 */
@@ -752,17 +754,14 @@
           <div class="titlebox">
             <h2>{{list.name}}</h2>
             <div class="datebox">
-              <button class="orange-n moreBtn">Happening Now</button>
-              <span class="festival-period">{{list.start_date}} ~ {{list.end_date}}</span>
-            </div>
-            <h4 class="rating">★4.8</h4>
-          </div>
-          <div class="datebox">
             <button class="orange-n moreBtn">Happening Now</button>
             <span class="festival-period">
               {{ list.start_date|date:"Y-m-d" }} ~ {{ list.end_date|date:"Y-m-d" }}
             </span>
           </div>
+            <h4 class="rating">★4.8</h4>
+          </div>
+          
         </div>
         <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
       </section>
