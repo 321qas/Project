@@ -4,8 +4,7 @@ from django.db.models import Prefetch, F
 from django.http import JsonResponse
 import json
 
-def festival_detail(request, pk):
-    # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
+def festival_detail(request, pk): # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
     # 해당 축제 불러오기
     festival = get_object_or_404(Festival, pk=pk)
     # 해당 축제의 지역 코드 추출
