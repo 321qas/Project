@@ -81,11 +81,7 @@ WSGI_APPLICATION = 'PastPest.wsgi.application'
 DATABASES = { # Oracle 데이터베이스 설정
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-<<<<<<< HEAD
         'NAME': 'xe',  # 'orcl' or 'xe'
-=======
-        'NAME': 'orcl',  # 'orcl' or 'xe'
->>>>>>> b7ca45e6c1e210ec3837f2d78292a0b9f9f509f9
         'USER': 'ora_user2',
         'PASSWORD': '1111',
         'HOST': 'localhost',
