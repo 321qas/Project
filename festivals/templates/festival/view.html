@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detailed view</title>
   <link rel="stylesheet" href="/static/css/main.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
 
     /* 배너 */
@@ -717,39 +718,38 @@
       <section id="cont1" class="section-card no-shadow">
         <div class="section-header">
           <div class="titlebox">
-            <h2>Boryeong Mud Festival</h2>
+            <h2>{{list.name}}</h2>
             <h4 class="rating">★4.8</h4>
           </div>
           <div class="datebox">
             <button class="orange-n moreBtn">Happening Now</button>
-            <span class="festival-period">2025.07.25 ~ 2025.08.10</span>
+            <span class="festival-period">{{list.start_date}} ~ {{list.end_date}}</span>
           </div>
         </div>
-        <div id="banner"></div>        
+        <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
       </section>
 
       <section id="info-container" class="section-card no-shadow">
         <div class="info-left">
           <div class="tags">
             <!-- <span>문화예술</span><span>여름</span><span>전연령</span><span>체험/참여</span> -->
-            <span class="tag tag-third">Summer </span>
-            <span class="tag tag-primary">Nature </span>
-            <span class="tag tag-secondary">All ages </span>
-            <span class="tag tag-secondary">Experience </span>
+            {% for tag in tags %}
+              <span class="tag tag-secondary">{{tag.name}}</span>
+            {% endfor %}
           </div>
           <div class="section-header">
             <h3>Festival Info</h3>
           </div>
           <div class="txtBox">
             <div class="info-list">
-              <div class="info-line"><div class="info-icon"><img src='/static/image/calendar.png'></div> <span>2025.07.25 ~ 2025.08.10</span></div>
-              <div class="info-line"><div class="info-icon"><img src='/static/image/placeholder.png'></div> <span>2282, Sinheuk-dong, Boryeong-si, Chungcheongnam-do<br>(충청남도 보령시 신흑동 2282)</span></div>
-              <div class="info-line"><div class="info-icon"><img src='/static/image/won.png'></div> <span>standard zone: adults [Mon-Thu] 10,000 won [Fri-Sun] 14,000 won<br>family zone: kids [Mon-Thu] 9,000 won [Fri-Sun] 11,000 won</span></div>
-              <div class="info-line"><div class="info-icon"><img src='/static/image/telephone.png'></div> <span>041-930-0891</span></div>
-              <div class="info-line"><div class="info-icon"><img src='/static/image/institution.png'></div> <span>보령시/재단법인 보령축제관광재단</span></div>
-              <div class="info-line"><div class="info-icon"><img src='/static/image/footprint.png'></div> <span>33,489　visitors last year</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/calendar.png'></div> <span>{{list.start_date}} ~ {{list.end_date}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/placeholder.png'></div> <span>{{list.region}} {{list.detail_region}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/won.png'></div> <span>{{list.fee}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/telephone.png'></div> <span>{{list.contact_phone}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/institution.png'></div> <span>{{list.organizer}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/footprint.png'></div> <span>{{list.visitor_count}}　visitors last year</span></div>
               <!-- <li>📷 boryengfestival_official</li> -->
-              <div class="info-line"><button class="white-orange moreBtn bold">Official Website</button></div>
+              <div class="info-line"><a href="{{list.website_url}}"><button class="white-orange moreBtn bold">Official Website</button></a></div>
             </div>
           </div>
         </div>
@@ -780,12 +780,9 @@
 
         </div>
         <div class="txtBox About">
-          <p>This is a festival dedicated to Boryeong’s famous mud from Daecheon Beach. 
-            The Boryeong Mud Festival has a global reputation, attracting hundreds of thousands of international visitors from all over the world every year, 
-            and for good reason, as the festival offers a variety of attractions and interactive programs for unforgettable memories. 
-            In the Regular Zone, which is for teenagers and adults, you can enjoy full body activities such as large mud baths and mud slides. 
-            In the Family Zone, both adults and children can cover themselves with mud and play together. 
-            You can also participate in programs such as mud self-massage and colored mud painting, which utilize the benefits of Boryeong mud in different ways.</p>
+          {% autoescape off %} <!-- 문자열 HTML로 변환하기 -->
+          <p>{{list.description}}</p>
+          {% endautoescape %}
         </div>
       </section>
 
