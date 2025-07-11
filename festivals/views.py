@@ -49,28 +49,30 @@ def search(request):
     region = request.GET.get('region')
     start_date_str = request.GET.get('startDate')
     end_date_str = request.GET.get('endDate')
+    # name_query = request.GET.get('name', '') 
 
     festival_qs = Festival.objects.all().order_by('?').prefetch_related(
         Prefetch(
             'images',
-            queryset=FestivalImage.objects.order_by('uploaded_at'), # 각 축제별 이미지들을 업로드 일시 순으로 정렬
-            to_attr='sorted_images' # 각 Festival 객체에 'sorted_images'라는 속성으로 관련 이미지 리스트가 할당됩니다.
-        )
+            queryset=FestivalImage.objects.order_by('uploaded_at'),
+            to_attr='sorted_images'
+        ),
+        'tags' 
     )
 
-    if region:
-        festival_qs = festival_qs.filter(region=region)
-    if start_date_str:
-        festival_qs = festival_qs.filter(start_date__gte=start_date_str)
-    if end_date_str:
-        festival_qs = festival_qs.filter(end_date__lte=end_date_str)
+    # 필터링 조건 적용
+    if region: festival_qs = festival_qs.filter(region=region)
+    if start_date_str: festival_qs = festival_qs.filter(start_date__gte=start_date_str)
+    if end_date_str: festival_qs = festival_qs.filter(end_date__lte=end_date_str)
+    
+    # 이름 검색 조건 추가
+    # if name_query: festival_qs = festival_qs.filter(name__icontains=name_query)
 
     festival_data = []
     for festival in festival_qs:
         first_festival_image = festival.sorted_images[0] if festival.sorted_images else None
-
-        image_url = first_festival_image.image.url if first_festival_image and first_festival_image.image else None
-
+        image_url = request.build_absolute_uri(first_festival_image.image.url) if first_festival_image and first_festival_image.image else None
+        tags_list = [tag.name for tag in festival.tags.all()]
         festival_data.append({
             'id': festival.id,
             'name': festival.name,
@@ -78,6 +80,7 @@ def search(request):
             'start_date': festival.start_date.strftime('%Y-%m-%d') if festival.start_date else None,
             'end_date': festival.end_date.strftime('%Y-%m-%d') if festival.end_date else None,
             'image': image_url,
+            'tags': tags_list, # 여기에 태그 이름 리스트 추가
         })
 
     return JsonResponse(festival_data, safe=False)

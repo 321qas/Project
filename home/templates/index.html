@@ -352,13 +352,10 @@
     // DOM이 로드되면 바로 실행
     document.addEventListener('DOMContentLoaded', function() {
         AOS.init({
-            duration: 1000,   // 기본 애니메이션 지속 시간
-            once: true,       // 애니메이션을 한 번만 실행
-        });  
+            duration: 1000, // 기본 애니메이션 지속 시간
+            once: true, // 애니메이션을 한 번만 실행
+        }); 
 
-        // ★ 1. 초기 UI 구조를 한 번만 설정
-        // 이 함수가 #shortsContainer와 .listTitle의 기본 틀을 잡습니다.
-        // 이 함수는 .contents의 내용을 '덮어쓰기' 때문에, Ajax보다 먼저 한 번만 호출하는 게 좋습니다.
         setupInitialShortsUI('bottom'); 
 
         $.ajax({
@@ -376,10 +373,7 @@
                     return;
                 }
 
-                // ★ 3. AJAX 데이터가 로드된 후 `addlist`와 `updateShortsContent` 호출
-                // `addlist`는 추천 축제 리스트를 채웁니다.
                 addlist(alldata); 
-                // 첫 번째 쇼츠 콘텐츠를 표시합니다.
                 updateShortsContent(alldata[i]); 
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -389,7 +383,6 @@
         });
     });
 
-    // jQuery ready 함수 안의 휠 이벤트 처리 로직 (DOMContentLoaded 안으로 통합해도 됨)
     $(document).ready(function() {
         $('#wrap').on('wheel', '#shortsContainer', function(e) {
             e.preventDefault();
@@ -407,9 +400,6 @@
                         j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
                         applyAOSAnimation('up'); // 쇼츠 컨테이너 AOS 애니메이션
                         updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                        // addlist(alldata); // ★ 여기서는 addlist 다시 호출할 필요 없음 (리스트는 고정)
-                                          // 만약 쇼츠마다 추천 리스트가 바뀐다면 필요하지만,
-                                          // 현재 로직상 아님
                     }, 500);
                 }
             } else {  // 휠을 올리면 (이전 쇼츠)
@@ -419,16 +409,12 @@
                         j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
                         applyAOSAnimation('down'); // 쇼츠 컨테이너 AOS 애니메이션
                         updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                        // addlist(alldata); // ★ 여기서는 addlist 다시 호출할 필요 없음
                     }, 500);
                 }
             }
         });
     });
 
-    // --- 새로운/수정된 함수 정의 ---
-
-    // 초기 shortsContainer 및 listTitle HTML 구조를 설정하는 함수 (DOM 로드 시 한 번만 호출)
     function setupInitialShortsUI(animove) {
         const initialShortsHtml = `
             <div id="shortsContainer" data-aos="fade-${animove}"> 
@@ -472,9 +458,6 @@
         $('.festNameInShorts').text(festivalItem.name);
         $('.festNameInShorts').attr('href', `/festivals/view/${festivalItem.id}/`); 
 
-        // 태그 업데이트 (tags가 배열 형태라고 가정)
-        // Django 쿼리셋에서 tags__name='spring'으로 필터링했으므로,
-        // festivalItem.tags는 배열 안에 태그 이름이 들어있다고 가정합니다.
         const tagsHtml = (festivalItem.tags && Array.isArray(festivalItem.tags) && festivalItem.tags.length > 0) ?
             festivalItem.tags.map(tag => `<a href="result_list.html?tag=${tag}">#${tag}</a>`).join(' ') : '';
         $('.tags').html(tagsHtml); 
@@ -512,7 +495,6 @@
         $('.recommendFestList').html(jdata);
     }
 
-    // 기타 버튼 함수 (목록에 있는 것들)
     function createBtn() { console.log('Create Button clicked'); }
     function likeBtn() { console.log('Like Button clicked'); }
     function shareBtn() { console.log('Share Button clicked'); }
@@ -594,7 +576,7 @@
     }
 
     function createBtn() {
-      alert('로그인 후 이용 가능');
+      location.href='/shortforms/upload/';
     }
 
     //JS: body.dark 클래스를 토글

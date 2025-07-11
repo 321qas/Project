@@ -757,6 +757,12 @@
             </div>
             <h4 class="rating">★4.8</h4>
           </div>
+          <div class="datebox">
+            <button class="orange-n moreBtn">Happening Now</button>
+            <span class="festival-period">
+              {{ list.start_date|date:"Y-m-d" }} ~ {{ list.end_date|date:"Y-m-d" }}
+            </span>
+          </div>
         </div>
         <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
       </section>
@@ -774,7 +780,7 @@
           </div>
           <div class="txtBox">
             <div class="info-list">
-              <div class="info-line"><div class="info-icon"><img src='/static/image/calendar.png'></div> <span>{{list.start_date}} ~ {{list.end_date}}</span></div>
+              <div class="info-line"><div class="info-icon"><img src='/static/image/calendar.png'></div><span>{{ list.start_date|date:"Y-m-d" }} ~ {{ list.end_date|date:"Y-m-d" }}</span></div>
               <div class="info-line"><div class="info-icon"><img src='/static/image/placeholder.png'></div> <span>{{list.region}} {{list.detail_region}}</span></div>
               <div class="info-line"><div class="info-icon"><img src='/static/image/won.png'></div> <span>{{list.fee}}</span></div>
               <div class="info-line"><div class="info-icon"><img src='/static/image/telephone.png'></div> <span>{{list.contact_phone}}</span></div>

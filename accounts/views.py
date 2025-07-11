@@ -230,7 +230,7 @@ def id_check(request):
     user_id = request.GET.get('id')
     
     if User.objects.filter(user_id=user_id).exists():
-        return JsonResponse({'msg': 'id_exist'})
+        return JsonResponse({'msg': 'id_exist'})    
     else:
         return JsonResponse({'msg': 'id_available'})
     

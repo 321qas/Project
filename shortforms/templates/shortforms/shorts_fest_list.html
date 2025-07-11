@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Document</title>
     <style>
       * {margin:0; padding: 0; box-sizing: border-box;}
@@ -137,7 +138,6 @@
 
       .searchBlock.tag { width: 18%; }
 
-      .region { width: 18%; }
 
       .date { width: 46%; }
 
@@ -150,9 +150,6 @@
         min-height: 22px;
       }
 
-      .region input {
-        margin-top: auto; /* input을 아래로 밀기 */
-        }
 
       .searchBlock input[type="text"],
       .searchBlock input[type="date"] {
@@ -165,22 +162,6 @@
 
       }    
 
-      .date .stardToEnd {
-        display: flex;
-        width: 90%;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .date .stardToEnd > div {
-        flex: 1;
-      }
-
-      .date label {
-        font-size: 13px;
-        margin-bottom: 5px;
-        display: block;
-      }
 
       #searchBtn {
         margin-top: auto;
@@ -281,7 +262,6 @@
     <div id="wrap">
         <div id="nav">
             <div id="logo"><button type="button" class="logoBtn" onclick="logoBtn()">logo_img</button></div>
-
             <div id="pageMove">
                 <ul>
                 <li><a href="#">축제정보</a></li>
@@ -296,276 +276,253 @@
         <div id="banner_blur">
           <div class="title-search-wrap">
             <h1>등록할 쇼츠와 관련된 축제를 선택하세요.</h1>
+          </div>
+              
+          <div id="searchBlocks">
+            <div class="searchBlock tag">
+              <h3>태그검색</h3>
+              <select id="tagSelect">
+              <option value="">Choice Tag</option>
+              {% for tag in tags%}
+              <option value="{{tag}}">{{tag}}</option>
+              {% endfor%}
+            </select>
             <div id="quickSearch">
-              <input type="text" id="quickSearchInput" placeholder="빠른 검색어 입력">
-              <button type="button" onclick="quickSearch()">검색</button>
+                <input type="text" id="quickSearchInput" placeholder="빠른 검색어 입력">
             </div>
           </div>
-            
-              
-              <div id="searchBlocks">
-                <div class="searchBlock tag">
-                <h3>태그검색</h3>
-                <select id="tagSelect">
-                  <option value="">태그 선택</option>
-                  <option value="불꽃">불꽃</option>
-                  <option value="음악">음악</option>
-                  <option value="먹거리">먹거리</option>
-                  <option value="전통">전통</option>
-                  <option value="바다">바다</option>
-                  <option value="눈">눈</option>
-                </select>
-              </div>
-                    <div class="searchBlock region">
-                    <h3>지역검색</h3>
-                    <input type="text" name="region" id="region" placeholder="예: 서울, 부산">
-                    </div>
-
-                    <div class="searchBlock date">
-                    <h3>날짜검색</h3>
-                    <div class="stardToEnd">
-                        <div>
-                        <label for="startDate">시작일</label>
-                        <input type="date" name="startDate" id="startDate">
-                        </div>
-                        <span>~</span>
-                        <div>
-                        <label for="endDate">종료일</label>
-                        <input type="date" name="endDate" id="endDate">
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="searchBlock button">
-                    <button type="button" id="resetBtn"onclick="resetFilter()">reset</button>
-                    <button type="button" id="searchBtn" onclick="runDetailedSearch()">검색</button>
-                    </div>
-                </div>
-            
+          <div class="searchBlock button">
+              <button type="button" id="resetBtn">reset</button>
+              <button type="button" id="searchBtn">검색</button> 
+          </div>
+        </div>
 
         </div>
-            
-
-        <div class="contents"> 
           
+        <div class="contents">  
             <div id="festList">
                 <div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div>
-                <div class="festCard"><img src="" alt="축제2"><p>부산 바다축제</p></div>
-                <div class="festCard"><img src="" alt="축제3"><p>진주 남강유등축제</p></div>
-                <div class="festCard"><img src="" alt="축제4"><p>화천 산천어축제</p></div>
-                <div class="festCard"><img src="" alt="축제5"><p>안동 탈춤축제</p></div>
-                <div class="festCard"><img src="" alt="축제6"><p>제주 들불축제</p></div>
-                <div class="festCard"><img src="" alt="축제7"><p>대구 치맥페스티벌</p></div>
-                <div class="festCard"><img src="" alt="축제8"><p>전주 한지문화축제</p></div>
-            </div>
-            
-            
+            </div>  
         </div> 
-
     </div>
     <script>
-    const festData = [
-      { img: "", name: "서울 불꽃축제", tag: ["불꽃", "서울"], region: "서울", date: "2025-10-07" },
-      { img: "", name: "부산 바다축제", tag: ["바다"], region: "부산", date: "2025-08-01" },
-      { img: "", name: "진주 남강유등축제", tag: ["전통"], region: "진주", date: "2025-10-10" },
-      { img: "", name: "화천 산천어축제", tag: ["눈"], region: "화천", date: "2025-01-10" },
-      { img: "", name: "안동 탈춤축제", tag: ["전통"], region: "안동", date: "2025-09-27" },
-      { img: "", name: "제주 들불축제", tag: ["불꽃"], region: "제주", date: "2025-03-08" },
-      { img: "", name: "대구 치맥페스티벌", tag: ["먹거리"], region: "대구", date: "2025-07-17" },
-      { img: "", name: "전주 한지문화축제", tag: ["전통"], region: "전주", date: "2025-05-05" },
-      { img: "", name: "춘천 마임축제", tag: ["음악", "야외"], region: "춘천", date: "2025-05-25" },
-      { img: "", name: "광주 비엔날레", tag: ["음악"], region: "광주", date: "2025-09-06" },
-      { img: "", name: "포항 불빛축제", tag: ["불꽃", "야경"], region: "포항", date: "2025-07-31" },
-      { img: "", name: "여수 밤바다축제", tag: ["바다", "야경"], region: "여수", date: "2025-08-15" },
-      { img: "", name: "울산 고래축제", tag: ["먹거리"], region: "울산", date: "2025-06-10" },
-      { img: "", name: "인천 펜타포트", tag: ["음악"], region: "인천", date: "2025-08-09" },
-      { img: "", name: "수원 화성문화제", tag: ["전통"], region: "수원", date: "2025-10-03" },
-      { img: "", name: "청주 직지코리아", tag: ["전통"], region: "청주", date: "2025-09-01" }
-    ];
+        $(document).ready(function() {
+    // 1. DOM 요소 캐싱 및 변수 정의
+    const festList = $('#festList');
+    const tagSelect = $('#tagSelect');
+    const quickSearchInput = $('#quickSearchInput');
+    const searchBtn = $('#searchBtn');
+    const resetBtn = $('#resetBtn');
+    const detailedSearchBtn = $('#detailedSearchBtn'); // 상세 검색 버튼이 있다면
 
-    const festList = document.getElementById('festList');
-    const INITIAL_LOAD_COUNT = 8; // 초기 로드할 축제 개수
+    // 2. 축제 카드 렌더링 함수
+    function renderFestCards(festivals) {
+        festList.empty(); // 기존 검색 결과 모두 지우기
+        festList.attr('aria-busy', 'true'); // 접근성을 위한 속성
 
-    function getFilteredFestivals(festivals, { tag = null, keyword = null, region = null, startDate = null, endDate = null }) {
-        let filtered = festivals;
-
-        if (tag) {
-            filtered = filtered.filter(f => Array.isArray(f.tag) ? f.tag.includes(tag) : f.tag === tag);
-        }
-        if (keyword) {
-            const lowerKeyword = keyword.toLowerCase();
-            filtered = filtered.filter(f =>
-                f.name.toLowerCase().includes(lowerKeyword) ||
-                (f.region && f.region.toLowerCase().includes(lowerKeyword)) ||
-                (Array.isArray(f.tag) ? f.tag.some(t => t.toLowerCase().includes(lowerKeyword)) : (f.tag && f.tag.toLowerCase().includes(lowerKeyword)))
-            );
-        }
-        if (region) {
-            const lowerRegion = region.toLowerCase();
-            filtered = filtered.filter(f => f.region && f.region.toLowerCase().includes(lowerRegion));
-        }
-        if (startDate) {
-            filtered = filtered.filter(f => f.date >= startDate);
-        }
-        if (endDate) {
-            filtered = filtered.filter(f => f.date <= endDate);
-        }
-        return filtered;
-    }
-
-    function updateUrlParams(params) {
-        const urlParams = new URLSearchParams();
-        for (const key in params) {
-            if (params[key]) { // 값이 있을 때만 추가
-                urlParams.set(key, params[key]);
-            }
-        }
-        history.replaceState(null, '', location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : ''));
-    }
-
-    function renderFestCards(dataArr, limit = dataArr.length) {
-        const fragment = document.createDocumentFragment(); // DocumentFragment 사용
-        
-        // 기존 자식 요소들을 효율적으로 제거
-        while (festList.firstChild) {
-            festList.removeChild(festList.firstChild);
+        if (festivals.length === 0) {
+            festList.html('<p style="text-align: center; padding: 20px;">검색 결과가 없습니다.</p>');
+            festList.attr('aria-busy', 'false');
+            return; // 결과가 없으면 여기서 함수 종료
         }
 
-        // 접근성(Accessibility)을 위한 aria-busy 속성 토글
-        festList.setAttribute('aria-busy', 'true'); 
+        const fragment = document.createDocumentFragment(); // DOM 조작 최소화를 위한 DocumentFragment
 
-        dataArr.slice(0, limit).forEach((data, idx) => {
-            const tagsHtml = (data.tag || []).map(t => `<span class="tag">${t}</span>`).join(' ');
+        festivals.forEach(festival => {
+            const tagsHtml = (festival.tags && festival.tags.length > 0)
+                ? `<p class="tags">${festival.tags.map(tag => `<span>#${tag}</span>`).join(' ')}</p>`
+                : '';
+            const imageUrl = festival.image_url || 'https://via.placeholder.com/150?text=No+Image';
+
             const card = document.createElement('div');
             card.className = 'festCard';
-            card.dataset.name = data.name;
-            card.dataset.tags = JSON.stringify(data.tag); // 배열을 문자열로 저장
+            // data-* 속성 정의 시 JSON.stringify를 사용하여 배열을 문자열로 저장
+            card.dataset.name = festival.name;
+            card.dataset.tags = JSON.stringify(festival.tags || []);
+
             card.innerHTML = `
-                <a href="#"><img src="${data.img}" alt="${data.name} 이미지"></a>
-                <p>${data.name}</p>
-                <div>${tagsHtml}</div>
+                <a href="#"><img src="${imageUrl}" alt="${festival.name} 이미지" width='100%' height='60%'></a>
+                <p>${festival.name}</p>
+                ${tagsHtml}
             `;
             fragment.appendChild(card);
         });
-        festList.appendChild(fragment); // 한 번에 DOM에 추가
-        festList.setAttribute('aria-busy', 'false'); // 렌더링 완료
 
-        // 렌더링 후 리스트로 스크롤 및 포커스
-        festList.scrollIntoView({ behavior: "smooth", block: "start" });
-        festList.setAttribute('tabindex', '-1'); // 포커스 가능하도록 설정
-        festList.focus(); // 포커스 이동
+        festList.append(fragment); // 한 번에 DOM에 추가
+        festList.attr('aria-busy', 'false'); // 렌더링 완료
+        festList.attr('tabindex', '-1').focus(); // 렌더링 후 리스트로 스크롤 및 포커스
     }
 
-    // --- 이벤트 핸들러 및 초기 로딩 로직 ---
-
-    // 페이지 로드 시 URL 파라미터에 따라 필터링 및 초기 렌더링
-    window.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const tag = urlParams.get('tag');
-        const keyword = urlParams.get('keyWord');
-        const region = urlParams.get('region');
-        const startDate = urlParams.get('startDate');
-        const endDate = urlParams.get('endDate');
-
-        // 상세 검색 필드 값 설정 (URL 파라미터에 따라)
-        if (tag) {
-            const tagSelect = document.getElementById('tagSelect');
-            if (!Array.from(tagSelect.options).some(opt => opt.value === tag)) { // 기존 옵션에 없는 태그면 동적으로 추가
-                const opt = document.createElement('option');
-                opt.value = tag;
-                opt.textContent = tag + ' (외부)';
-                tagSelect.appendChild(opt);
+    // 3. 범용 검색 실행 함수 (AJAX 호출)
+    function performSearch(params) {
+        $.ajax({
+            url: '/shortforms/search/', // Django search 뷰의 URL
+            type: 'GET',
+            data: params, // 검색 파라미터 객체
+            dataType: 'json',
+            success: function(data) {
+                renderFestCards(data); // 서버에서 필터링된 데이터를 바로 렌더링
+            },
+            error: function(xhr, status, error) {
+                console.error("검색 중 오류 발생:", status, error);
+                festList.html('<p style="text-align: center; padding: 20px; color: red;">검색 데이터를 불러오는 중 오류가 발생했습니다.</p>');
             }
-            tagSelect.value = tag;
-        }
-        if (keyword) document.getElementById('quickSearchInput').value = keyword;
-        if (region) document.getElementById('region').value = region;
-        if (startDate) document.getElementById('startDate').value = startDate;
-        if (endDate) document.getElementById('endDate').value = endDate;
-
-        
-        if (tag || keyword || region || startDate || endDate) { // URL 파라미터가 하나라도 있으면 해당 조건으로 필터링, 없으면 초기 로드 개수만큼만 렌더링
-            const filtered = getFilteredFestivals(festData, { tag, keyword, region, startDate, endDate });
-            renderFestCards(filtered, filtered.length); // 필터링 결과는 모두 렌더링
-        } else {
-            renderFestCards(festData, INITIAL_LOAD_COUNT); // 초기 로드 개수만큼 렌더링
-        }
-    });
-
-    festList.addEventListener('click', (event) => { // festList 컨테이너에 이벤트 위임 (카드를 선택했을 때)
-        const clickedCard = event.target.closest('.festCard');
-        if (clickedCard) {
-            const name = clickedCard.dataset.name;
-            const tags = JSON.parse(clickedCard.dataset.tags); // 문자열화된 배열을 다시 파싱
-            selectFestival(name, tags);
-        }
-    });
-
-    function quickSearch() {
-        const keyword = document.getElementById('quickSearchInput').value.trim();
-        updateUrlParams({ keyWord: keyword });
-        const filtered = getFilteredFestivals(festData, { keyword });
-        renderFestCards(filtered, filtered.length); // 빠른 검색 결과는 모두 렌더링
+        });
     }
 
+    // 4. URL 파라미터 업데이트 함수
+    function updateUrlParams(params) {
+        const url = new URL(window.location.href);
+        for (const key in params) {
+            if (Object.prototype.hasOwnProperty.call(params, key)) { // hasOwnProperty 권장
+                if (params[key]) {
+                    url.searchParams.set(key, params[key]);
+                } else {
+                    url.searchParams.delete(key);
+                }
+            }
+        }
+        history.replaceState(null, '', url.toString()); // history.replaceState 사용
+    }
 
-    function runDetailedSearch() {
-        const tag = document.getElementById('tagSelect').value;
-        const region = document.getElementById('region').value.trim();
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
+    // 5. 검색 및 필터링 로직
+    function handleSearch(isDetailed = false) { // isDetailed 매개변수로 상세/빠른 검색 구분
+        const keyword = quickSearchInput.val().trim();
+        const tag = isDetailed ? tagSelect.val() : ''; // 상세 검색일 때만 태그 사용
 
-        updateUrlParams({ tag, region, startDate, endDate });
-        const filtered = getFilteredFestivals(festData, { tag, region, startDate, endDate });
-        renderFestCards(filtered, filtered.length); // 상세 검색 결과는 모두 렌더링
+        updateUrlParams({ keyWord: keyword, tag: tag });
+        performSearch({ name: keyword, tag: tag });
     }
 
     function resetFilter() {
-        document.getElementById('tagSelect').value = '';
-        document.getElementById('region').value = '';
-        document.getElementById('startDate').value = '';
-        document.getElementById('endDate').value = '';
-        document.getElementById('quickSearchInput').value = '';
-
-        renderFestCards(festData, INITIAL_LOAD_COUNT); // 초기 로드 상태로 복원
+        quickSearchInput.val('');
+        tagSelect.val('');
         updateUrlParams({}); // URL 파라미터 모두 제거
+        performSearch({}); // 모든 파라미터를 빈 값으로 보내 전체 축제 반환
     }
 
+    // 6. 축제 카드 선택 함수 (팝업/모달 연동)
+    // 이 함수는 $(document).ready 블록 바깥에 정의되어야 전역에서 접근 가능합니다.
+    // 하지만, Jquery ready 내부에서만 사용된다면 내부에서 정의해도 상관 없습니다.
+    // 여기서는 최적화를 위해 ready 블록 내부로 옮겼습니다.
     function selectFestival(name, tags) {
-        if (window.opener) {
-            window.opener.document.getElementById("shorts_festname").value = name;
+        // 디버깅용 로그 (성공적으로 작동하면 나중에 삭제해도 좋습니다)
+        console.log("selectFestival 함수 호출됨.");
+        console.log("전달받은 이름:", name);
+        console.log("전달받은 태그:", tags); // 이미 배열로 넘어와야 함
 
-            const tagWrapper = window.opener.document.querySelector(".searchedTags > div");
-            if (tagWrapper) {
-                tagWrapper.innerHTML = ""; // 기존 태그 지우기
+        if (window.opener) { // 팝업 창일 경우
+            const openerDoc = window.opener.document;
+
+            // 1. 축제 이름 전달
+            const openerFestnameInput = openerDoc.getElementById("shorts_festname");
+            if (openerFestnameInput) {
+                openerFestnameInput.value = name;
+                // 중요: input 이벤트를 강제로 발생시켜 upload 페이지의 실시간 반영 로직을 트리거
+                const event = new Event('input', { bubbles: true });
+                openerFestnameInput.dispatchEvent(event);
+                console.log("축제 이름 input 이벤트 트리거됨.");
+            } else {
+                console.warn("경고: 'shorts_festname' input을 부모 창에서 찾을 수 없습니다.");
+            }
+
+            // 2. 태그들을 'searchedTags div'에 시각적으로 추가
+            const openerTagWrapper = openerDoc.querySelector(".searchedTags > div");
+            if (openerTagWrapper) {
+                openerTagWrapper.innerHTML = ""; // 기존 태그들 모두 지우기
                 tags.forEach(tag => {
-                    const span = window.opener.document.createElement("span");
+                    const span = openerDoc.createElement("span");
                     span.className = "tag-badge";
-                    span.textContent = "#" + tag + " ";
-                    tagWrapper.appendChild(span);
+                    span.textContent = `#${tag} `; // 태그 앞에 # 붙이기
+                    openerTagWrapper.appendChild(span);
                 });
+                console.log("태그들이 searchedTags div에 추가됨.");
+            } else {
+                console.warn("경고: '.searchedTags > div'를 부모 창에서 찾을 수 없습니다.");
             }
 
-            const hiddenTagInput = window.opener.document.getElementById("selected_tags");
-            if (hiddenTagInput) {
-                hiddenTagInput.value = tags.join(",");
+            // 3. 숨겨진 input 필드에 태그들 문자열로 저장 (폼 제출용)
+            const openerHiddenTagInput = openerDoc.getElementById("selected_tags"); 
+            if (openerHiddenTagInput) {
+                openerHiddenTagInput.value = tags.join(",");
+                console.log("'selected_tags' hidden input에 태그 저장됨:", openerHiddenTagInput.value);
+            } else {
+                console.warn("경고: 'selected_tags' hidden input을 부모 창에서 찾을 수 없습니다.");
             }
-            window.close();
+            
+            // 모든 데이터 전달 후 현재 팝업 창 (list 페이지) 닫기
+            window.close(); 
+            console.log("팝업 창이 닫힘 요청됨.");
+
+        } else {
+            console.error("오류: window.opener가 null입니다. 이 기능은 팝업으로 열렸을 때만 작동합니다.");
+            alert("이 창은 팝업으로 열려야 합니다. 직접 접근 시 데이터 전달 및 창 닫기 기능이 작동하지 않습니다.");
         }
     }
-</script>
+
+
+    // 7. 이벤트 핸들러 연결
+    searchBtn.on('click', () => handleSearch(false)); // 빠른 검색
+    quickSearchInput.on('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearch(false);
+        }
+    });
+
+    resetBtn.on('click', resetFilter);
+
+    if (detailedSearchBtn.length) {
+        detailedSearchBtn.on('click', () => handleSearch(true)); // 상세 검색
+    }
+    tagSelect.on('change', () => handleSearch(true)); // 태그 선택 시 상세 검색
+
+    // 축제 카드 클릭 시 selectFestival 함수 호출 (이벤트 위임)
+    // `tags`가 JSON 문자열로 넘어왔을 때 `JSON.parse`를 확실히 적용
+    festList.on('click', '.festCard', function() {
+        const name = $(this).data('name');
+        let tags = $(this).data('tags'); // 이미 JSON.parse 된 상태일수도 있고, 문자열일 수도 있음
+
+        // data() 함수는 내부적으로 JSON.parse를 시도하므로, `tags`는 이미 배열일 가능성이 높습니다.
+        // 하지만 만약을 대비해 한 번 더 확인합니다.
+        const tagsArray = (typeof tags === 'string') ? JSON.parse(tags) : tags;
+        
+        selectFestival(name, tagsArray); // 올바르게 파싱된 배열을 전달
+    });
+
+    // 8. 초기 페이지 로딩 시 URL 파라미터에 따른 검색 실행
+    function initializePage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tag = urlParams.get('tag');
+        const keyword = urlParams.get('keyWord');
+
+        // URL 파라미터에 따라 검색 필드 값 설정
+        if (tag) tagSelect.val(tag);
+        if (keyword) quickSearchInput.val(keyword);
+
+        // URL 파라미터가 하나라도 있으면 해당 조건으로 검색, 없으면 전체 목록 로드
+        if (tag || keyword) {
+            performSearch({ tag, name: keyword });
+        } else {
+            performSearch({}); // 모든 파라미터를 빈 값으로 보내 전체 축제 목록을 가져옵니다.
+        }
+    }
+
+    initializePage(); // 페이지 초기화 함수 호출
+});
+    </script>
     <div id="footer">
-    <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
-    <ul class="footer-links">
-      <li><a href="#">개인정보처리방침</a></li>
-      <li><a href="#">이용약관</a></li>
-      <li><a href="#">관리자페이지 이동</a></li>
-      <li>
-        <div id="ldMode">
-          <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
-        </div>
-      </li>
-    </ul>
-  </div>
+      <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
+      <ul class="footer-links">
+        <li><a href="#">개인정보처리방침</a></li>
+        <li><a href="#">이용약관</a></li>
+        <li><a href="#">관리자페이지 이동</a></li>
+        <li>
+          <div id="ldMode">
+            <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
+          </div>
+        </li>
+      </ul>
+    </div>
 </body>
 </html>

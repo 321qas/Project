@@ -28,7 +28,7 @@ def jlist(request):
         first_festival_image = festival.sorted_images[0] if festival.sorted_images else None
         image_url = first_festival_image.image.url if first_festival_image and first_festival_image.image else None
 
-        festival_data.append({
+        festival_data.append({  
             'id': festival.id,
             'name': festival.name,
             'region': festival.region,
@@ -37,7 +37,6 @@ def jlist(request):
             'image': image_url,
             'tag' : 'spring'
         })
-        
-    print(festival_data)
+
     return JsonResponse(festival_data, safe=False)
     
