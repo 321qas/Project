@@ -53,11 +53,13 @@
 
 */
 
-/* 버튼 색상 */
+/* 버튼 색상 및 폰트*/
 
 .orange, .orange-n {
     background-color: #f97316;
     color: #ffffff;
+    border: 1px solid #f97316;
+    font-weight: 500;
 }
 
 .orange-n {
@@ -73,7 +75,7 @@
     border: 1px solid #f97316;
     background-color: #fff;
     color: #f97316;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .white-orange-active:hover {
@@ -81,7 +83,9 @@
     color: #fff;
 }
 
-
+.bold {
+    font-weight: bold;
+}
 
 /* 태그 */
 /* 상위 div 클래스명 ="tags", span이 태그 */
