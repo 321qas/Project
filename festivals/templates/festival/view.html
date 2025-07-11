@@ -24,17 +24,49 @@
     }
 
     .titlebox {
+      display:flex;
+      flex-direction:column;
+      width:fit-content;
+      gap: 5px;
+    }
+
+
+    /*
+    .titlebox {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
+      justify-content: flex-start
       gap: 40px;
     }
 
+    .titlebox .rating {
+      margin-top: 8px;
+    }
+
+    .titlebox h2 {
+      display: table;
+    }
+    */
+
     .datebox {
-      width: 400px;
+      width: fit-content;
       display: flex;
-      justify-content: flex-end;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-center;
+      gap: 10px;
+    }
+
+    /*
+    .datebox button {
+      margin-bottom: 10px;
+    }
+    */
+
+    .datebox .festival-period {
+      display: inline-flex;
       align-items: center;
-      gap: 20px;
+      white-space: nowrap;
     }
 
     .tags {
@@ -719,11 +751,11 @@
         <div class="section-header">
           <div class="titlebox">
             <h2>{{list.name}}</h2>
+            <div class="datebox">
+              <button class="orange-n moreBtn">Happening Now</button>
+              <span class="festival-period">{{list.start_date}} ~ {{list.end_date}}</span>
+            </div>
             <h4 class="rating">★4.8</h4>
-          </div>
-          <div class="datebox">
-            <button class="orange-n moreBtn">Happening Now</button>
-            <span class="festival-period">{{list.start_date}} ~ {{list.end_date}}</span>
           </div>
         </div>
         <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
