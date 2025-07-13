@@ -1,31 +1,36 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import Festival, FestivalImage, RegionInterest
 
 class FestivalImageInline(admin.TabularInline):
-    """축제별 이미지를 인라인으로 관리"""
     model = FestivalImage
     extra = 0
     min_num = 2
     max_num = 8
+    readonly_fields = ('preview',)
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-height:100px; max-width:150px;" />', obj.image.url)
+        return "-"
+    preview.short_description = "이미지 미리보기"
 
 class FestivalAdmin(admin.ModelAdmin):
-    """축제 관리자 화면"""
     inlines = [FestivalImageInline]
     list_display = (
-        'id',
-        'name', 'start_date', 'end_date', 'region', 'organizer',
-        'visitor_count', 'display_tags'
+        'id', 'name', 'start_date', 'end_date', 'region', 'organizer',
+        'visitor_count', 'display_tags', 'created_at', 'updated_at'
     )
     search_fields = (
-        'name', 'organizer', 'tags__name',
+        'name', 'organizer',
     )
     list_filter = (
-        'region', 'tags',
+        'region',
     )
-    filter_horizontal = ('tags',)  # 태그 편집 편하게
+    filter_horizontal = ('tags',)
+    readonly_fields = ('created_at', 'updated_at')
 
     def display_tags(self, obj):
-        """어드민 목록에서 태그를 콤마로 연결해 보여줌"""
         return ", ".join([tag.name for tag in obj.tags.all()])
     display_tags.short_description = '태그'
 
@@ -35,5 +40,4 @@ class RegionInterestAdmin(admin.ModelAdmin):
     search_fields = ('region',)
 
 admin.site.register(Festival, FestivalAdmin)
-admin.site.register(FestivalImage)
 admin.site.register(RegionInterest, RegionInterestAdmin)

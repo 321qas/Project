@@ -12,8 +12,67 @@
 
   <style>
     /* 배너 */
-    #cont1 #banner {
-      height:400px;
+    .banner-slider {
+      width: 100%;
+      max-width: 1100px; /* 더 시원하게 */
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 460px; /* 더 높게 */
+      background: #f4f4f4;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .banner-image-box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .banner-image {
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      transition: opacity 0.6s;
+      z-index: 0;
+    }
+    .banner-image.active {
+      opacity: 1;
+      z-index: 1;
+      position: relative;
+    }
+    .banner-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.85);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s;
+      z-index: 10;
+    }
+    .banner-arrow:hover {
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.11);
+    }
+    .banner-arrow.prev { left: 28px; }
+    .banner-arrow.next { right: 28px; }
+    @media (max-width: 900px) {
+      .banner-slider, .banner-image, .banner-image.active { height: 260px; max-width: 98vw;}
     }
   
     /* 축제 정보 */
@@ -715,40 +774,30 @@
       margin-bottom: 32px;  /* 폼 아래에 간격 추가 */
     }
 
+
   </style>
 
-
-  <!-- 더미데이터 (사진 슬라이드 관련) -->
+  <!-- 이미지 갤러리 슬라이더 -->
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-  const gallery = document.getElementById("gallery");
-  if (!gallery) return; // gallery가 없으면 스크립트 종료
-  const slides = gallery.querySelectorAll(".festImg");
-  const totalSlides = slides.length;
-  const visibleCount = 4; // 한 화면에 보이는 이미지 수
-  let currentIndex = 0;
-
-  function updateSlider() {
-    const shift = 100 / visibleCount * currentIndex;
-    gallery.style.transform = `translateX(-${shift}%)`;
-  }
-
-  document.querySelector(".arrow.prev").addEventListener("click", () => {
-    if (currentIndex > 0) {
-      currentIndex -= 1;
-      updateSlider();
+    const images = document.querySelectorAll('.banner-image');
+    let current = 0;
+    function show(idx) {
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === idx);
+      });
     }
+    document.querySelector('.banner-arrow.prev').onclick = () => {
+      current = (current === 0) ? images.length - 1 : current - 1;
+      show(current);
+    };
+    document.querySelector('.banner-arrow.next').onclick = () => {
+      current = (current === images.length - 1) ? 0 : current + 1;
+      show(current);
+    };
   });
+  </script>
 
-  document.querySelector(".arrow.next").addEventListener("click", () => {
-    if (currentIndex < totalSlides - visibleCount) {
-      currentIndex += 1;
-      updateSlider();
-    }
-  });
-});
-</script>
-<!--  -->
 </head>
 
 <body>
@@ -771,9 +820,22 @@
               <span style="color:#888;font-size:17px;">({{ review_count }})</span>
             </div>
           {% endif %}
+          </div>
         </div>
+        <div class="banner-slider">
+          <button class="banner-arrow prev" aria-label="이전">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="banner-image-box">
+            {% for image in list.images.all %}
+              <img class="banner-image{% if forloop.first %} active{% endif %}" src="{{ image.image.url }}" alt="축제 이미지">
+            {% endfor %}
+          </div>
+          <button class="banner-arrow next" aria-label="다음">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
-        <div id="banner" style="background: url('{{ list.images.all.1.image.url }}') center/cover no-repeat;"></div>        
+        
       </section>
 
       <section id="info-container" class="section-card no-shadow">
