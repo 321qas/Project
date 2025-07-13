@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>네이버 로그인 처리 중...</title>
+  <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; margin-top: 100px; }
+  </style>
+</head>
+<body>
+  <h2>네이버 로그인 처리 중입니다...</h2>
+  <p>잠시만 기다려 주세요.</p>
+  <script type="text/javascript">
+    // 1. 네이버 인증 정보 객체 생성
+    var naver_id_login = new naver_id_login("Wke0wdADmCltAya71Ce9", "http://127.0.0.1:8000/naver/callback");
+
+    // 2. 네이버 사용자 프로필 가져오기
+    naver_id_login.get_naver_userprofile("naverSignInCallback()");
+
+    // 3. 콜백 함수: 정보 추출 → 서버로 전송 → 메인페이지 리다이렉트(팝업일 경우 부모창!)
+    function naverSignInCallback() {
+      const userData = {
+        id: naver_id_login.getProfileData('id'),
+        email: naver_id_login.getProfileData('email'),
+        name: naver_id_login.getProfileData('name'),
+        nickname: naver_id_login.getProfileData('nickname'),
+        gender: naver_id_login.getProfileData('gender'),
+        birthyear: naver_id_login.getProfileData('birthyear'),
+        birthday: naver_id_login.getProfileData('birthday'),
+      };
+      // 서버로 정보 전달
+      $.ajax({
+        type: 'POST',
+        url: '/naver/callback',
+        data: JSON.stringify(userData),
+        contentType: 'application/json',
+        success: function(res) {
+          // 팝업에서 실행된 경우: 부모창 이동 + 팝업 닫기
+          if (window.opener && !window.opener.closed) {
+            window.opener.location.href = "/";
+            window.close();
+          } else {
+            // 팝업이 아니거나 window.opener 없음: 현재 창에서 이동
+            window.location.href = "/";
+          }
+        },
+        error: function(err) {
+          alert('서버 전송 실패! 다시 시도해 주세요.');
+          if (window.opener && !window.opener.closed) {
+            window.opener.location.href = "/accounts/login/";
+            window.close();
+          } else {
+            window.location.href = "/accounts/login/";
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
