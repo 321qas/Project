@@ -70,7 +70,8 @@
       font-weight: 500;
     }
 
-    #logo > span > span {
+    #logo > span > span > a {
+      display:inline-block;
       font-weight: 600;
       background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
       -webkit-background-clip: text;

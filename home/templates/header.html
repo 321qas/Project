@@ -1,8 +1,8 @@
 <div id="nav">
   <div id="logo">
     <a href='/'><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="로고" ></a>
-    {% if user_id %}
-    <span>for　<span>{{ nickname }}</span></span>
+    {% if is_login %}
+    <span>for　<span><a href="/accounts/mypage1/">{{ nickname }}</a></span></span>
     {% endif %}
   </div>
 
@@ -10,8 +10,13 @@
   <div id="pageMove">     
     <ul>
       <li><a href="/festivals/list/">festivals</a></li>
-      <li><a href="/accounts/login/">login</a></li>
-      <li><a href="/accounts/signup/terms/">sign up</a></li> 
+      {% if is_login %}
+        <li><a href="/accounts/logout/">logout</a></li>
+        <li><a href="/accounts/mypage1/">my page</a></li>
+      {% else %}
+        <li><a href="/accounts/login/">login</a></li>
+        <li><a href="/accounts/signup/terms/">sign up</a></li>
+      {% endif %}
       <li><a href="/inquiry/support/">support</a></li>  
     </ul>
   </div>

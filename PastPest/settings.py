@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'home.context_processors.user_info',
             ],
         },
     },
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'PastPest.wsgi.application'
 DATABASES = { # Oracle 데이터베이스 설정
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',  # 'orcl' or 'xe'
+        'NAME': 'xe',  # 'orcl' or 'xe'
         'USER': 'ora_user2',
         'PASSWORD': '1111',
         'HOST': 'localhost',
@@ -90,6 +91,13 @@ DATABASES = { # Oracle 데이터베이스 설정
 }
 
 AUTH_USER_MODEL = 'accounts.User' # 사용자 모델을 accounts 앱의 User로 설정
+
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리디렉션 URL
+LOGOUT_REDIRECT_URL = '/login/'  # 로그아웃 후 이동할 URL
+
+# 세션 유지 관련 옵션
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 24시간
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

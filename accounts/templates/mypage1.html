@@ -1,15 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
 
         /* 헤더
 
@@ -136,7 +134,7 @@
     </header>
     -->
     <div id="wrap">
-        {% include "footer.html" %}
+        {% include "header.html" %}
         <div class="contents">
 
             <!-- 프로필 카드 -->
@@ -149,9 +147,9 @@
                 <!-- 설정 버튼 링크 -->
                 <!-- <button>회원정보 수정</button> -->
                 <div class="links">
-                    <a href="#">My Plans</a>
-                    <a href="#">My Posts</a>
-                    <a href="#">Settings</a>
+                    <a href="/accounts/mypage2/">My Plans</a>
+                    <a href="/accounts/mypage2/">My Posts</a>
+                    <a href="/accounts/mypage2/">Settings</a>
                 </div>
             </div>
             <!--/ 프로필 카드 -->

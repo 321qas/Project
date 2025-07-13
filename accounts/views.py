@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password
 from .models import User, EmailVerification
 from .utils import send_gmail
@@ -11,7 +13,7 @@ from tags.models import Tag
 import uuid, datetime, random, string
 
 # 0. 로그인 화면
-def login(request):
+def login_view(request):
     if request.method == "POST":
         user_id = request.POST.get('id')
         password = request.POST.get('password')
@@ -28,6 +30,7 @@ def login(request):
             return render(request, 'login.html')
 
         # 로그인 성공: 세션에 정보 저장 (필요에 따라)
+        login(request, user)
         request.session['user_id'] = user.user_id
         request.session['nickname'] = user.nickname
         return redirect('index')
@@ -35,7 +38,8 @@ def login(request):
     return render(request, 'login.html')
 
 # 1. 로그아웃
-def logout(request):
+def logout_view(request):
+    logout(request)
     request.session.flush()
     return redirect('index')
 
@@ -352,6 +356,14 @@ def verify_email(request):
     messages.success(request, "이메일 인증이 완료되었습니다. 로그인 해주세요.")
     return redirect('accounts:login')
 
-# 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
-def pw_reset(request):
-    return render(request, 'login_password_reset.html')
+# # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
+# def pw_reset(request):
+#     return render(request, 'login_password_reset.html')
+
+
+# 8. 마이페이지
+def mypage1(request):
+    return render(request,'mypage1.html')
+
+def mypage2(request):
+    return render(request,'mypage2.html')
