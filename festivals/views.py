@@ -32,7 +32,7 @@ def region_interest_chart(request): # 지역별 관심도 통계 페이지
 from reviews.models import Review
 from django.db.models import Avg
 
-def view(request, id):
+def view(request, id): # 축제 상세 페이지
     qs = get_object_or_404(
         Festival.objects.prefetch_related(
             Prefetch(
@@ -104,3 +104,5 @@ def search(request): # 축제 검색
         })
 
     return JsonResponse(festival_data, safe=False)
+
+

@@ -14,7 +14,7 @@ class Wishlist(models.Model):
         help_text="관심을 등록한 축제를 선택하세요. (축제 삭제 시 함께 삭제)"
     )
     notify = models.BooleanField(
-        default=True,
+        default=False,
         help_text="축제 일정 알림 여부 (ON: 알림, OFF: 알림 없음)"
     )
     added_date = models.DateTimeField(

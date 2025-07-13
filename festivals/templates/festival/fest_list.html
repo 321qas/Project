@@ -13,7 +13,9 @@
       ul, li {list-style: none;}
       a {text-decoration: none; color: inherit;}
 
-      #wrap {flex: 1;}
+      #wrap {
+        flex: 1;
+      }
 
       #banner_blur {
         height: 400px;
@@ -119,20 +121,11 @@
       .button button:hover {
         background-color: #0056b3;
       }
-       #festList {
-        width: 60%;
-        margin: 50px auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; /* 간격 균등 */
-        gap: 20px; /* 카드 간격 */
-        border-top: 1px solid #ccc;
-        padding-top: 30px;
-      }
+
       @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
       #festList {
-        width: 60%;
+        width: 100%;
         margin: 50px auto;
         display: flex;
         flex-wrap: wrap;
@@ -142,7 +135,6 @@
         padding-top: 30px;
         font-family: 'Nanum Gothic', sans-serif;
       }
-
       .festCard {
         width: calc(33.333% - 13.333px);
         height: 380px;
