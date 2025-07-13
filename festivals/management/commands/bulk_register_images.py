@@ -1,7 +1,5 @@
-
 # DB에 이미지 경로 자동등록을 위한 Django 커맨드 스크립트
 # 사용법: 터미널에 => python manage.py bulk_register_images
-
 
 import os
 from django.core.management.base import BaseCommand
@@ -43,14 +41,20 @@ class Command(BaseCommand):
                 total_skipped += 1
                 continue
 
-            # 3. 폴더 안의 이미지 파일 등록
+            # 3. 폴더 안의 이미지 파일 등록 (최대 8장)
             files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
             if not files:
                 self.stdout.write(self.style.WARNING(f"[SKIP] 이미지 없음: {folder}"))
                 total_skipped += 1
                 continue
 
+            images_registered = 0  # 폴더별 등록 카운트
             for fname in files:
+                if images_registered >= 8:
+                    self.stdout.write(self.style.WARNING(f"[SKIP] 이미지 8장 초과로 무시: {folder}/{fname}"))
+                    total_skipped += 1
+                    continue
+
                 image_path = os.path.join('festivals', 'images', folder, fname)
 
                 # 중복 체크
@@ -65,5 +69,6 @@ class Command(BaseCommand):
                 )
                 self.stdout.write(self.style.SUCCESS(f"[OK] {festival.name} ← {fname}"))
                 total_registered += 1
+                images_registered += 1
 
         self.stdout.write(self.style.SUCCESS(f"\n=== 작업 종료 ===\n성공: {total_registered}건, 스킵: {total_skipped}건"))
