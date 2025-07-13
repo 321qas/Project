@@ -1,3 +1,4 @@
+
 body {
     justify-content: center;
     align-items: center;
@@ -66,3 +67,13 @@ body {
 .social-login img:hover {
   opacity: 0.7;
 }
+.card img {
+           margin-bottom:35px;
+        }
+        .divider-links {
+         font-size: 1em;
+         white-space: nowrap;
+        }
+        .divider-links * {
+         margin: 5px;
+        }
