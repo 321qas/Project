@@ -130,6 +130,7 @@
 </head>
 <body>
     <div id="wrap">
+        {% include "header.html" %}
         <div class="contents">
             <h1>Member Registration</h1>
 
@@ -154,7 +155,7 @@
             {% if messages %}
                 <ul class="messages">
                 {% for message in messages %}
-                    <li style="color: color: #a4161a; font-size: 15px; font-weight: bold; background-color: #ffe0e0; border: 1px solid #e63946; padding: 5px 10px;">{{ message }}</li>
+                    <li style="color: #a4161a; font-size: 15px; font-weight: bold; background-color: #ffe0e0; border: 1px solid #e63946; padding: 5px 10px;">{{ message }}</li>
                 {% endfor %}
                 </ul>
             {% endif %}
@@ -258,6 +259,7 @@
             </form>
         </div>
     </div>
+    {% include "footer.html" %}
     <!-- 관심 태그 JS (간단 데모, 실제 서비스는 고도화 필요) -->
     <script>
 

@@ -119,7 +119,7 @@ def find_password(request):
               and change it immediately for your account's security.
             </p>
             <div style="text-align:center;margin:34px 0 0 0;">
-              <a href="https://yourdomain.com/accounts/login/"
+              <a href="http://localhost:8000/accounts/login"
                  style="display:inline-block;padding:13px 34px;font-size:1.08rem;background:#f97316;color:#fff;border-radius:7px;text-decoration:none;font-weight:bold;letter-spacing:1px;box-shadow:0 2px 6px #f9731633;">
                  🔒 Go to Login
               </a>

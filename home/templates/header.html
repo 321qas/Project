@@ -1,6 +1,9 @@
 <div id="nav">
   <div id="logo">
-    <a href='#'><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="로고" ></a>
+    <a href='/'><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="로고" ></a>
+    {% if user_id %}
+    <span>for　<span>{{ nickname }}</span></span>
+    {% endif %}
   </div>
 
 
