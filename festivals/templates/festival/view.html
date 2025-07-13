@@ -823,17 +823,73 @@
         </div>
       </section>
 
-      
-
+      <!-- 카카오맵 섹션 -->
       <section id="cont3" class="section-card no-shadow">
         <div class="section-header">
           <h3>Location</h3>
         </div>
         <div class="txtBox">
-          <div id="kakaomap">카카오맵api 활용</div>
+          <div id="map" style="width:600px;height:300px;"></div>
         </div>
       </section>
+      <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1ae8ecdbe59bd236260a1e3d89dc0a51"></script> <!-- 카카오맵 JS SDK (APP KEY 교체 필요) -->
+      <script>
+        // Django 변수에서 위도/경도 값 읽기 (없으면 0)
+        var latitude = {{ list.latitude|default:0 }};
+        var longitude = {{ list.longitude|default:0 }};
+      
+        var mapContainer = document.getElementById('map'),
+            mapOption = { 
+              center: new kakao.maps.LatLng(latitude, longitude),
+              level: 3
+            };
+          
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+          
+        // 마커 생성
+        var marker = new kakao.maps.Marker({
+          map: map, 
+          position: new kakao.maps.LatLng(latitude, longitude)
+        });
+      
+        // 커스텀 오버레이(닫기버튼 포함, 주소만 표시)
+        var content = `
+          <div class="wrap" style="border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.10);overflow:hidden;">
+            <div class="info" style="background:#fff;position:relative;width:350px;"> <!-- ← 여기 width 늘림 -->
+              <div class="title" style="padding:10px 34px 10px 12px;font-weight:bold;font-size:15px;background:#f5f6fa;">
+                축제 장소
+                <div class="close" onclick="closeOverlay()" title="닫기"
+                     style="position:absolute;top:9px;right:8px;width:23px;height:23px;cursor:pointer;">
+                  <span style="display:block;width:100%;height:100%;text-align:center;line-height:23px;font-size:16px;color:#666;">×</span>
+                </div>
+              </div>
+              <div class="body" style="padding:13px;text-align:left;">
+                <div class="desc" style="font-size:14px;color:#222;word-break:break-all;">
+                  <div>{{ list.detail_region }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
 
+        var overlay = new kakao.maps.CustomOverlay({
+          content: content,
+          position: marker.getPosition(),
+          yAnchor: 1
+        });
+      
+        kakao.maps.event.addListener(marker, 'click', function() {
+          overlay.setMap(map);
+        });
+      
+        window.closeOverlay = function() {
+          overlay.setMap(null);     
+        }
+      </script>
+      <!-- 카카오맵 섹션 끝 -->
+
+      
+      <!-- 리뷰 섹션 -->
       <section id="cont4" class="section-card no-shadow">
         <div class="section-header">
           <h3>Reviews</h3>
