@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    {% comment %} <link rel="stylesheet" type="text/css" href="/static/css/main.css"> {% endcomment %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Document</title>
     <style>
@@ -128,9 +128,15 @@
 
       @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
+      .contents {
+          width: 60%;
+          margin: 0 auto; /* 중앙 정렬 */
+        }
+
+      
       #festList {
         width: 100%;
-        margin: 50px auto;
+        margin: 50px 0;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -140,8 +146,8 @@
         font-family: 'Nanum Gothic', sans-serif;
       }
       .festCard {
-        width: calc(33.333% - 13.333px);
-        height: 380px;
+        width: calc(32% - 10px);
+        height: 480px;
         display: flex;
         flex-direction: column;
         border-radius: 12px;
