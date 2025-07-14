@@ -2,7 +2,7 @@
   <div id="logo">
     <a href='/'><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="로고" ></a>
     {% if user.is_authenticated %}
-      <span>for <span><a href="/accounts/mypage1/">{{ user.nickname }}</a></span></span>
+      <span>for<span><a href="/accounts/mypage1/">{{ nickname }}</a></span></span>
     {% endif %}
   </div>
 
