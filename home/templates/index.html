@@ -343,163 +343,207 @@
 
   </style>
   <script>
-    let scrollTimer;
-    let i = 0; // 현재 표시 중인 쇼츠의 인덱스 (alldata 배열 기준)
-    let j = 0; // 현재 쇼츠 내에서 이미지 순환을 위한 인덱스
-    let startX, isDragging = false;
-    let alldata = []; // AJAX로 받아온 모든 축제 데이터를 저장할 전역 변수
+let scrollTimer;
+let currentShortIndex = 0; // 현재 표시 중인 쇼츠의 인덱스 (shortformsData 배열 기준)
+let currentImageIndex = 0; // 현재 쇼츠 내에서 이미지 순환을 위한 인덱스
+let startX, isDragging = false; // 드래그 관련 변수
+let shortformsData = []; // sList에서 받아온 모든 쇼츠 데이터를 저장할 변수
+let festivalsData = []; // jList에서 받아온 모든 축제 데이터를 저장할 변수
 
-    // DOM이 로드되면 바로 실행
-    document.addEventListener('DOMContentLoaded', function() {
-        AOS.init({
-            duration: 1000, // 기본 애니메이션 지속 시간
-            once: true, // 애니메이션을 한 번만 실행
-        }); 
+// DOM이 로드되면 바로 실행
+document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+        duration: 1000, // 기본 애니메이션 지속 시간
+        once: true, // 애니메이션을 한 번만 실행
+    }); 
 
-        setupInitialShortsUI('bottom'); 
+    setupInitialShortsUI('bottom'); 
 
+    // 모든 AJAX 요청이 완료된 후에 실행될 Promise.all 사용
+    Promise.all([
+        // sList AJAX 요청 (쇼츠 데이터)
+        $.ajax({
+            url: '/slist/', 
+            type: 'GET',
+            dataType: 'json'
+        }),
+        // jList AJAX 요청 (축제 리스트 데이터)
         $.ajax({
             url: '/jlist/',
             type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // ★ 2. AJAX 데이터 성공 시 전역 변수 alldata에 저장
-                alldata = data; 
+            dataType: 'json'
+        })
+    ])
+    .then(function(results) {
+        // 모든 AJAX 요청이 성공적으로 완료되었을 때 실행
+        const shortformsResponse = results[0]; // sList 응답
+        const festivalsResponse = results[1]; // jList 응답
 
-                // 데이터 유효성 검사
-                if (!Array.isArray(alldata) || alldata.length === 0) {
-                    console.error("Error: No festival data received or data is not an array.");
-                    $('.listTitle').html('<p>축제 데이터를 불러올 수 없습니다.</p>');
-                    return;
-                }
+        // shortformsData 할당 (data.shortforms로 접근)
+        shortformsData = shortformsResponse.shortforms || []; 
 
-                addlist(alldata); 
-                updateShortsContent(alldata[i]); 
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error("AJAX Error: " + textStatus, errorThrown, jqXHR.responseText);
-                $('.listTitle').html('<p>축제 정보를 불러오는 중 오류가 발생했습니다.</p>');
-            }
-        });
+        // festivalsData 할당 (jList 응답 그대로 할당)
+        festivalsData = festivalsResponse || []; 
+
+        // 데이터 유효성 검사
+        if (!Array.isArray(festivalsData) || festivalsData.length === 0) {
+            console.error("Error: No festival data received from jlist or data is not an array.");
+            $('.listTitle').html('<p>축제 데이터를 불러올 수 없습니다.</p>');
+        } else {
+            addlist(festivalsData); // 축제 리스트 UI 업데이트
+        }
+
+        if (!Array.isArray(shortformsData) || shortformsData.length === 0) {
+            console.error("Error: No shortform data received from slist or data is not an array.");
+            $('#shorts').html('<p>쇼츠 데이터를 불러올 수 없습니다.</p>');
+        } else {
+            // 초기 쇼츠 UI 업데이트 (첫 번째 쇼츠 데이터로)
+            updateShortsContent(shortformsData[currentShortIndex]); 
+            // 5초마다 이미지 순환 시작 (현재 쇼츠 내 이미지)
+            setInterval(changeShortsImage, 5000); 
+        }
+    })
+    .catch(function(error) {
+        // Promise.all 중 하나라도 실패하면 실행
+        console.error('데이터 로드 중 오류 발생:', error);
+        $('#shortsContainer').html('<p>데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>');
+        $('.listTitle').html('<p>축제 정보를 불러오는 중 오류가 발생했습니다.</p>');
     });
 
-    $(document).ready(function() {
-        $('#wrap').on('wheel', '#shortsContainer', function(e) {
-            e.preventDefault();
-            clearTimeout(scrollTimer);
+    // #shortsContainer에 대한 휠 이벤트 리스너 (jQuery ready 함수 안으로 이동)
+    $('#wrap').on('wheel', '#shortsContainer', function(e) {
+        e.preventDefault();
+        clearTimeout(scrollTimer);
 
-            if (!alldata || alldata.length === 0) { // 데이터가 없으면 스크롤 동작 안 함
-                return;
-            }
+        if (!shortformsData || shortformsData.length === 0) { 
+            return; // 쇼츠 데이터가 없으면 스크롤 동작 안 함
+        }
 
-            if (e.originalEvent.deltaY > 0) {  // 휠을 내리면 (다음 쇼츠)
-                // 현재 인덱스가 전체 데이터의 마지막이 아니라면 이동
-                if (i < alldata.length - 1) { 
-                    scrollTimer = setTimeout(function() {
-                        i++;
-                        j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
-                        applyAOSAnimation('up'); // 쇼츠 컨테이너 AOS 애니메이션
-                        updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                    }, 500);
-                }
-            } else {  // 휠을 올리면 (이전 쇼츠)
-                if (i > 0) { // 첫 번째 축제가 아니라면
-                    scrollTimer = setTimeout(function() {
-                        i--;
-                        j = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
-                        applyAOSAnimation('down'); // 쇼츠 컨테이너 AOS 애니메이션
-                        updateShortsContent(alldata[i]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                    }, 500);
-                }
+        if (e.originalEvent.deltaY > 0) { // 휠을 내리면 (다음 쇼츠)
+            if (currentShortIndex < shortformsData.length - 1) { 
+                scrollTimer = setTimeout(function() {
+                    currentShortIndex++;
+                    currentImageIndex = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
+                    applyAOSAnimation('up'); // 쇼츠 컨테이너 AOS 애니메이션
+                    updateShortsContent(shortformsData[currentShortIndex]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
+                }, 500); // 0.5초 디바운스
             }
-        });
+        } else { // 휠을 올리면 (이전 쇼츠)
+            if (currentShortIndex > 0) { 
+                scrollTimer = setTimeout(function() {
+                    currentShortIndex--;
+                    currentImageIndex = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
+                    applyAOSAnimation('down'); // 쇼츠 컨테이너 AOS 애니메이션
+                    updateShortsContent(shortformsData[currentShortIndex]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
+                }, 500); // 0.5초 디바운스
+            }
+        }
     });
+}); // document.ready end
 
-    function setupInitialShortsUI(animove) {
-        const initialShortsHtml = `
-            <div id="shortsContainer" data-aos="fade-${animove}"> 
-                <div id="shortsBorder"> 
-                    <data id="shorts"><img src="" width='100%' height='100%' alt="쇼츠 이미지"></data>
-                    <div id="shortsMeta">
-                        <a href="#" class="festNameInShorts"></a>
-                        <span class="tags" style="font-size: 15px;"></span>
-                    </div>
-                </div>
-                <div id="shortsIcoContainer">
-                    <button class="iconBtn createBtn" onclick="createBtn()">+</button>
-                    <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
-                    <button class="iconBtn shareBtn" onclick="shareBtn()">🔄</button>
-                    <button class="iconBtn reviewBtn" onclick="reviewBtn()">📝</button>
-                    <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
+// setupInitialShortsUI 함수 (DOMContentLoaded 안에 있었으므로, 필요에 따라 외부로 뺄 수 있습니다)
+function setupInitialShortsUI(animove) {
+    const initialShortsHtml = `
+        <div id="shortsContainer" data-aos="fade-${animove}"> 
+            <div id="shortsBorder"> 
+                <data id="shorts">
+                    <img src="" width='100%' height='100%' alt="쇼츠 이미지">
+                    <a class="creator">@축제모아</a>
+                    <a class="shorts_title">요즘 입소문 탄다는 축제</a>
+                </data>
+                <div id="shortsMeta">
+                    <a href="#" class="festNameInShorts"></a>
+                    <span class="tags" style="font-size: 15px;"></span>
                 </div>
             </div>
-            <div class="listTitle"><h3> Festivals</h3></div>
-            <div class="recommendFestList">`;
-        $('.contents').html(initialShortsHtml);
-        AOS.refresh(); // AOS가 새로 생성된 요소들을 인식하도록 새로고침
+            <div id="shortsIcoContainer">
+                <button class="iconBtn createBtn" onclick="createBtn()">+</button>
+                <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
+                <button class="iconBtn shareBtn" onclick="shareBtn()">🔄</button>
+                <button class="iconBtn reviewBtn" onclick="reviewBtn()">📝</button>
+                <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
+            </div>
+        </div>
+        <div class="listTitle"><h3> Festivals</h3></div>
+        <div class="recommendFestList"></div>`; // 닫는 <div> 태그는 addlist에서 추가될 것이므로 여기서 제거
+    $('.contents').html(initialShortsHtml);
+    AOS.refresh(); 
+}
+
+// shortsContainer의 AOS 애니메이션만 적용하는 함수
+function applyAOSAnimation(animove) {
+    $('#shortsContainer').attr('data-aos', `fade-${animove}`);
+    AOS.refresh(); 
+}
+
+// shortsContainer 내부의 콘텐츠를 데이터에 맞춰 업데이트하는 함수
+function updateShortsContent(shortformItem) {
+    if (!shortformItem) {
+        console.warn("shortformItem이 유효하지 않습니다.");
+        return;
+    }
+    
+    // 쇼츠 제목 업데이트
+    $('#shorts .shorts_title').text(shortformItem.title); // 'shorts_title' 클래스 사용
+
+    // 1. 쇼츠 이미지 업데이트
+    const imageUrl = shortformItem.images && shortformItem.images.length > currentImageIndex ?
+                     shortformItem.images[currentImageIndex].image_url : ''; 
+    $('#shorts img').attr('src', imageUrl); 
+
+    // 2. 축제 이름 업데이트
+    const festival = shortformItem.festival;
+    const festivalName = festival && festival.name ? festival.name : '없어진 축제입니다';
+    const festivalId = festival && festival.id ? festival.id : null;
+
+    $('.festNameInShorts').text(festivalName);
+    if (festivalId) {
+        $('.festNameInShorts').attr('href', `/festivals/view/${festivalId}/`);
+    } else {
+        $('.festNameInShorts').removeAttr('href').css('cursor', 'default'); 
     }
 
-    // shortsContainer의 AOS 애니메이션만 적용하는 함수
-    function applyAOSAnimation(animove) {
-        $('#shortsContainer').attr('data-aos', `fade-${animove}`);
-        AOS.refresh(); // AOS 애니메이션 새로고침
-    }
+    // 3. 축제 태그 업데이트
+    const tagsHtml = (festival && festival.tags && Array.isArray(festival.tags) && festival.tags.length > 0) ?
+        festival.tags.map(tag => `<a href="result_list.html?tag=${encodeURIComponent(tag.name)}">#${tag.name}</a>`).join(' ') : '';
+    $('.tags').html(tagsHtml);
+}
 
-    // shortsContainer 내부의 콘텐츠를 데이터에 맞춰 업데이트하는 함수
-    function updateShortsContent(festivalItem) {
-        if (!festivalItem) return;
+// 현재 쇼츠 내에서 이미지를 순환하는 함수
+function changeShortsImage() {
+    if (!shortformsData || shortformsData.length === 0) return; // 데이터 없으면 종료
 
-        // 이미지 업데이트 (festivalItem.sorted_images가 배열이고, j 인덱스가 유효한지 확인)
-        const imageUrl = festivalItem.sorted_images && festivalItem.sorted_images.length > j ? 
-                         festivalItem.sorted_images[j].image.url : '';
-        $('#shorts img').attr('src', imageUrl);
-        
-        // 축제 이름 업데이트
-        $('.festNameInShorts').text(festivalItem.name);
-        $('.festNameInShorts').attr('href', `/festivals/view/${festivalItem.id}/`); 
-
-        const tagsHtml = (festivalItem.tags && Array.isArray(festivalItem.tags) && festivalItem.tags.length > 0) ?
-            festivalItem.tags.map(tag => `<a href="result_list.html?tag=${tag}">#${tag}</a>`).join(' ') : '';
-        $('.tags').html(tagsHtml); 
-    }
-
-    // 자동 콘텐츠 변경 (5초마다) - 현재 쇼츠 내에서 이미지 순환
-    function changeContent() {
-        if (!alldata || alldata.length === 0) return; // 데이터 없으면 종료
-
-        const currentFestival = alldata[i]; // 현재 표시 중인 쇼츠 데이터
-        if (currentFestival && currentFestival.sorted_images) {
-            j++;
-            if (j >= currentFestival.sorted_images.length) { 
-                j = 0; // 현재 쇼츠의 모든 이미지를 봤으면 다시 첫 번째 이미지로
-            }
-            // 현재 쇼츠 (i)의 j번째 이미지로 업데이트
-            updateShortsContent(currentFestival); 
+    const currentShort = shortformsData[currentShortIndex]; // 현재 표시 중인 쇼츠 데이터
+    if (currentShort && currentShort.images && currentShort.images.length > 0) {
+        currentImageIndex++;
+        if (currentImageIndex >= currentShort.images.length) { 
+            currentImageIndex = 0; // 현재 쇼츠의 모든 이미지를 봤으면 다시 첫 번째 이미지로
         }
+        // 현재 쇼츠 (currentShortIndex)의 currentImageIndex번째 이미지로 업데이트
+        updateShortsContent(currentShort); 
     }
+}
 
-    // 5초마다 콘텐츠 변경 타이머 시작
-    setInterval(changeContent, 5000);
-
-    // addlist 함수 (추천 축제 리스트를 동적으로 생성)
-    function addlist(data){ // data 인자로 alldata를 받습니다
-        // 데이터 반복 및 HTML 생성
-        jdata=``;
-        for (let k = 0; k < data.length && k < 8; k++) { // 최대 8개 또는 data.length 만큼
-            const festival = data[k];
-            // 이미지 alt 속성 개선 및 태그 표시 로직 추가
-            jdata += `<a href="/festivals/view/${festival.id}/"><div class="festCard"><img src="${festival.image}" alt="${festival.name} 축제 이미지"><p>${festival.name}</p></div></a>`;
-        }
-        jdata += `</div>`; // recommendFestList 닫기
-
-        $('.recommendFestList').html(jdata);
+// addlist 함수 (추천 축제 리스트를 동적으로 생성)
+function addlist(data){ // data 인자로 festivalsData를 받습니다
+    let jdata = ``;
+    for (let k = 0; k < data.length && k < 8; k++) { // 최대 8개 또는 data.length 만큼
+        const festival = data[k];
+        // image 필드는 jlist 응답의 festival 객체에 직접 있어야 합니다.
+        // 예를 들어, festival.image_url 또는 festival.main_image_url
+        // 현재 코드에서는 `festival.image`를 사용하고 있으므로, `jlist`에서 해당 필드를 제공한다고 가정합니다.
+        const imageUrl = festival.image || '경로/기본_이미지.png'; // 이미지가 없으면 기본 이미지
+        jdata += `<a href="/festivals/view/${festival.id}/"><div class="festCard"><img src="${imageUrl}" alt="${festival.name} 축제 이미지"><p>${festival.name}</p></div></a>`;
     }
+    $('.recommendFestList').html(jdata); // div 닫는 태그는 HTML 구조에 따라 처리
+}
 
-    function createBtn() { console.log('Create Button clicked'); }
-    function likeBtn() { console.log('Like Button clicked'); }
-    function shareBtn() { console.log('Share Button clicked'); }
-    function reviewBtn() { console.log('Review Button clicked'); }
-    function viewBtn() { console.log('View Button clicked'); }
+// 아이콘 버튼 핸들러 함수들
+function createBtn() { console.log('Create Button clicked'); }
+function likeBtn() { console.log('Like Button clicked'); }
+function shareBtn() { console.log('Share Button clicked'); }
+function reviewBtn() { console.log('Review Button clicked'); }
+function viewBtn() { console.log('View Button clicked'); }
 </script>
 </head>
 
