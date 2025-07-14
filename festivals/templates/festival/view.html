@@ -811,7 +811,7 @@
         <div class="titlebox">
           <h2>{{list.name}}</h2>
           <div class="datebox">
-            <button class="orange-n moreBtn">Happening Now</button>
+            <button class="orange-n moreBtn">{{ status_text }}</button>
             <span class="festival-period">
               {{ list.start_date|date:"Y-m-d" }} ~ {{ list.end_date|date:"Y-m-d" }}
             </span>
