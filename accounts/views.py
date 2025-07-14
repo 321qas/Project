@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
+from django.db import IntegrityError
 
 import uuid
 import datetime
@@ -408,7 +409,7 @@ def naver_callback(request):
 
     # 1. access_token 요청
     client_id = 'Wke0wdADmCltAya71Ce9'
-    client_secret = 'pulBcjX7gl'  # 꼭! 입력
+    client_secret = 'pulBcjX7gl'
     redirect_uri = 'http://127.0.0.1:8000/naver/callback/'
     token_url = (
         "https://nid.naver.com/oauth2.0/token"
@@ -430,38 +431,61 @@ def naver_callback(request):
         return render(request, "login.html", {"messages": ["프로필 조회 실패! 다시 시도해 주세요."]})
     info = profile_json.get('response', {})
 
-    # 3. 유저 정보 파싱 및 로그인/회원가입 처리
+    # 3. 유저 정보 파싱
     email = info.get('email')
     nickname = info.get('nickname') or f"네이버유저_{uuid.uuid4().hex[:3]}"
     name = info.get('name') or "네이버"
-    gender_raw = info.get('gender')  # 'M', 'F', None
+    gender_raw = info.get('gender')
     birthyear = info.get('birthyear')
     birthday = info.get('birthday')
     dob = f"{birthyear}-{birthday[:2]}-{birthday[2:]}" if birthyear and birthday else None
 
-    if gender_raw == 'M':
-        gender = 'male'
-    elif gender_raw == 'F':
-        gender = 'female'
-    else:
-        gender = None
-        
+    gender = 'male' if gender_raw == 'M' else 'female' if gender_raw == 'F' else None
+
     if not email:
         return render(request, "login.html", {"messages": ["이메일을 받아올 수 없습니다. 네이버 계정 설정 확인!"]})
 
-    user, created = User.objects.get_or_create(
-        email=email,
-        login_type='naver',
-        defaults={
-            'user_id': f"naver_{uuid.uuid4().hex[:6]}",
-            'nickname': nickname,
-            'real_name': name,
-            'gender': gender,
-            'dob': dob,
-        }
-    )
+    # [1] 이메일 중복 완전 차단 (unique 제약 대응, login_type 상관없이 전체 체크)
+    if User.objects.filter(email=email).exists():
+        return render(request, "login.html", {
+            "messages": [
+                "이미 일반회원으로 가입된 이메일입니다."
+            ]
+        })
 
-    request.session['user_id'] = user.user_id
-    request.session['nickname'] = user.nickname
-
-    return redirect("index")  # 메인페이지로 이동
+    # [2] 네이버로 이미 가입된 경우 바로 로그인
+    try:
+        user = User.objects.get(email=email, login_type='naver')
+        login(request, user)
+        request.session['user_id'] = user.user_id
+        request.session['nickname'] = user.nickname
+        return redirect("index")
+    except User.DoesNotExist:
+        # [3] 신규 네이버 계정 회원가입 (user_id, nickname 충돌 방지, IntegrityError 안전망)
+        for _ in range(10):
+            base_user_id = f"naver_{uuid.uuid4().hex[:6]}"
+            while User.objects.filter(user_id=base_user_id).exists():
+                base_user_id = f"naver_{uuid.uuid4().hex[:6]}"
+            base_nickname = nickname
+            count = 1
+            while User.objects.filter(nickname=base_nickname).exists():
+                base_nickname = f"{nickname}_{count}"
+                count += 1
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    login_type='naver',
+                    user_id=base_user_id,
+                    nickname=base_nickname,
+                    real_name=name,
+                    gender=gender,
+                    dob=dob,
+                )
+                login(request, user)
+                request.session['user_id'] = user.user_id
+                request.session['nickname'] = user.nickname
+                return redirect("index")
+            except IntegrityError:
+                continue  # 랜덤값이 충돌나면 다시 시도
+        # 10번 루프 돌았는데도 실패하면
+        return render(request, "login.html", {"messages": ["회원가입에 실패했습니다. 관리자에게 문의해 주세요."]})
