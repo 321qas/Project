@@ -82,7 +82,7 @@ def search(request): # 축제 검색
 
     # 필터링 조건 적용
     if name_query: festival_qs = festival_qs.filter(name__icontains=name_query)
-    if region: festival_qs = festival_qs.filter(region=region)
+    if region: festival_qs = festival_qs.filter(region__icontains=region)
     if start_date_str: festival_qs = festival_qs.filter(start_date__gte=start_date_str)
     if end_date_str: festival_qs = festival_qs.filter(end_date__lte=end_date_str)
 
