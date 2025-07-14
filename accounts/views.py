@@ -394,20 +394,23 @@ def naver_login_start(request):
     )
     return redirect(url)
 
-# 2. 네이버 로그인 콜백: access_token → 프로필 → 로그인 처리
+# 2. 네이버 로그인 콜백: 네이버에서 인증 후 돌아오는 URL 처리
 def naver_callback(request):
+    import uuid, requests  # 이미 상단에 import 되어있으면 생략
+
     code = request.GET.get('code')
     state = request.GET.get('state')
     session_state = request.session.get('naver_state')
     error = request.GET.get('error')
 
+    # 1. 기본 유효성 검사
     if not code or not state or error:
         return render(request, "login.html", {"messages": ["네이버 로그인 실패! 다시 시도해 주세요."]})
 
     if session_state != state:
         return render(request, "login.html", {"messages": ["잘못된 접근입니다. 다시 시도해 주세요."]})
 
-    # 1. access_token 요청
+    # 2. access_token 요청
     client_id = 'Wke0wdADmCltAya71Ce9'
     client_secret = 'pulBcjX7gl'
     redirect_uri = 'http://127.0.0.1:8000/naver/callback/'
@@ -422,7 +425,7 @@ def naver_callback(request):
     if not access_token:
         return render(request, "login.html", {"messages": ["토큰 발급 실패! 다시 시도해 주세요."]})
 
-    # 2. 프로필 정보 요청
+    # 3. 네이버 프로필 정보 요청
     profile_url = "https://openapi.naver.com/v1/nid/me"
     headers = {'Authorization': f'Bearer {access_token}'}
     profile_res = requests.get(profile_url, headers=headers)
@@ -431,7 +434,7 @@ def naver_callback(request):
         return render(request, "login.html", {"messages": ["프로필 조회 실패! 다시 시도해 주세요."]})
     info = profile_json.get('response', {})
 
-    # 3. 유저 정보 파싱
+    # 4. 유저 정보 파싱
     email = info.get('email')
     nickname = info.get('nickname') or f"네이버유저_{uuid.uuid4().hex[:3]}"
     name = info.get('name') or "네이버"
@@ -439,21 +442,12 @@ def naver_callback(request):
     birthyear = info.get('birthyear')
     birthday = info.get('birthday')
     dob = f"{birthyear}-{birthday[:2]}-{birthday[2:]}" if birthyear and birthday else None
-
     gender = 'male' if gender_raw == 'M' else 'female' if gender_raw == 'F' else None
 
     if not email:
         return render(request, "login.html", {"messages": ["이메일을 받아올 수 없습니다. 네이버 계정 설정 확인!"]})
 
-    # [1] 이메일 중복 완전 차단 (unique 제약 대응, login_type 상관없이 전체 체크)
-    if User.objects.filter(email=email).exists():
-        return render(request, "login.html", {
-            "messages": [
-                "이미 일반회원으로 가입된 이메일입니다."
-            ]
-        })
-
-    # [2] 네이버로 이미 가입된 경우 바로 로그인
+    # 5. 네이버 회원이면 바로 로그인
     try:
         user = User.objects.get(email=email, login_type='naver')
         login(request, user)
@@ -461,7 +455,15 @@ def naver_callback(request):
         request.session['nickname'] = user.nickname
         return redirect("index")
     except User.DoesNotExist:
-        # [3] 신규 네이버 계정 회원가입 (user_id, nickname 충돌 방지, IntegrityError 안전망)
+        # 6. 동일 이메일의 일반 회원이 있으면 안내
+        if User.objects.filter(email=email, login_type='normal').exists():
+            return render(request, "login.html", {
+                "messages": [
+                    "이미 일반회원으로 가입된 이메일입니다.<br>일반 로그인을 이용해 주세요.<br>"
+                    "비밀번호를 잊으셨다면 <a href='/accounts/find_password/'>비밀번호 찾기</a>를 이용해 주세요."
+                ]
+            })
+        # 7. 네이버 계정도, 일반 계정도 없으면 신규 네이버 회원가입
         for _ in range(10):
             base_user_id = f"naver_{uuid.uuid4().hex[:6]}"
             while User.objects.filter(user_id=base_user_id).exists():
@@ -486,6 +488,7 @@ def naver_callback(request):
                 request.session['nickname'] = user.nickname
                 return redirect("index")
             except IntegrityError:
-                continue  # 랜덤값이 충돌나면 다시 시도
-        # 10번 루프 돌았는데도 실패하면
+                continue  # user_id, nickname 충돌시 재시도
+        # 10번 시도해도 실패 시
         return render(request, "login.html", {"messages": ["회원가입에 실패했습니다. 관리자에게 문의해 주세요."]})
+

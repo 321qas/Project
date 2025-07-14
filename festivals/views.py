@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Festival, RegionInterest,FestivalImage
-from django.db.models import Prefetch, F
+from .models import Festival, RegionInterest, FestivalImage
+from django.db.models import Prefetch, F, Avg
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from reviews.models import Review
 import json
+from datetime import date
 
 def festival_detail(request, pk): # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
     # 해당 축제 불러오기
@@ -32,7 +33,7 @@ def region_interest_chart(request): # 지역별 관심도 통계 페이지
 from reviews.models import Review
 from django.db.models import Avg
 
-def view(request, id): # 축제 상세 페이지
+def view(request, id):  # 축제 상세 페이지
     qs = get_object_or_404(
         Festival.objects.prefetch_related(
             Prefetch(
@@ -49,12 +50,26 @@ def view(request, id): # 축제 상세 페이지
     avg_rating = Review.objects.filter(festival=qs).aggregate(avg=Avg('rating'))['avg']
     review_count = Review.objects.filter(festival=qs).count()
 
+    # ----------- 상태 텍스트 계산 부분 -----------
+    today = date.today()
+    # qs.start_date와 qs.end_date가 datetime일 수도 있으니 .date()로 맞추는 것이 안전
+    start = qs.start_date if isinstance(qs.start_date, date) else qs.start_date.date()
+    end = qs.end_date if isinstance(qs.end_date, date) else qs.end_date.date()
+    if start > today:
+        status_text = "Coming Soon"
+    elif end < today:
+        status_text = "Finished"
+    else:
+        status_text = "Happening Now"
+    # ------------------------------------------
+
     content = {
         'list': qs,
         'tags': tags_list,
         'is_logged_in': is_logged_in,
         'avg_rating': avg_rating,      # None or float
         'review_count': review_count,  # 0 이상 int
+        'status_text': status_text,    # 여기에 상태 텍스트 추가!
     }
     return render(request, 'festival/view.html', content)
 
