@@ -524,18 +524,8 @@
                     contentRow.show();
                     this.scrollIntoView({
                         behavior: "smooth",
-                        block: "start"
+                        block: "center"
                     });
-                }
-            });
-
-            // 외부 클릭 시 전체 닫기
-            $(document).on("click", function (e) {
-                if (
-                    !$(e.target).closest("#inquiry-table tr[data-id]").length &&
-                    !$(e.target).closest(".collapsible-content").length
-                ) {
-                    collapsibles.hide();
                 }
             });
             
