@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="/static/css/main.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/navigation.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -939,77 +940,81 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <body>
-  <div class="contents">
-      <div id="shortsContainer"> 
-        <div id="shortsBorder"> 
-          <data id="shorts">
-            <a class="creator">@축제모아</a>
-            <a class="shorts_title">요즘 입소문 탄다는 축제</a>
-          </data>
-          <div id="shortsMeta">
-            <a class="festNameInShorts"></a>
-            <span class="tags" style="font-size: 12px;">
+  <div id="wrap">
+  {% include "header.html" %}
+    <div class="contents">
+        <div id="shortsContainer"> 
+          <div id="shortsBorder"> 
+            <data id="shorts">
+              <a class="creator">@축제모아</a>
+              <a class="shorts_title">요즘 입소문 탄다는 축제</a>
+            </data>
+            <div id="shortsMeta">
+              <a class="festNameInShorts"></a>
+              <span class="tags" style="font-size: 12px;">
 
-            </span>
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="overlay" class="overlay">
-        <!-- 팝업 콘텐츠 -->
-        <div class="popup-content">
-          <button onclick="closeOverlay()" id='xs'>X</button>
-            <div id="overlayShortsContainer"> 
-              <div id="overlayShortsBorder"> 
-                  <data id="overlayShorts" class='over'>
-                      <a class="creator">@축제모아</a>
-                      <a class="shorts_title">요즘 입소문 탄다는 축제</a>
-                  </data>
-                  <div id="overlayShortsMeta"> 
-                      <a class="festNameInShorts"></a>
-                      <span class="tags" style="font-size: 12px;">
-                      </span>
-                  </div>
-              </div>
+        <div id="overlay" class="overlay">
+          <!-- 팝업 콘텐츠 -->
+          <div class="popup-content">
+            <button onclick="closeOverlay()" id='xs'>X</button>
+              <div id="overlayShortsContainer"> 
+                <div id="overlayShortsBorder"> 
+                    <data id="overlayShorts" class='over'>
+                        <a class="creator">@축제모아</a>
+                        <a class="shorts_title">요즘 입소문 탄다는 축제</a>
+                    </data>
+                    <div id="overlayShortsMeta"> 
+                        <a class="festNameInShorts"></a>
+                        <span class="tags" style="font-size: 12px;">
+                        </span>
+                    </div>
+                </div>
+          </div>
         </div>
-      </div>
-  </div>
-  <div id="shortsEditor">
-    <form action="#" name="myShorts" method="post">
-      {% csrf_token %}
-      <!-- 프레임 색상 선택 -->
-      <div class="color_frame box">
-        <button type="button" data-color ="#E74C3C" class="color-btn red"></button>
-        <button type="button" data-color ="#f78fb3" class="color-btn pink"></button>
-        <button type="button" data-color ="#F28D35" class="color-btn orange"></button>
-        <button type="button" data-color ="#f9d835" class="color-btn yellow" ></button>
-      </div>
-      <div class="color_frame box">
-        <button type="button" data-color ="#55EFC4" class="color-btn green" ></button>
-        <button type="button" data-color ="#4aa3f9" class="color-btn blue"></button>
-        <button type="button" data-color ="#8c6df0" class="color-btn purple"></button>
-        <button type="button" data-color ="#2D3436" class="color-btn black"></button>
-      </div>
-      <input type="hidden" name="selected_color" id="selected_color">
+    </div>
+    <div id="shortsEditor">
+      <form action="#" name="myShorts" method="post">
+        {% csrf_token %}
+        <!-- 프레임 색상 선택 -->
+        <div class="color_frame box">
+          <button type="button" data-color ="#E74C3C" class="color-btn red"></button>
+          <button type="button" data-color ="#f78fb3" class="color-btn pink"></button>
+          <button type="button" data-color ="#F28D35" class="color-btn orange"></button>
+          <button type="button" data-color ="#f9d835" class="color-btn yellow" ></button>
+        </div>
+        <div class="color_frame box">
+          <button type="button" data-color ="#55EFC4" class="color-btn green" ></button>
+          <button type="button" data-color ="#4aa3f9" class="color-btn blue"></button>
+          <button type="button" data-color ="#8c6df0" class="color-btn purple"></button>
+          <button type="button" data-color ="#2D3436" class="color-btn black"></button>
+        </div>
+        <input type="hidden" name="selected_color" id="selected_color">
 
-      <!-- 이미지 업로드 // data-index >> JS에서 활용 -->
-      <div class="image_upload box" id="imageUploadContainer"></div>
+        <!-- 이미지 업로드 // data-index >> JS에서 활용 -->
+        <div class="image_upload box" id="imageUploadContainer"></div>
 
-      <!-- 코멘트 작성 -->
-      <textarea name="shorts_title" id="shorts_title" placeholder="제목을 정하세요."></textarea>
-      <div class="goToSearch">
-        <input name="shorts_festname" id="shorts_festname" placeholder="축제 이름을 입력해주세요."></input>
-        <button type="button" onclick="searchBtn()" class="searchBtn">search</button>
-      </div>
-      <div class="searchedTags">
-        <span>tag:</span>
-        <div></div>
-        <input type="hidden" name="selected_tags" id="selected_tags">
-      </div>
+        <!-- 코멘트 작성 -->
+        <textarea name="shorts_title" id="shorts_title" placeholder="제목을 정하세요."></textarea>
+        <div class="goToSearch">
+          <input name="shorts_festname" id="shorts_festname" placeholder="축제 이름을 입력해주세요."></input>
+          <button type="button" onclick="searchBtn()" class="searchBtn">search</button>
+        </div>
+        <div class="searchedTags">
+          <span>tag:</span>
+          <div></div>
+          <input type="hidden" name="selected_tags" id="selected_tags">
+        </div>
 
-      <div class="action_buttons">
-        <button type="button" onclick="openOverlay()" class="func Btn">Preview</button>
-        <button type="submit" onclick="submitBtn(event)" class="submit Btn">Post</button>
-      </div>
-    </form>
-  </div> 
+        <div class="action_buttons">
+          <button type="button" onclick="openOverlay()" class="func Btn">Preview</button>
+          <button type="submit" onclick="submitBtn(event)" class="submit Btn">Post</button>
+        </div>
+      </form>
+    </div> 
+    </div>
+  {% include "footer.html" %}
 </body>    

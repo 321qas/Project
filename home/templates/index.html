@@ -4,21 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/header.css">
   <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"> 
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <title>HOME</title>
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    ul, li {list-style: none;}
     a {text-decoration: none;}
 
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      background: #f8fafc;
     }
 
     #wrap {
@@ -26,7 +25,8 @@
     }
 
     #searchAll{
-      display: flex;
+      position: absolute;
+      right: 700px;
     }
 
     #searchAll .searchIco{
@@ -76,7 +76,6 @@
       width: 100%;
       min-height: 1000px;
       height:1600px;
-      padding: 30px 0;
     }
 
     #shortsContainer {
@@ -248,33 +247,6 @@
       margin-top: 10px;
       font-weight: bold;
       font-size: 1rem;
-    }
-
-    #footer {
-      padding: 20px;
-      background-color: #f1f1f1;
-      font-size: 0.9rem;
-      color: #666;
-      text-align: center;
-      
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      list-style: none;
-      margin-top: 10px;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: #666;
-    }
-
-    .footer-links a:hover {
-      text-decoration: underline;
     }
 
      /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
@@ -550,12 +522,15 @@ function viewBtn() { console.log('View Button clicked'); }
 <body>
   <div id="wrap">
     <div id="nav">
+      
       <div id="logo">
-        <button type="button" class="logoBtn" onclick="logoBtn()"><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="Logo" ></button>
+        <a href="/"><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="Logo" ></a>
+        {% if user_id %}
+        <span>for　<span><a href="/accounts/mypage1/">{{ nickname }}</a></span></span>
+        {% endif %}
       </div>
 
       <div id="searchAll">
-        <div class="searchIco">🔍</div>
         <form action="fest_list.html" method="GET">
           <div class="searchKey">
             <input name="keyWord" type="text" placeholder="축제명, 지역, 태그 등으로 검색" />
@@ -568,9 +543,8 @@ function viewBtn() { console.log('View Button clicked'); }
         <ul>
           <li><a href="/festivals/list/">festivals</a></li>
           {% if user_id %}
-              <li><span style="color:#2563eb;">{{ nickname }}님</span></li>
               <li><a href="/accounts/logout/">logout</a></li>
-              <li><a href="/accounts/mypage/">my page</a></li>
+              <li><a href="/accounts/mypage1/">my page</a></li>
           {% else %}
               <li><a href="/accounts/login/">login</a></li>
               <li><a href="/accounts/signup/terms/">sign up</a></li>
@@ -584,8 +558,11 @@ function viewBtn() { console.log('View Button clicked'); }
     <div class="contents">
       
   </div>
- 
-  <div id="footer">
+
+  {% include "footer.html" %}
+
+
+  {% comment %} <div id="footer">
     <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
     <ul class="footer-links">
       <li><a href="#">개인정보처리방침</a></li>
@@ -597,7 +574,7 @@ function viewBtn() { console.log('View Button clicked'); }
         </div>
       </li>
     </ul>
-  </div>
+  </div>  {% endcomment %}
 </body>
   <script>
     function logoBtn() {

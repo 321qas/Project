@@ -4,4 +4,9 @@
 @import url('./base.css');
 @import url('./fonts.css');
 @import url('./layout.css');
-@import url('./components.css')
+@import url('./components.css');
+
+
+/* 헤더 푸터 */
+@import url('./navigation.css');
+@import url('./footer.css');

@@ -1,17 +1,27 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password
+from django.views.decorators.csrf import csrf_exempt
+from django.db import IntegrityError
+
+import uuid
+import datetime
+import random
+import string
+import json
+import requests
+
 from .models import User, EmailVerification
 from .utils import send_gmail
 from tags.models import Tag
-import uuid, datetime, random, string
 
 # 0. 로그인 화면
-def login(request):
+def login_view(request):
     if request.method == "POST":
         user_id = request.POST.get('id')
         password = request.POST.get('password')
@@ -28,6 +38,7 @@ def login(request):
             return render(request, 'login.html')
 
         # 로그인 성공: 세션에 정보 저장 (필요에 따라)
+        login(request, user)
         request.session['user_id'] = user.user_id
         request.session['nickname'] = user.nickname
         return redirect('index')
@@ -35,7 +46,8 @@ def login(request):
     return render(request, 'login.html')
 
 # 1. 로그아웃
-def logout(request):
+def logout_view(request):
+    logout(request)
     request.session.flush()
     return redirect('index')
 
@@ -119,7 +131,7 @@ def find_password(request):
               and change it immediately for your account's security.
             </p>
             <div style="text-align:center;margin:34px 0 0 0;">
-              <a href="https://yourdomain.com/accounts/login/"
+              <a href="http://localhost:8000/accounts/login"
                  style="display:inline-block;padding:13px 34px;font-size:1.08rem;background:#f97316;color:#fff;border-radius:7px;text-decoration:none;font-weight:bold;letter-spacing:1px;box-shadow:0 2px 6px #f9731633;">
                  🔒 Go to Login
               </a>
@@ -352,6 +364,128 @@ def verify_email(request):
     messages.success(request, "이메일 인증이 완료되었습니다. 로그인 해주세요.")
     return redirect('accounts:login')
 
+# # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
+# def pw_reset(request):
+#     return render(request, 'login_password_reset.html')
+
+
+# 8. 마이페이지
+def mypage1(request):
+    return render(request,'mypage1.html')
+
+def mypage2(request):
+    return render(request,'mypage2.html')
 # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
 def pw_reset(request):
     return render(request, 'login_password_reset.html')
+
+
+
+# 1. 네이버 로그인 시작: 네이버 인증페이지로 리다이렉트
+def naver_login_start(request):
+    client_id = 'Wke0wdADmCltAya71Ce9'  # 본인 네이버 REST API Client ID
+    redirect_uri = 'http://127.0.0.1:8000/naver/callback/'  # 콜백 URL (반드시 등록)
+    state = uuid.uuid4().hex  # CSRF 방지용 랜덤값
+    request.session['naver_state'] = state
+    url = (
+        f"https://nid.naver.com/oauth2.0/authorize"
+        f"?response_type=code&client_id={client_id}"
+        f"&redirect_uri={redirect_uri}&state={state}"
+    )
+    return redirect(url)
+
+# 2. 네이버 로그인 콜백: access_token → 프로필 → 로그인 처리
+def naver_callback(request):
+    code = request.GET.get('code')
+    state = request.GET.get('state')
+    session_state = request.session.get('naver_state')
+    error = request.GET.get('error')
+
+    if not code or not state or error:
+        return render(request, "login.html", {"messages": ["네이버 로그인 실패! 다시 시도해 주세요."]})
+
+    if session_state != state:
+        return render(request, "login.html", {"messages": ["잘못된 접근입니다. 다시 시도해 주세요."]})
+
+    # 1. access_token 요청
+    client_id = 'Wke0wdADmCltAya71Ce9'
+    client_secret = 'pulBcjX7gl'
+    redirect_uri = 'http://127.0.0.1:8000/naver/callback/'
+    token_url = (
+        "https://nid.naver.com/oauth2.0/token"
+        f"?grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}"
+        f"&code={code}&state={state}"
+    )
+    token_res = requests.get(token_url)
+    token_json = token_res.json()
+    access_token = token_json.get('access_token')
+    if not access_token:
+        return render(request, "login.html", {"messages": ["토큰 발급 실패! 다시 시도해 주세요."]})
+
+    # 2. 프로필 정보 요청
+    profile_url = "https://openapi.naver.com/v1/nid/me"
+    headers = {'Authorization': f'Bearer {access_token}'}
+    profile_res = requests.get(profile_url, headers=headers)
+    profile_json = profile_res.json()
+    if profile_json.get('resultcode') != '00':
+        return render(request, "login.html", {"messages": ["프로필 조회 실패! 다시 시도해 주세요."]})
+    info = profile_json.get('response', {})
+
+    # 3. 유저 정보 파싱
+    email = info.get('email')
+    nickname = info.get('nickname') or f"네이버유저_{uuid.uuid4().hex[:3]}"
+    name = info.get('name') or "네이버"
+    gender_raw = info.get('gender')
+    birthyear = info.get('birthyear')
+    birthday = info.get('birthday')
+    dob = f"{birthyear}-{birthday[:2]}-{birthday[2:]}" if birthyear and birthday else None
+
+    gender = 'male' if gender_raw == 'M' else 'female' if gender_raw == 'F' else None
+
+    if not email:
+        return render(request, "login.html", {"messages": ["이메일을 받아올 수 없습니다. 네이버 계정 설정 확인!"]})
+
+    # [1] 이메일 중복 완전 차단 (unique 제약 대응, login_type 상관없이 전체 체크)
+    if User.objects.filter(email=email).exists():
+        return render(request, "login.html", {
+            "messages": [
+                "이미 일반회원으로 가입된 이메일입니다."
+            ]
+        })
+
+    # [2] 네이버로 이미 가입된 경우 바로 로그인
+    try:
+        user = User.objects.get(email=email, login_type='naver')
+        login(request, user)
+        request.session['user_id'] = user.user_id
+        request.session['nickname'] = user.nickname
+        return redirect("index")
+    except User.DoesNotExist:
+        # [3] 신규 네이버 계정 회원가입 (user_id, nickname 충돌 방지, IntegrityError 안전망)
+        for _ in range(10):
+            base_user_id = f"naver_{uuid.uuid4().hex[:6]}"
+            while User.objects.filter(user_id=base_user_id).exists():
+                base_user_id = f"naver_{uuid.uuid4().hex[:6]}"
+            base_nickname = nickname
+            count = 1
+            while User.objects.filter(nickname=base_nickname).exists():
+                base_nickname = f"{nickname}_{count}"
+                count += 1
+            try:
+                user = User.objects.create_user(
+                    email=email,
+                    login_type='naver',
+                    user_id=base_user_id,
+                    nickname=base_nickname,
+                    real_name=name,
+                    gender=gender,
+                    dob=dob,
+                )
+                login(request, user)
+                request.session['user_id'] = user.user_id
+                request.session['nickname'] = user.nickname
+                return redirect("index")
+            except IntegrityError:
+                continue  # 랜덤값이 충돌나면 다시 시도
+        # 10번 루프 돌았는데도 실패하면
+        return render(request, "login.html", {"messages": ["회원가입에 실패했습니다. 관리자에게 문의해 주세요."]})

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Document</title>
     <style>
@@ -12,50 +13,12 @@
       ul, li {list-style: none;}
       a {text-decoration: none; color: inherit;}
 
-      #wrap {flex: 1;}
-
-      #nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 30px;
-        background-color: #f8f8f8;
-        border-bottom: 1px solid #ddd;
-        gap: 40px;
-        height: 180px;
-        flex-wrap: wrap;
-      }
-
-      #logo .logoBtn {
-        font-size: 40px;
-        font-weight: bold;
-        background: none;
-        cursor: pointer;
-        padding: 10px 20px;
-        border: none;
-      }
-
-      #pageMove ul {
-        display: flex;
-        gap: 20px;  
-        flex-wrap: wrap;
-      }
-
-      #pageMove a {
-        color: #333;
-        font-weight: 500;
-      }
-
-      #pageMove a:hover {color: #007bff;}    
-      .contents {
-        max-width: 100%;
-        margin: 32px auto;
-        padding: 0 16px;
+      #wrap {
+        flex: 1;
       }
 
       #banner_blur {
         height: 400px;
-        border: 1px solid black;
                   
         justify-content: center;    
         align-items: center;       
@@ -159,78 +122,247 @@
         background-color: #0056b3;
       }
 
+      @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
       #festList {
-        width: 60%;
+        width: 100%;
         margin: 50px auto;
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px;
+        justify-content: space-between;
+        gap: 20px;
         border-top: 1px solid #ccc;
         padding-top: 30px;
+        font-family: 'Nanum Gothic', sans-serif;
       }
-
       .festCard {
-        width: 200px;
-        height: 250px;
-        border-radius: 5px;
-        overflow: hidden;
-        text-align: center;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-        background-color: white;
-      }
-
-      #loadMoreBtn {
-        display:block; 
-        margin:10px auto 0; 
-        padding:12px 32px; 
-        font-size:1.1rem;  
-        border:1px solid #ccc; 
-        background:#f8f8f8; 
-        cursor:pointer;
-      }
-
-      #footer {
-        padding: 20px;
-        background-color: #f1f1f1;
-        font-size: 14.4px;
-        color: #666;
-        text-align: center;
-      }
-
-      .footer-links {
+        width: calc(33.333% - 13.333px);
+        height: 380px;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+      
+        background: 
+          linear-gradient(to bottom right, #fefae0, #e9f5ff),
+          repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
+          repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
+        border: 3px double #b39068;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .festCard:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      }
+
+      .festCard a img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #e2d7c3;
+      }
+
+      .festCard::before {
+        content: "ongoing";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(45deg, #cc5c48, #e2905b);
+        color: #fff;
+        font-size: 11px;
+        padding: 3px 7px;
+        border-radius: 8px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        z-index: 1;
+      }
+
+      /* 공통 텍스트 스타일 */
+      .festCard p {
+        margin: 4px 12px;
+        white-space: normal;
+        overflow: visible;
+        line-height: 1.6em;
+      }
+
+      .festCard p.title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #b35c1e;
+        margin-top: 8px;
+        margin-bottom: 6px;
+      }
+
+      .festCard p.rating {
+        font-size: 14px;
+        color: #e2a934;
+        white-space: nowrap;
+        margin-bottom: 8px;
+      }
+
+      .festCard p.date-info,
+      .festCard p.region-info,
+      .festCard p.tags {
+        font-size: 12px;
+        color: #5a4632;
+        background: rgba(243, 234, 204, 0.6);
+        padding: 6px 10px;
+        border-radius: 8px;
+      }
+
+      .festCard p.date-info {
+        margin-top: auto;
+        padding-bottom: 8px;
+      }
+
+      /* 상세 설명 영역 (배너 아래) */
+      .festival-info-under-banner {
+        padding: 16px 24px;
+        background: #fff;
+        border-top: 1px solid #ddd;
+        font-family: 'Nanum Gothic', sans-serif;
+      }
+
+      .festival-info-under-banner h2.festival-name {
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+        color: #222;
+      }
+
+      .festival-info-under-banner .festival-rating {
+        font-size: 20px;
+        color: #ff9800;
+        margin-top: 4px;
+      }
+
+      .festival-info-under-banner .festival-period,
+      .festival-info-under-banner .festival-location {
+        font-size: 16px;
+        color: #555;
+        margin-top: 6px;
+      }
+
+      .festival-info-under-banner .festival-tags,
+      .festival-tags {
+        display: flex;
         flex-wrap: wrap;
-        gap: 15px;
-        list-style: none;
-        margin-top: 10px;
+        gap: 8px;
+        margin-top: 12px;
       }
 
-      .footer-links a {
-        text-decoration: none;
-        color: #666;
+      .festival-info-under-banner .tag,
+      .festival-tags .tag,
+      .tag {
+        background-color: #E6F5FF;
+        color: #4fc3f7;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: default;
       }
 
-      .footer-links a:hover {text-decoration: underline;}
+      /* 카드 밖에서 사용되는 독립적인 카드 스타일 */
+      .festival-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        width: 280px;
+        background: #fff;
+        font-family: Arial, sans-serif;
+      }
+
+      .festival-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .festival-description {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .festival-rating {
+        font-size: 18px;
+        color: #ff9800;
+        margin-left: 8px;
+      }
+
+      .festival-info-row {
+        display: flex;
+        justify-content: space-between;
+        background: #f9f1db;
+        border-radius: 6px;
+        padding: 6px 10px;
+        margin: 8px 0;
+        font-size: 14px;
+        color: #5a5a4d;
+      }
+
+            #loadMoreBtn {
+              display:block; 
+              margin:10px auto 0; 
+              padding:12px 32px; 
+              font-size:1.1rem;  
+              border:1px solid #ccc; 
+              background:#f8f8f8; 
+              cursor:pointer;
+            }
+          
+            #footer {
+              padding: 20px;
+              background-color: #f1f1f1;
+              font-size: 14.4px;
+              color: #666;
+              text-align: center;
+            }
+          
+            .footer-links {
+              display: flex;
+              justify-content: center;
+              flex-wrap: wrap;
+              gap: 15px;
+              list-style: none;
+              margin-top: 10px;
+            }
+          
+            .footer-links a {
+              text-decoration: none;
+              color: #666;
+            }
+          
+            .footer-links a:hover {text-decoration: underline;}
+          
+            .fest-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 12px 4px;
+        gap: 10px;
+      }
+        .festival-name {
+        margin-left: 8px; /* 또는 padding-left: 8px; */
+      }
 
     </style>
 </head>
 <body>
     <div id="wrap">
-        <div id="nav">
-            <div id="logo"><button type="button" class="logoBtn" onclick="logoBtn()">logo_img</button></div>
-
-            <div id="pageMove">
-                <ul>
-                <li><a href="#">축제정보</a></li>
-                <li><a href="#">회원가입</a></li>
-                <li><a href="#">로그인</a></li>
-                <li><a href="#">고객센터</a></li>
-                </ul>
-            </div>
-        </div>
-
+      {% include "header.html" %}
         <div id="banner_blur">
             <h1>여행지를 검색해보세요</h1>
             <form id='searchForm' action="#" method="GET">
@@ -256,7 +388,7 @@
                     </div>
 
                     <div class="searchBlock button">
-                    <button type="submit"><a href="/festivals/search/">검색</a></button>
+                    <button type="submit">검색</button>
                     </div>
                 </div>
             </form>
@@ -272,8 +404,8 @@
     <script>
         let allFestivalData = []; // AJAX 검색 결과를 저장할 배열
         let loadedCount = 0;      // 현재까지 로드된 카드 수
-        const LOAD_COUNT = 8;     // 초기 로드 개수 (검색 시)
-        const LOAD_MORE_COUNT = 4; // '더보기' 클릭 시 추가 로드 개수
+        const LOAD_COUNT = 9;     // 초기 로드 개수 (검색 시)
+        const LOAD_MORE_COUNT = 3; // '더보기' 클릭 시 추가 로드 개수
 
         // DOM 요소 캐싱 (자주 사용하므로 변수에 저장)
         const festList = document.getElementById('festList');
@@ -297,9 +429,20 @@
                     <a href="/festivals/view/${data.id}">
                         <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
                     </a>
-                    <p>${data.name}</p>
-                    <p class="region-info">Region: ${data.region}</p>
-                    <p class="date-info">Period: ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                    <p>
+                      <div class="festival-header">
+                        <span class="festival-name">${data.name}</span>
+                        <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                        <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                        <p class="region-info">📍 ${data.region}</p>
+                      </div>
+
+
+                    <div class="festival-tags">
+                        ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                      </div>
+
+                    
                 `;
                 festList.appendChild(card);
                 loadedCount++;
@@ -377,19 +520,7 @@
             searchForm.submit();
         });
     </script>
-
-    <div id="footer">
-      <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
-      <ul class="footer-links">
-        <li><a href="#">개인정보처리방침</a></li>
-        <li><a href="#">이용약관</a></li>
-        <li><a href="#">관리자페이지 이동</a></li>
-        <li>
-          <div id="ldMode">
-            <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
-          </div>
-        </li>
-      </ul>
-    </div>
+    {% include "footer.html" %}
+    
 </body>
 </html>

@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from .models import Festival, RegionInterest,FestivalImage
 from django.db.models import Prefetch, F
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from reviews.models import Review
 import json
 
-def festival_detail(request, pk):
-    # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
+def festival_detail(request, pk): # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
     # 해당 축제 불러오기
     festival = get_object_or_404(Festival, pk=pk)
     # 해당 축제의 지역 코드 추출
@@ -27,25 +29,43 @@ def region_interest_chart(request): # 지역별 관심도 통계 페이지
         "region_labels": region_labels        # 코드→한글 매핑 딕셔너리
     })
 
-def view(request,id):
+from reviews.models import Review
+from django.db.models import Avg
+
+def view(request, id): # 축제 상세 페이지
     qs = get_object_or_404(
-    Festival.objects.prefetch_related(
-    Prefetch(
-        'images',
-        queryset=FestivalImage.objects.order_by('uploaded_at') # 이미지를 업로드된 시간 순으로 정렬
-    )),
-    id=id)
+        Festival.objects.prefetch_related(
+            Prefetch(
+                'images',
+                queryset=FestivalImage.objects.order_by('uploaded_at')
+            )
+        ),
+        id=id
+    )
 
     tags_list = [{'name': tag.name} for tag in qs.tags.all()]
-    content = {'list':qs,'tags': tags_list}
+    is_logged_in = request.session.get('user_id') is not None
+
+    avg_rating = Review.objects.filter(festival=qs).aggregate(avg=Avg('rating'))['avg']
+    review_count = Review.objects.filter(festival=qs).count()
+
+    content = {
+        'list': qs,
+        'tags': tags_list,
+        'is_logged_in': is_logged_in,
+        'avg_rating': avg_rating,      # None or float
+        'review_count': review_count,  # 0 이상 int
+    }
     return render(request, 'festival/view.html', content)
 
-def list(request):
+
+
+def list(request): # 축제 목록 페이지
     qs = Festival.objects.all().order_by('?')
     content = {'list': qs}
     return render(request, 'festival/fest_list.html', content)
 
-def search(request):
+def search(request): # 축제 검색
     region = request.GET.get('region')
     start_date_str = request.GET.get('startDate')
     end_date_str = request.GET.get('endDate')
@@ -84,3 +104,5 @@ def search(request):
         })
 
     return JsonResponse(festival_data, safe=False)
+
+
