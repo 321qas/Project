@@ -343,10 +343,11 @@
                             </div> 
                             {% endcomment %}
                             <a class="moreBtn white-orange" id="my-posts-toggle">My posts</a>
+                            <a class="moreBtn white-orange" style="display: none;" id="all-posts-toggle">All posts</a>
                             
                     
                         </div>
-                        <a href="../write/" class="clickBtn orange">Write</a>
+                        <button type="button" onclick="writeBtn()" class="clickBtn orange" >Write</button>
                     </div>
                 </div>
 
@@ -431,20 +432,113 @@
     {% include "footer.html" %}
 
     <script>
+        // toggles
+        function toggleAnswer(element) {
+            const answerDiv = element.nextElementSibling;
 
-        function formatDate(isoString) {
+            if (answerDiv.classList.contains("open")) {
+                answerDiv.classList.remove("open");
+            } else {
+                // 다른 FAQ는 닫고 이거만 열기
+                document.querySelectorAll(".faq-answer.open").forEach(el => el.classList.remove("open"));
+                answerDiv.classList.add("open");
+            }
+        }
+   
+    $(".collapsible-content").hide();
+    $(".collapsible-content").hide();
+    $("#inquiry-table tr[data-id] td:nth-child(2)").off("click").on("click", function () {
+        const id = $(this).closest("tr").data("id");
+        const contentRow = $(`.collapsible-content[data-id='${id}']`);
+        $(".collapsible-content").not(contentRow).hide();
+        contentRow.toggle();
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    function writeBtn() {
+    {% if session_user_id %}
+        location.href = "/inquiry/write/";
+    {% else %}
+        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동할까요?")) {
+            window.location.href = "/accounts/login/";
+        }
+    {% endif %}
+}
+    
+    function formatDate(isoString) {
     const date = new Date(isoString);
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const hh = String(date.getHours()).padStart(2, '0');
     const mi = String(date.getMinutes()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
 }
-        // my posts render
-        $(document).ready(function () {
+
+function renderInquiries(inquiries) {
+    const tbody = $("#inquiry-table");
+    tbody.empty();
+
+    inquiries.forEach(function (item, index) {
+        const no = index + 1;
+        const statusHtml = item.status === 'answered'
+            ? '<span style="color: green;">답변완료</span>'
+            : '<span style="color: orange;">접수중</span>';
+        const createdAtFormatted = formatDate(item.created_at);
+
+        const row = `
+            <tr data-id="${no}">
+                <td>${no}</td>
+                <td>${item.title}</td>
+                <td>${item.user__nickname}</td>
+                <td>${createdAtFormatted}</td>
+                <td>${statusHtml}</td>
+            </tr>
+            <tr class="collapsible-content" data-id="${no}" style="display:none;">
+                <td colspan="5">
+                    <div class="q-row"><strong>Q:</strong> ${item.content}</div><br>
+                    <div class="a-row"><strong>A:</strong> ${item.answer}</div>
+                </td>
+            </tr>
+        `;
+        tbody.append(row);
+    });
+
+    $(".collapsible-content").hide();
+    $("#inquiry-table tr[data-id] td:nth-child(2)").off("click").on("click", function () {
+        const id = $(this).closest("tr").data("id");
+        const contentRow = $(`.collapsible-content[data-id='${id}']`);
+        $(".collapsible-content").not(contentRow).hide();
+        contentRow.toggle();
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+}
+
+function loadInquiries(url, isMyPosts = false) {
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: function (response) {
+            renderInquiries(response.inquiries);
+
+            if (isMyPosts) {
+                $("#my-posts-toggle").hide();
+                $("#all-posts-toggle").show();
+            } else {
+                $("#all-posts-toggle").hide();
+                $("#my-posts-toggle").show();
+            }
+        },
+        error: function () {
+            alert("목록을 불러오는 중 오류가 발생했습니다.");
+        }
+    });
+}
+
+$(document).ready(function () {
     const isLoggedIn = "{{ session_user_id|default:'' }}" !== "";
 
+    // 내 글 보기
     $("#my-posts-toggle").on("click", function (e) {
         if (!isLoggedIn) {
             e.preventDefault();
@@ -452,117 +546,17 @@
                 window.location.href = `/accounts/login/`;
             }
         } else {
-            $.ajax({
-                url: "/inquiry/support/my_posts/",
-                method: "GET",
-                success: function (response) {
-                    const tbody = $("#inquiry-table");
-                    tbody.empty();
-
-                    response.inquiries.forEach(function (item) {
-                        const statusHtml = item.status === 'answered'
-                            ? '<span style="color: green;">답변완료</span>'
-                            : '<span style="color: orange;">접수중</span>';
-                        const createdAtFormatted = formatDate(item.created_at);
-
-                        const row = `
-                            <tr data-id="${item.no}">
-                                <td>${item.no}</td>
-                                <td>${item.title}</td>
-                                <td>${item.user__nickname}</td>
-                                <td>${createdAtFormatted}</td>
-                                <td>${statusHtml}</td>
-                            </tr>
-                            <tr class="collapsible-content" data-id="${item.no}" style="display:none;">
-                                <td colspan="5">
-                                    <div class="q-row"><strong>Q:</strong> <span>${item.content}</span></div><br>
-                                    <div class="a-row"><strong>A:</strong> <span>${item.answer}</span></div>
-                                </td>
-                            </tr>
-                        `;
-                        tbody.append(row);
-                    });
-
-                    // 클릭 이벤트 재연결
-                    $(".collapsible-content").hide();
-                    $("#inquiry-table tr[data-id] td:nth-child(2)").off("click").on("click", function () {
-                        const row = $(this).closest("tr");
-                        const id = row.data("id");
-                        const contentRow = $(`.collapsible-content[data-id='${id}']`);
-
-                        if (contentRow.is(":visible")) {
-                            contentRow.hide();
-                        } else {
-                            $(".collapsible-content").hide();
-                            contentRow.show();
-                            this.scrollIntoView({ behavior: "smooth", block: "center" });
-                        }
-                    });
-                },
-                error: function () {
-                    alert("내 문의글을 불러오는 중 오류가 발생했습니다.");
-                }
-            });
+            loadInquiries("/inquiry/support/my_posts/", true);
         }
     });
+
+    // 전체 글 보기
+    $("#all-posts-toggle").on("click", function () {
+        loadInquiries("/inquiry/support/all_posts/", false);
+    });
+
 });
 
-            $(document).ready(function() {
-                $(".collapsible-content").hide();
-            });
-
-            $(document).on("click", "#inquiry-table tr[data-id] td:nth-child(2)", function () {
-                const row = $(this).closest("tr");
-                const id = row.data("id");
-                const contentRow = $(`.collapsible-content[data-id='${id}']`);
-                
-
-                if (contentRow.is(":visible")) {
-                    contentRow.hide();
-                } else {
-                    $(".collapsible-content").hide();
-                    contentRow.show();
-                    this.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-                }
-            });
-            
-            // pagination
-            $(document).ready(function(){
-                $(".pagination").on("click", ".page-link", function(e){
-                    e.preventDefault();
-                    const page = $(this).data("page");
-
-                    $.ajax({
-                        url: "/inquiry/support/",
-                        type: "GET",
-                        data: {
-                            page: page
-                        },
-                        success: function(data){
-                            const newTable = $(data).find("#inquiry-table").html();
-                            $("#inquiry-table").html(newTable);
-
-                            // 페이지네이션도 교체
-                            const newPagination = $(data).find(".pagination").html();
-                            $(".pagination").html(newPagination);
-
-
-
-                            // 새로 들어온 collapsible 요소 숨기기
-                            $("#inquiry-table .collapsible-content").hide();
-
-                            // 스크롤 부드럽게 이동
-                            window.scrollTo({ top: $("#inquiry-table").offset().top, behavior: "smooth" });
-                        },
-                        error: function(){
-                            alert("오류가 발생했습니다.");
-                        }
-                    });
-                });
-            });
 
     </script>
 
