@@ -212,6 +212,7 @@
         .table th {
             background-color: #f5f5f5;
         }
+        
         .table tr.collapsible-content td {
             background-color: #f9fafb;
             border-top: 2px solid var(--color-primary);
@@ -269,6 +270,13 @@
             color: white;
             font-weight: bold;
             border-color: #f97316;
+        }
+
+        .pagination a.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            border-color: #eee;
+            color: #aaa;
         }
         
     </style>
@@ -395,22 +403,26 @@
                 
 
                 <div class="pagination">
-                    <a href="?page=1"
-                    class="{% if inquiries.number == 1 %}disabled{% endif %}">&laquo;</a> {%comment%} 가장처음 {%endcomment%}
+                <!-- 처음 페이지로 -->
+                <a href="?page=1" class="page-link {% if inquiries.number == 1 %}disabled{% endif %}" data-page="1">&laquo;</a>
 
-                    <a href="?page={% if inquiries.has_previous %}{{ inquiries.previous_page_number }}{% else %}1{% endif %}"
-                    class="{% if not inquiries.has_previous %}disabled{% endif %}">&lt;</a>
+                <!-- 중간 페이지 번호들 -->
+                {% for num in inquiries.paginator.page_range %}
+                    <a href="?page={{ num }}" 
+                    class="page-link {% if inquiries.number == num %}active{% endif %}" 
+                    data-page="{{ num }}">
+                    {{ num }}
+                    </a>
+                {% endfor %}
 
-                    {% for num in inquiries.paginator.page_range %}
-                        <a href="?page={{ num }}" class="{% if inquiries.number == num %}active{% endif %}">{{ num }}</a>
-                    {% endfor %}
+                <!-- 마지막 페이지로 -->
+                <a href="?page={{ inquiries.paginator.num_pages }}" 
+                class="page-link {% if inquiries.number == inquiries.paginator.num_pages %}disabled{% endif %}" 
+                data-page="{{ inquiries.paginator.num_pages }}">
+                &raquo;
+                </a>
+            </div>
 
-                    <a href="?page={% if inquiries.has_next %}{{ inquiries.next_page_number }}{% else %}{{ inquiries.paginator.num_pages }}{% endif %}"
-                    class="{% if not inquiries.has_next %}disabled{% endif %}">&gt;</a>
-
-                    <a href="?page={{ inquiries.paginator.num_pages }}"
-                    class="{% if inquiries.number == inquiries.paginator.num_pages %}disabled{% endif %}">&raquo;</a> {%comment%} 가장끝 {%endcomment%}
-                </div>
 
 
             </div>
@@ -495,27 +507,25 @@
     });
 });
 
-            
-            const collapsibles = $(".collapsible-content");
-            collapsibles.hide();
+            $(document).ready(function() {
+                $(".collapsible-content").hide();
+            });
 
-            $("#inquiry-table tr[data-id] td:nth-child(2)").on("click", function () {
-            const row = $(this).closest("tr");
-            const id = row.data("id");
-            const contentRow = $(`.collapsible-content[data-id='${id}']`);
+            $(document).on("click", "#inquiry-table tr[data-id] td:nth-child(2)", function () {
+                const row = $(this).closest("tr");
+                const id = row.data("id");
+                const contentRow = $(`.collapsible-content[data-id='${id}']`);
+                
 
-            if (contentRow.is(":visible")) {
-                // 이미 열려 있다면 닫기
-                contentRow.hide();
-            } else {
-                // 먼저 다 닫고 현재 것만 열기
-                collapsibles.hide();
-                contentRow.show();
-
-                // 스크롤 이동
-                this.scrollIntoView({
-                behavior: "smooth",
-                block: "center"})
+                if (contentRow.is(":visible")) {
+                    contentRow.hide();
+                } else {
+                    $(".collapsible-content").hide();
+                    contentRow.show();
+                    this.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
                 }
             });
 
@@ -529,6 +539,40 @@
                 }
             });
             
+            // pagination
+            $(document).ready(function(){
+                $(".pagination").on("click", ".page-link", function(e){
+                    e.preventDefault();
+                    const page = $(this).data("page");
+
+                    $.ajax({
+                        url: "/inquiry/support/",
+                        type: "GET",
+                        data: {
+                            page: page
+                        },
+                        success: function(data){
+                            const newTable = $(data).find("#inquiry-table").html();
+                            $("#inquiry-table").html(newTable);
+
+                            // 페이지네이션도 교체
+                            const newPagination = $(data).find(".pagination").html();
+                            $(".pagination").html(newPagination);
+
+
+
+                            // 새로 들어온 collapsible 요소 숨기기
+                            $("#inquiry-table .collapsible-content").hide();
+
+                            // 스크롤 부드럽게 이동
+                            window.scrollTo({ top: $("#inquiry-table").offset().top, behavior: "smooth" });
+                        },
+                        error: function(){
+                            alert("오류가 발생했습니다.");
+                        }
+                    });
+                });
+            });
 
     </script>
 
