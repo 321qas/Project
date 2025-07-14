@@ -69,7 +69,7 @@ def search(request): # 축제 검색
     region = request.GET.get('region')
     start_date_str = request.GET.get('startDate')
     end_date_str = request.GET.get('endDate')
-    # name_query = request.GET.get('name', '') 
+    name_query = request.GET.get('name', '') 
 
     festival_qs = Festival.objects.all().order_by('?').prefetch_related(
         Prefetch(
@@ -81,12 +81,10 @@ def search(request): # 축제 검색
     )
 
     # 필터링 조건 적용
+    if name_query: festival_qs = festival_qs.filter(name__icontains=name_query)
     if region: festival_qs = festival_qs.filter(region=region)
     if start_date_str: festival_qs = festival_qs.filter(start_date__gte=start_date_str)
     if end_date_str: festival_qs = festival_qs.filter(end_date__lte=end_date_str)
-    
-    # 이름 검색 조건 추가
-    # if name_query: festival_qs = festival_qs.filter(name__icontains=name_query)
 
     festival_data = []
     for festival in festival_qs:
