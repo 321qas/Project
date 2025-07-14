@@ -78,6 +78,10 @@
         margin-top: auto; /* input을 아래로 밀기 */
       }
 
+      .name input {
+        margin-top: auto; /* input을 아래로 밀기 */
+      }
+
       .searchBlock input[type="text"],
       .searchBlock input[type="date"] {
         padding: 10px 12px;
@@ -373,24 +377,28 @@
             <h1>여행지를 검색해보세요</h1>
             <form id='searchForm' action="#" method="GET">
                 <div id="searchBlocks">
+                    <div class="searchBlock name">
+                      <h3>이름검색</h3>
+                      <input type="text" name='name' id="name" placeholder="Name Search">
+                    </div>
                     <div class="searchBlock region">
-                    <h3>지역검색</h3>
-                    <input type="text" name="region" id="region" placeholder="예: 서울, 부산">
+                      <h3>지역검색</h3>
+                      <input type="text" name="region" id="region" placeholder="예: 서울, 부산">
                     </div>
 
                     <div class="searchBlock date">
-                    <h3>날짜검색</h3>
-                    <div class="stardToEnd">
-                        <div>
-                        <label for="startDate">시작일</label>
-                        <input type="date" name="startDate" id="startDate">
-                        </div>
-                        <span>~</span>
-                        <div>
-                        <label for="endDate">종료일</label>
-                        <input type="date" name="endDate" id="endDate">
-                        </div>
-                    </div>
+                      <h3>날짜검색</h3>
+                      <div class="stardToEnd">
+                          <div>
+                          <label for="startDate">시작일</label>
+                          <input type="date" name="startDate" id="startDate">
+                          </div>
+                          <span>~</span>
+                          <div>
+                          <label for="endDate">종료일</label>
+                          <input type="date" name="endDate" id="endDate">
+                          </div>
+                      </div>
                     </div>
 
                     <div class="searchBlock button">
@@ -484,11 +492,13 @@
             }
 
             // 폼 데이터 가져오기 (초기 로드 시에는 모두 빈 문자열이 될 것임)
+            const name = $('#name').val();
             const region = $('#region').val();
             const startDate = $('#startDate').val();
             const endDate = $('#endDate').val();
 
             const queryParams = {
+                name:name,
                 region: region,
                 startDate: startDate,
                 endDate: endDate

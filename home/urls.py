@@ -5,4 +5,5 @@ app_name=''
 urlpatterns = [
     path('', views.index, name='index'),
     path('jlist/', views.jlist, name='jlist'),
+    path('slist/', views.slist, name='slist'),
 ]
