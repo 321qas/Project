@@ -57,34 +57,14 @@
             height: 400px;
         }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 10px;
-            width: 100%;
-        }
 
-        .controls .set-private {
-            display:flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 200px;
-            border: none;
-        }
-
-        .controls input[type="checkbox"] {
-            margin-right: 5px;
-            
-        }
-        .controls .btn {
+        .btn {
             padding: 8px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-        .controls .btn-orange {
+        .btn-orange {
             background-color: #f97316;
             color: #ffffff;
         }
@@ -93,6 +73,9 @@
         
         
     </style>
+    <script>
+        
+    </script>
 </head>
 <body>
     <!--
@@ -113,24 +96,14 @@
             <h2>Inquiry</h2>
                 
             <form action="#" method="post">
+                {% csrf_token %}
                 <label for="title">Inquiry Title</label>
                 <input type="text" name="title" id="title" placeholder="title">
-                <label for="textbox">Text</label>
-                <textarea name="textbox" id="textbox" placeholder="enter your words."></textarea>
-                
-
+                <label for="content_box">Text</label>
+                <textarea name="content_box" id="content_box" placeholder="enter your words."></textarea>
+                <button type="submit" class="btn btn-orange">Write</button>                
             </form>
             
-            <div class="controls">
-                <div class="set-private">
-                    <input type="checkbox" id="set-private">
-                    <label for="set-private">Private Post</label>
-                </div>
-                <a href="/inquiry/write/">
-                    <button class="btn btn-orange">Write</button>
-                </a>
-
-            </div>
             
         </div>
     </div>
