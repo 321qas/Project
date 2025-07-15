@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
@@ -72,14 +74,17 @@
         .links a:hover {
             color: #f97316;
         }
+
         .tags-container {
-            max-width: 600px;
+            max-width: 100%;
             margin: 20px auto;
             padding: 20px;
             background-color: #ffffff;
-            border: 2px solid #fde68a;
+            border: 2px solid var(--color-gray); /* light gray border */
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tags-container hr {
+            margin-top: 20px;
         }
         .tag-search {
             display: flex;
@@ -87,38 +92,27 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        .tag-search input {
-            width: 60%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .tag-search p {
+            font-weight: 600;
+            color: #4B5563;
         }
-        .my-tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb; /* 연회색, 더 부드러운 톤 (#e5e7eb = tailwind gray-200) */
+            margin: 20px 0;
         }
-        .whole-tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tag {
-            border: 1px solid #2563eb;
-            border-radius: 4px;
-            padding: 5px 10px;
-            background-color: #f0f9ff;
-            color: #2563eb;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .tag button {
+        .tag button {  /* my tag의 X버튼 */
             margin-left: 5px;
             border: none;
             background: transparent;
             cursor: pointer;
-            color: #f97316;
+            color: var(--color-primary);
             font-weight: bold;
+            font-size:14px;
+        }
+        #tag-confirm {
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -155,31 +149,98 @@
             <!--/ 프로필 카드 -->
 
 
+            <!-- 관심 태그 -->
             <div class="tags-container">
                 <div class="tag-search">
-                    <p>나의 관심 태그</p>
+                    <p>My Interest Tags</p>
                 </div>
-                <!-- 내가 선택한 태그 -->
-                <div class="my-tag-list">
-                    <div class="tag">태그1 <button>X</button></div>
-                    <div class="tag">태그2 <button>X</button></div>
-                    <div class="tag">태그3 <button>X</button></div>
+                <div class="tags mine" id="selected-tags">
+                    {% if my_tags %}
+                        {% for tag in my_tags %}
+                            <span class="tag tag-secondary">
+                                {{ tag.name }}
+                                <button type="button" onclick="removeTag(this, '{{ tag.id }}', '{{ tag.name|escapejs }}')">X</button>
+                            </span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <hr>
-                <!-- 전체 태그 리스트 -->
-                <div class="whole-tag-list">
-                    <div class="tag">문화예술 </div>
-                    <div class="tag">전통역사 </div>
-                    <div class="tag">자연생태 </div>
-                    <div class="tag">지역특산물 </div>
-                    <div class="tag">먹거리/푸드 </div>
-                    <div class="tag">음악/공연 </div>
+                <div class="tags whole" id="all-tags">
+                    {% for tag in tags %}
+                        {% if tag in my_tags %}
+                        {% else %}
+                        <span class="tag tag-secondary-hover"
+                                onclick="addTag('{{ tag.id }}', '{{ tag.name|escapejs }}')">
+                            {{ tag.name }}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                
-
-            </div>
+            </div>    
+            <button class="orange clickBtn" id="tag-confirm">Edit</button>
         </div>
     </div>
     {% include "footer.html" %}
+
+    <script>
+     // tagId: 태그 pk(id), tagName: 태그명
+    function addTag(tagId, tagName) {
+        const selectedTags = document.getElementById('selected-tags');
+        // 중복 체크 (같은 id의 hidden input이 이미 있으면 중복 추가 금지)
+        // if (document.querySelector('input[name="tags"][value="' + tagId + '"]')) return;
+        
+        // 표시(태그 영역에 추가)
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag tag-secondary';
+        tagSpan.innerHTML = tagName + `<button type="button" onclick="removeTag(this, '${tagId}', '${tagName}')">X</button>`;
+        selectedTags.appendChild(tagSpan);
+        // 원래 있던 영역에서 삭제.
+        let item = Array.from(document.getElementById('all-tags').querySelectorAll('span')).find(el => el.textContent.trim() === tagName);
+        item.remove();
+    }
+
+    function removeTag(btn, tagId, tagName) {
+        btn.parentElement.remove();
+        // 삭제 후 all-tags에 다시 추가
+        const alltags = document.getElementById('all-tags');
+        tagRegen = document.createElement('span');
+        tagRegen.className = 'tag tag-secondary-hover';
+        tagRegen.setAttribute('onclick',`addTag('${tagId}', '${tagName}')`);
+        tagRegen.innerText = `${tagName}`;
+        alltags.appendChild(tagRegen);
+    }
+
+    $(function(){
+        $(document).on("click","#tag-confirm",function(){   // #tag-confirm 클릭 시,
+            let selected_tag_names = $("#selected-tags").find('span').map(function(){
+                return $(this).text().slice(0,-1);
+            }).get();   // 선택된 태그 이름들을 array 형태로 만듦
+            let cToken = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: '/accounts/mypage1/',
+                type: "POST",
+                data: JSON.stringify({
+                    tags_edit: selected_tag_names
+                }),
+                contentType: "application/json",
+                headers: {
+                      "X-CSRFToken": cToken
+                },
+                success: function(response) {
+                    console.log("성공:", response);
+                    alert('Interest Tags have been Edited');
+                },
+                error: function(xhr) {
+                    console.error("에러:", xhr.status);
+                }
+
+            }); // ajax
+            
+        }); // click #tag-confirm
+
+    }); // dom 로드 후 jquery 실행
+
+    </script>
 </body>
 </html>

@@ -371,10 +371,32 @@ def verify_email(request):
 
 # 8. 마이페이지
 def mypage1(request):
-    return render(request,'mypage1.html')
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('accounts:login')
+    
+    tags = Tag.objects.all()  # ① 태그 전체 쿼리
+    
+    context = {
+        'tags': tags,
+        'selected_tags': [],
+        'my_tags': user.interest_tags.all()
+    }
+    
+    if request.method == "POST":    # edit 버튼 눌렀을 때 ajax 전송
+        data = json.loads(request.body)
+        update_tags = data.get('tags_edit',[])
+        db_tags = Tag.objects.filter(name__in=update_tags)  # querySet 형태로 변환
+        user.interest_tags.set(db_tags)
+        
+        return JsonResponse({'status': 'ok'})
+        
+    
+    return render(request,'mypage1.html',context)
 
 def mypage2(request):
     return render(request,'mypage2.html')
+
 # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
 def pw_reset(request):
     return render(request, 'login_password_reset.html')

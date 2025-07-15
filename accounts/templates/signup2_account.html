@@ -232,7 +232,7 @@
                                 {% for tag in selected_tags %}
                                     <span class="tag tag-secondary">
                                         {{ tag.name }} 
-                                        <button type="button" onclick="removeTag(this, '{{ tag.id }}')">X</button>
+                                        <button type="button" onclick="removeTag(this, '{{ tag.id }}', '{{ tag.name|escapejs }}')">X</button>
                                         <input type="hidden" name="tags" value="{{ tag.id }}">
                                     </span>
                                 {% endfor %}
@@ -365,13 +365,25 @@
         // 표시(태그 영역에 추가)
         const tagSpan = document.createElement('span');
         tagSpan.className = 'tag tag-secondary';
-        tagSpan.innerHTML = tagName + ' <button type="button" onclick="removeTag(this, \'' + tagId + '\')">X</button>' +
-            '<input type="hidden" name="tags" value="' + tagId + '">';
+        tagSpan.innerHTML = tagName + `<button type="button" onclick="removeTag(this, '${tagId}', '${tagName}')">X</button>` +
+            `<input type="hidden" name="tags" value="${tagId}">`;
         selectedTags.appendChild(tagSpan);
+        // 원래 있던 영역에서 삭제.
+        let item = Array.from(document.getElementById('all-tags').querySelectorAll('span')).find(el => el.textContent.trim() === tagName);
+        item.remove();
+
     }
 
-    function removeTag(btn, tagId) {
+    function removeTag(btn, tagId, tagName) {
         btn.parentElement.remove();
+        // all-tags에 다시 추가
+        const alltags = document.getElementById('all-tags')
+        tagRegen = document.createElement('span');
+        tagRegen.className = 'tag tag-secondary-hover';
+        tagRegen.setAttribute('onclick',`addTag('${tagId}', '${tagName}')`);
+        tagRegen.innerText = `${tagName}`;
+        alltags.appendChild(tagRegen);
+
     }
 </script>
 </body>
