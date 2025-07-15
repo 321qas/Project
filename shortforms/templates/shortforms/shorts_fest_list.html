@@ -274,7 +274,7 @@
                 festList.empty(); // 기존 검색 결과 모두 지우기
                 festList.attr('aria-busy', 'true'); // 접근성을 위한 속성
 
-                if (festivals.length === 0) {
+                if (festivals.length === 0)  {
                     festList.html('<p style="text-align: center; padding: 20px;">검색 결과가 없습니다.</p>');
                     festList.attr('aria-busy', 'false');
                     return; // 결과가 없으면 여기서 함수 종료

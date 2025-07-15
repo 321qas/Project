@@ -5,23 +5,32 @@ from tags.models import Tag
 from festivals.models import Festival,FestivalImage
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 
 def upload(request):
-    return render(request,'shortforms/shorts_upload.html')
+    nname = request.session.get('nickname')
+    nickname = {'nick':nname}
+    return render(request,'shortforms/shorts_upload.html',nickname)
 
 def create(request):
     try:
         with transaction.atomic(): 
             # 1. 폼 데이터 추출 및 초기 검증
+            nickname = request.POST.get('nickname')
             title = request.POST.get('title')
             festival_name = request.POST.get('festival_name')
             frame_color = request.POST.get('frame_color')
-            # tags_string = request.POST.get('tags') # 태그 데이터는 이제 받지 않습니다.
+            
+            
+            User = get_user_model()  # 인증된 User 모델을 가져옵니다.
 
+            try:
+                user = User.objects.get(nickname=nickname)  # username으로 해당 사용자를 조회
+            except User.DoesNotExist:
+                user = None 
+            
             # 필수 입력 필드 확인 (태그 제외)
             if not all([title, festival_name]): 
                 return JsonResponse({'message': '제목과 축제명은 필수 입력 사항입니다.'}, status=400)
@@ -38,13 +47,11 @@ def create(request):
             
             # 3. ShortForm 객체 생성
             new_shortform = ShortForm.objects.create(
+                user=user,
                 title=title,
                 festival=current_festival,
                 frame_color=frame_color,
-                # user=request.user if request.user.is_authenticated else None 
             )
-
-            # 4. 태그 처리 (이 부분은 이전 요청에 따라 제거된 상태입니다.)
 
             # **5. 이미지 파일 처리 및 유효성 검사 - 이 부분 복구됨**
             uploaded_images = [] 

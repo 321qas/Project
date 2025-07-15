@@ -523,10 +523,6 @@
                         }
                     }
 
-                    // History API를 사용하여 URL 업데이트 (페이지 새로고침 없음)
-                    // 첫 번째 인자: state 객체 (현재 상태를 나타내는 데이터, 여기서는 빈 객체)
-                    // 두 번째 인자: title (현재 페이지의 새로운 제목, 대부분의 브라우저에서 무시됨)
-                    // 세 번째 인자: URL (변경할 새로운 URL)
                     if (isSearch) { // 새로운 검색일 때만 히스토리 스택에 추가
                         window.history.pushState(null, '', newUrl.toString());
                     } else { // '더보기'나 초기 로드 등 검색 상태를 바꾸지 않는 경우 (선택 사항)
@@ -554,7 +550,24 @@
                 loadAndDisplayFestivals(true); // 검색임을 알리고 데이터 로드
             });
 
-            searchForm.submit();
+            const currentUrl = new URL(window.location.href);
+            const urlSearchParams = currentUrl.searchParams;
+
+            // URL에 검색 파라미터가 있는지 확인
+            const hasSearchParams = Array.from(urlSearchParams.values()).some(param => param.length > 0);
+
+            if (hasSearchParams) {
+                // URL 파라미터가 있다면, 폼 필드에 값을 채워넣고 바로 검색 실행
+                $('#name').val(urlSearchParams.get('name') || '');
+                $('#region').val(urlSearchParams.get('region') || '');
+                $('#startDate').val(urlSearchParams.get('startDate') || '');
+                $('#endDate').val(urlSearchParams.get('endDate') || '');
+                
+                loadAndDisplayFestivals(false); // 초기 로드임을 알리며 검색 실행
+            } else {
+                // URL 파라미터가 없다면, 초기 데이터 로드 (빈 검색으로)
+                loadAndDisplayFestivals(false);
+            } 
         });
     </script>
     {% include "footer.html" %}

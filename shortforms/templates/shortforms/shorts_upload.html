@@ -512,12 +512,10 @@
         const titleInput = document.getElementById("shorts_title");
         const festnameInput = document.getElementById("shorts_festname"); 
         const searchedTagsDisplayArea = document.querySelector(".searchedTags > div"); // 축제 검색 팝업에서 받아온 태그들이 표시될 컨테이너
-
         const mainPreviewFrame = document.getElementById('shortsBorder'); // 메인 미리보기 프레임 (프레임 색상 적용)
         const mainShortsMeta = document.getElementById('shortsMeta'); // 메인 미리보기의 메타 정보 (제목, 축제명, 태그 포함)
-
-        const colorButtons = document.querySelectorAll('.color-btn'); // 색상 선택 버튼들
-
+        const creatorElement = document.querySelector('a.creator');
+        const colorButtons = document.querySelectorAll('.color-btn'); // 색상 선택 버튼들 
         // 오버레이 관련 DOM 요소 (초기에는 존재하지 않을 수 있으므로, openOverlay 시점에 다시 찾는 것이 더 안전합니다)
         let overlayElement;
         let overlayShortsFrame;
@@ -558,11 +556,11 @@
                     });
                 } else {
                     // 기본 상태
-                    img.src = '/static/image/envelope-check_1.png'; 
+                    img.src = '/static/image/739249.png'; 
                     img.alt = '클릭하고 추가하기';
 
                     img.addEventListener('click', () => {
-                        if (img.src.includes('envelope-check_1.png')) { 
+                        if (img.src.includes('739249.png')) { 
                             input.click();
                         } else { 
                             // 메인 미리보기 배경 설정
@@ -578,8 +576,8 @@
                     });
 
                     img.addEventListener('dblclick', () => {
-                        if (img.src && !img.src.includes('envelope-check_1.png')) {
-                            img.src = '/static/image/envelope-check_1.png';
+                        if (img.src && !img.src.includes('739249.png')) {
+                            img.src = '/static/image/739249.png';
                             input.value = ''; 
                             if (mainShortsElement && mainShortsElement.style.backgroundImage.includes(img.src)) {
                                 mainShortsElement.style.backgroundImage = 'none';
@@ -619,7 +617,7 @@
                 generateImageUploadBoxes();
             }
             if (mainShortsElement) {
-                mainShortsElement.style.backgroundImage = "url('/static/image/envelope-check_1.png')"; 
+                mainShortsElement.style.backgroundImage = "url('/static/image/739249.png')"; 
                 mainShortsElement.style.backgroundSize = 'cover';
                 mainShortsElement.style.backgroundPosition = 'center';
                 mainShortsElement.style.backgroundRepeat = 'no-repeat';
@@ -795,7 +793,7 @@
 
             document.querySelectorAll('#imageUploadContainer .shorts_img img').forEach(img => {
                 // 빈 이미지 슬롯과 삭제 버튼 이미지는 제외
-                if (img.src && !img.src.includes('delete.jpg') && !img.src.includes('envelope-check_1.png')) {
+                if (img.src && !img.src.includes('delete.jpg') && !img.src.includes('739249.png')) {
                     images.push(img.src);
                 }
             });
@@ -827,14 +825,14 @@
         }
 
         function submitBtn(event) {
-            // 폼의 기본 제출 동작(페이지 새로고침)을 막습니다.
             event.preventDefault(); 
             
             console.log("submitBtn() 함수 호출됨: 게시물 제출 시도");
-
             const formData = new FormData();
-
-            // 1. 제목 (titleInput) - 모델의 max_length: 50에 맞춰 검증
+            
+            const nickname = creatorElement.textContent.replace(/^@/, '').trim(); 
+            formData.append('nickname', nickname);
+            console.log(nickname);
             const title = titleInput.value.trim();
             if (!title) {
                 alert("제목을 입력해주세요.");
@@ -845,7 +843,6 @@
                 return; 
             }
             formData.append('title', title);
-            console.log("제목:", title);
 
             // 2. 축제명 (festnameInput 값을 Festival 모델의 ID로 사용)
             const festivalName = festnameInput.value.trim();
@@ -854,15 +851,10 @@
                 return; 
             }
             formData.append('festival_name', festivalName); 
-            console.log("축제명 (전송용):", festivalName);
-
-            // 3. 태그 (이 부분은 이제 전송하지 않습니다. 요청에 따라 제거됨)
-            console.log("태그는 전송하지 않습니다.");
 
             // 4. 프레임 색상 (localStorage에서 가져옴)
             const frameColor = localStorage.getItem('frameColor') || "default"; 
             formData.append('frame_color', frameColor);
-            console.log("프레임 색상:", frameColor);
 
             // **5. 이미지 파일들 (ShortFormImage 모델: 최소 1장, 최대 5장) - 이 부분 복구됨**
             const imageInputs = document.querySelectorAll('#imageUploadContainer input[type="file"]');
@@ -952,7 +944,7 @@
         <div id="shortsContainer"> 
           <div id="shortsBorder"> 
             <data id="shorts">
-              <a class="creator">@축제모아</a>
+              <a class="creator">@{{nickname}}</a>
               <a class="shorts_title">요즘 입소문 탄다는 축제</a>
             </data>
             <div id="shortsMeta">
@@ -970,7 +962,7 @@
               <div id="overlayShortsContainer"> 
                 <div id="overlayShortsBorder"> 
                     <data id="overlayShorts" class='over'>
-                        <a class="creator">@축제모아</a>
+                        <a class="creator">@{{nickname}}</a>
                         <a class="shorts_title">요즘 입소문 탄다는 축제</a>
                     </data>
                     <div id="overlayShortsMeta"> 

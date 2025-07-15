@@ -8,20 +8,7 @@ from datetime import datetime
 
 current_datetime = datetime.now()
 current_month = current_datetime.month
-month_to_season = {
-    1: "Winter",
-    2: "Winter",
-    3: "Spring",
-    4: "Spring",
-    5: "Spring",
-    6: "Summer",
-    7: "Summer",
-    8: "Summer",
-    9: "Autumn",
-    10: "Autumn",
-    11: "Autumn",
-    12: "Winter"
-}
+month_to_season = {1:"Winter",2:"Winter",3:"Spring",4:"Spring",5:"Spring",6:"Summer",7:"Summer",8:"Summer",9:"Autumn",10:"Autumn",11:"Autumn",12:"Winter"}
 season = month_to_season.get(current_month, "잘못된 월")
 
 def index(request):
@@ -85,7 +72,6 @@ def jlist(request):
     return JsonResponse(festival_data, safe=False)
 # 쇼츠 데이터 보내기
 def slist(request, sno=None): # sno 매개변수를 추가하고 기본값을 None으로 설정
-    
     # 모든 ShortForm 객체를 미리 로드합니다.
     all_shortforms_qs = ShortForm.objects.select_related(
         'festival', 'user'
@@ -129,10 +115,10 @@ def slist(request, sno=None): # sno 매개변수를 추가하고 기본값을 No
 
         user_info = {
             'id': sf.user.id,
-            'username': sf.user.username,
+            'nickname': sf.user.nickname,
         } if sf.user else {
             'id': None,
-            'username': '탈퇴한 사용자',
+            'nickname': '탈퇴한 사용자',
         }
 
         shortform_images_data = []
