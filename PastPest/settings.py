@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.user_info',
+                'accounts.context_processors.user_info',
             ],
         },
     },
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'PastPest.wsgi.application'
 DATABASES = { # Oracle 데이터베이스 설정
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',  # 'orcl' or 'xe'
+        'NAME': 'xe',  # 'orcl' or 'xe'
         'USER': 'ora_user2',
         'PASSWORD': '1111',
         'HOST': 'localhost',
