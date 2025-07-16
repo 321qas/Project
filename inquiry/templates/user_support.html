@@ -275,7 +275,7 @@
             <h1>User Support</h1>
 
             <form method="get" action="/inquiry/support/" class="search-bar">
-                <input type="text" name="key" id="searchInput" placeholder="궁금한 내용을 검색해보세요..." value="{{ keyword }}">
+                <input type="text" name="key" id="searchInput" placeholder="Search for anything you're curious about..." value="{{ keyword }}">
                 <button type="submit" class="clickBtn orange">Search</button>
             </form>
 
@@ -301,11 +301,11 @@
                 </div>
                     <div class="pagination">
                     {% if faq_list.has_previous %}
-                        <a href="?faq_page={{ faq_list.previous_page_number }}">이전</a>
+                        <a href="?faq_page={{ faq_list.previous_page_number }}">before</a>
                     {% endif %}
                     <span>{{ faq_list.number }} / {{ faq_list.paginator.num_pages }}</span>
                     {% if faq_list.has_next %}
-                        <a href="?faq_page={{ faq_list.next_page_number }}">다음</a>
+                        <a href="?faq_page={{ faq_list.next_page_number }}">next</a>
                     {% endif %}
                 </div>
 
@@ -361,9 +361,9 @@
                             <td>{{ inquiry.created_at|date:"Y-m-d H:i" }}</td>
                             <td class="center">
                                 {% if inquiry.status == 'answered' %}
-                                <span style="color: green;">답변완료</span>
+                                <span style="color: green;">Answerd</span>
                                 {% else %}
-                                <span style="color: orange;">접수중</span>
+                                <span style="color: orange;">Receiving</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -380,7 +380,7 @@
                                         {% if inquiry.status == 'answered' %}
                                             {{ inquiry.replies.first.content }}
                                         {% else %}
-                                            아직 답변이 등록되지 않았습니다.
+                                            This question has not yet been registered for an answer.
                                         {% endif %}
                                     </span>
                                 </div>
@@ -429,7 +429,7 @@
     {% if session_user_id %}
         location.href = "/inquiry/write/";
     {% else %}
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동할까요?")) {
+        if (confirm("You need to log in. Should I go to the login page?")) {
             window.location.href = "/accounts/login/";
         }
     {% endif %}
@@ -452,8 +452,8 @@
         inquiries.forEach(function (item, index) {
             const no = index + 1;
             const statusHtml = item.status === 'answered'
-                ? '<span style="color: green;">답변완료</span>'
-                : '<span style="color: orange;">접수중</span>';
+                ? '<span style="color: green;">Answerd</span>'
+                : '<span style="color: orange;">Receiving</span>';
             const createdAtFormatted = formatDate(item.created_at);
 
             const row = `
@@ -535,7 +535,7 @@
             $("#my-posts-toggle").on("click", function (e) {
                 if (!isLoggedIn) {
                     e.preventDefault();
-                    if (confirm("로그인이 필요합니다. 로그인 페이지로 이동할까요?")) {
+                    if (confirm("You need to log in. Should I go to the login page?")) {
                         window.location.href = `/accounts/login/`;
                     }
                 } else {
