@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <title>My Page</title>
     <style>
@@ -74,20 +75,24 @@
         
     </style>
     <script>
-        
+         $(function() {
+            {% if msg %}
+                alert('{{msg.error_msg}}');
+            {% endif %}
+
+            $(function() {
+                $('#writeBtn').on('click', function(e) {
+                    
+                    const confirmed = confirm('Sure to post this inquiry?');
+                    if (!confirmed) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }); // jquery
     </script>
 </head>
 <body>
-    <!--
-    <header class="header">
-        <a href="#">로고</a>
-        <nav>
-            <a href="#">축제 정보</a>
-            <a href="#" class="active">마이페이지</a>
-            <a href="#">고객센터</a>
-        </nav>
-    </header>
-    -->
     <div id="wrap">
         {% include "header.html" %}
         <div class="contents">
@@ -98,10 +103,12 @@
             <form action="#" method="post">
                 {% csrf_token %}
                 <label for="title">Inquiry Title</label>
-                <input type="text" name="title" id="title" placeholder="title">
+                <input type="text" name="title" id="title" placeholder="title" value="{{ msg.written_title|default_if_none:'' }}">
                 <label for="content_box">Text</label>
-                <textarea name="content_box" id="content_box" placeholder="enter your words."></textarea>
-                <button type="submit" class="btn btn-orange">Write</button>                
+                <textarea name="content_box" id="content_box" placeholder="enter your words." value="{{ msg.written_content|default_if_none:'' }}"></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" class="btn btn-orange" id="writeBtn">Write</button>            
+                </div>    
             </form>
             
             

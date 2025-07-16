@@ -70,12 +70,26 @@
         border-radius: 6px;
         }
 
+        .faq-question, .faq-answer {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+        }
+
+        .faq-question strong {
+            color: #4B5563;
+        }
+
+        .faq-answer strong {
+            color: var(--color-primary);
+        }
         .faq-item {
         background: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin-bottom: 10px;
         overflow: hidden;
+    
         }
 
         .faq-question {
@@ -88,7 +102,7 @@
         .faq-answer {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease;
+        transition: max-height 0.1s ease;
         padding: 0 15px;
         background: #fafafa;
         }
@@ -241,9 +255,27 @@
             border-radius: 3px;
         }
 
+        .page-link {
+            text-decoration: none;
+            color: #555;
+            margin: 0 3px;
+            padding: 4px 8px;
+            font-size: 14px; /* 글씨 크기 줄이기 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
         
     </style>
     <script>
+        $(function() {
+        {% if messages %}
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        {% endif %}
+        });
+
         function searchFaq() {
         const input = document.getElementById("searchInput").value.toLowerCase();
         const faqItems = document.querySelectorAll("#faqContainer .faq-item"); 
@@ -252,7 +284,7 @@
         faqItems.forEach(row => {
             const question = row.querySelector(".faq-question").textContent.toLowerCase();
             const answer = row.querySelector(".faq-answer").textContent.toLowerCase();
-            const noResult = document.getElementById("noResult");
+            
 
             if (question.includes(input) || answer.includes(input)) {
                 row.style.display = ""; // 보이기
@@ -272,10 +304,13 @@
     <div id="wrap">
         {% include "header.html" %}
         <div class="contents">
+            {% if msg %}
+                    <li style="color: #a4161a; font-size: 15px; font-weight: bold; background-color: #ffe0e0; border: 1px solid #e63946; padding: 5px 10px;">{{ message }}</li>
+            {% endif %}
             <h1>User Support</h1>
 
             <form method="get" action="/inquiry/support/" class="search-bar">
-                <input type="text" name="key" id="searchInput" placeholder="궁금한 내용을 검색해보세요..." value="{{ keyword }}">
+                <input type="text" name="key" id="searchInput" placeholder="Search for anything you're curious about..." value="{{ keyword }}">
                 <button type="submit" class="clickBtn orange">Search</button>
             </form>
 
@@ -283,29 +318,32 @@
                 <h2>Frequently Asked Questions</h2>
 
                 <div id="faqContainer">
-                    <!-- FAQ 항목 예시 -->
                      {% for faq in faq_list %}
                     <div class="faq-item">
-                        <div class="faq-question" onclick="toggleAnswer(this)">
-                            Q. {{ faq.question }}
+                        <div class="faq-question" onclick="toggleAnswer(this)"> 
+                            <strong>Q:</strong>
+                            <span>{{ faq.question }}</span>
                         </div>
                         <div class="faq-answer">
-                            A. {{ faq.answer }}
+                            <strong>A:</strong>
+                            <span>{{ faq.answer }}</span>
                         </div>   
                     </div>
                     {% endfor %}    
+                    
                 </div>
 
                 <div id="noResult" class="no-result" style="display: none;">
                     관련된 FAQ가 없습니다.
                 </div>
+
                     <div class="pagination">
                     {% if faq_list.has_previous %}
-                        <a href="?faq_page={{ faq_list.previous_page_number }}">이전</a>
+                        <a href="?faq_page={{ faq_list.previous_page_number }}">before</a>
                     {% endif %}
                     <span>{{ faq_list.number }} / {{ faq_list.paginator.num_pages }}</span>
                     {% if faq_list.has_next %}
-                        <a href="?faq_page={{ faq_list.next_page_number }}">다음</a>
+                        <a href="?faq_page={{ faq_list.next_page_number }}">next</a>
                     {% endif %}
                 </div>
 
@@ -361,9 +399,9 @@
                             <td>{{ inquiry.created_at|date:"Y-m-d H:i" }}</td>
                             <td class="center">
                                 {% if inquiry.status == 'answered' %}
-                                <span style="color: green;">답변완료</span>
+                                <span style="color: green;">Answerd</span>
                                 {% else %}
-                                <span style="color: orange;">접수중</span>
+                                <span style="color: orange;">Receiving</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -380,7 +418,7 @@
                                         {% if inquiry.status == 'answered' %}
                                             {{ inquiry.replies.first.content }}
                                         {% else %}
-                                            아직 답변이 등록되지 않았습니다.
+                                            This question has not yet been registered for an answer.
                                         {% endif %}
                                     </span>
                                 </div>
@@ -429,7 +467,7 @@
     {% if session_user_id %}
         location.href = "/inquiry/write/";
     {% else %}
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동할까요?")) {
+        if (confirm("You need to log in. Should I go to the login page?")) {
             window.location.href = "/accounts/login/";
         }
     {% endif %}
@@ -452,8 +490,8 @@
         inquiries.forEach(function (item, index) {
             const no = index + 1;
             const statusHtml = item.status === 'answered'
-                ? '<span style="color: green;">답변완료</span>'
-                : '<span style="color: orange;">접수중</span>';
+                ? '<span style="color: green;">Answerd</span>'
+                : '<span style="color: orange;">Receiving</span>';
             const createdAtFormatted = formatDate(item.created_at);
 
             const row = `
@@ -535,7 +573,7 @@
             $("#my-posts-toggle").on("click", function (e) {
                 if (!isLoggedIn) {
                     e.preventDefault();
-                    if (confirm("로그인이 필요합니다. 로그인 페이지로 이동할까요?")) {
+                    if (confirm("You need to log in. Should I go to the login page?")) {
                         window.location.href = `/accounts/login/`;
                     }
                 } else {
@@ -548,6 +586,7 @@
             });
         });
 
+        
 
     </script>
 

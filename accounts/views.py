@@ -407,6 +407,7 @@ def pw_reset(request):
 def naver_login_start(request):
     client_id = 'Wke0wdADmCltAya71Ce9'  # 본인 네이버 REST API Client ID
     redirect_uri = 'http://127.0.0.1:8000/naver/callback/'  # 콜백 URL (반드시 등록)
+    # redirect_uri = 'http://192.168.0.20:8000/naver/callback/'  # 발표용
     state = uuid.uuid4().hex  # CSRF 방지용 랜덤값
     request.session['naver_state'] = state
     url = (
