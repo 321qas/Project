@@ -25,7 +25,7 @@ def view(request, id):  # 축제 상세 페이지
     tags_list = [{'name': tag.name} for tag in qs.tags.all()]
     is_logged_in = request.session.get('user_id') is not None
 
-    # ★ (1) 위시리스트 개수와 내 위시리스트 상태
+    # 위시리스트 개수와 내 위시리스트 상태
     total_wishlist_count = Wishlist.objects.filter(festival=qs).count()
     is_wishlisted = False
     if is_logged_in:
