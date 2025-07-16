@@ -20,36 +20,25 @@
             text-align: center;
             font-size: 1.8rem;
             margin-bottom: 100px;
+            margin-top: 40px;
         }
 
         button {
             font-weight: normal;
         }
+
         /* FAQ, Inquiry 탭 */
 
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 15px;
-        }
-        .tabs button {
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size:20px;
-            color: #333;
-        }
-        .tabs button.active {
-            color: #f97316;
-            font-weight: bold;
-        }
         .content {
             text-align: center;
             margin: 20px auto;
             padding: 20px;
             background-color: #ffffff;
             max-width: 900px;
+        }
+
+        #FAQ.content {
+            margin-top: 60px;
         }
 
         /* FAQ 내용 */
@@ -80,13 +69,6 @@
         border: 1px solid #ccc;
         border-radius: 6px;
         }
-
-        /*
-        .search-bar button {
-            border: 1px solid black; 
-            padding: 5px;
-        }
-            */
 
         .faq-item {
         background: #fff;
@@ -168,11 +150,10 @@
             width: fit-content;
             gap: 20px; 
         }
-        /*
-        #my-posts-toggle {
-            font-weight: 500;
+        
+        .controls-left a {
+            cursor: pointer;
         }
-        */
 
         {% comment %} 
         .controls .exclude-private {
@@ -186,18 +167,6 @@
             margin-right: 10px;
             
         }
-        /*
-        .controls .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .controls .btn-orange {
-            background-color: #f97316;
-            color: #ffffff;
-        }
-        */
         .table {
             width: 100%;
             border-collapse: separate;
@@ -212,7 +181,14 @@
         .table th {
             background-color: #f5f5f5;
         }
-        
+
+        .table td.center {
+            text-align: center;
+        }
+        .table td.center span {
+            display: inline-block;
+        }
+
         .table tr.collapsible-content td {
             background-color: #f9fafb;
             border-top: 2px solid var(--color-primary);
@@ -255,7 +231,7 @@
             margin: 30px 0;
         }
 
-        .pagination a {
+        .pagination a, .page-link {
             text-decoration: none;
             color: #555;
             margin: 0 3px;
@@ -358,12 +334,19 @@
 
                 <table class="table">
                     <thead>
+                        <colgroup>
+                            <col style="width: 10%">
+                            <col style="width: *">
+                            <col style="width: 15%">
+                            <col style="width: 20%">
+                            <col style="width: 15%">
+                        </colgroup>
                         <tr>
-                            <th>No.</th>
+                            <th style="text-align: center;">No.</th>
                             <th>Title</th>
                             <th>User</th>
                             <th>Date</th>
-                            <th>Status</th>
+                            <th style="text-align: center">Status</th>
                         </tr>
                     </thead>
                     <tbody id="inquiry-table">
@@ -376,7 +359,7 @@
                             </td>
 
                             <td>{{ inquiry.created_at|date:"Y-m-d H:i" }}</td>
-                            <td>
+                            <td class="center">
                                 {% if inquiry.status == 'answered' %}
                                 <span style="color: green;">답변완료</span>
                                 {% else %}
@@ -475,11 +458,11 @@
 
             const row = `
                 <tr data-id="${no}">
-                    <td>${no}</td>
+                    <td class="center">${no}</td>
                     <td>${item.title}</td>
                     <td>${item.user__nickname}</td>
                     <td>${createdAtFormatted}</td>
-                    <td>${statusHtml}</td>
+                    <td class="center">${statusHtml}</td>
                 </tr>
                 <tr class="collapsible-content" data-id="${no}" style="display:none;">
                     <td colspan="5">
