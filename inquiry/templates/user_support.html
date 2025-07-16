@@ -278,15 +278,24 @@
         
     </style>
     <script>
+        $(function() {
+        {% if messages %}
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        {% endif %}
+        });
+
         function searchFaq() {
         const input = document.getElementById("searchInput").value.toLowerCase();
         const faqItems = document.querySelectorAll("#faqContainer .faq-item"); 
-        
+        const noResult = document.getElementById("noResult");
+        let matchFound = false;
 
         faqItems.forEach(row => {
             const question = row.querySelector(".faq-question").textContent.toLowerCase();
             const answer = row.querySelector(".faq-answer").textContent.toLowerCase();
-            const noResult = document.getElementById("noResult");
+            
 
             if (question.includes(input) || answer.includes(input)) {
                 row.style.display = ""; // 보이기
@@ -337,6 +346,7 @@
                 <div id="noResult" class="no-result" style="display: none;">
                     관련된 FAQ가 없습니다.
                 </div>
+
                     <div class="pagination">
                     {% if faq_list.has_previous %}
                         <a href="?faq_page={{ faq_list.previous_page_number }}">이전</a>
@@ -579,6 +589,7 @@
             });
         });
 
+        
 
     </script>
 

@@ -82,14 +82,13 @@
 
             $(function() {
                 $('#writeBtn').on('click', function(e) {
+                    
                     const confirmed = confirm('Sure to post this inquiry?');
                     if (!confirmed) {
                         e.preventDefault();
-                    } else {alert('Thanks for your opinion');}
+                    }
                 });
             });
-
-
         }); // jquery
     </script>
 </head>
