@@ -5,11 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/components.css">
     {% comment %} <link rel="stylesheet" type="text/css" href="/static/css/main.css"> {% endcomment %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Document</title>
     <style>
-      * {margin:0; padding: 0; box-sizing: border-box;}
+      * {
+        margin:0; padding: 0; box-sizing: border-box; font-family: "Poppins", "Noto Sans KR", sans-serif;
+      }
       ul, li {list-style: none;}
       a {text-decoration: none; color: inherit;}
 
@@ -22,7 +27,6 @@
                   
         justify-content: center;    
         align-items: center;       
-        background: #f0f0f0;     
       }
 
       #banner_blur h1 {
@@ -93,6 +97,10 @@
 
       }
 
+      .searchBlock button {
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+      }
+
       .date .stardToEnd {
         display: flex;
         width: 90%;
@@ -113,8 +121,8 @@
       .button button {
         margin-top: auto;
         padding: 12px;
-        font-size: 15px;
-        background-color: #007bff;
+        font-size: 17px;
+        font-weight: 500;
         color: white;
         border: none;
         border-radius: 6px;
@@ -136,22 +144,20 @@
       
       #festList {
         width: 100%;
-        margin: 50px 0;
+        margin-bottom: 50px;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 20px;
-        border-top: 1px solid #ccc;
-        padding-top: 30px;
         font-family: 'Nanum Gothic', sans-serif;
       }
       .festCard {
         width: calc(32% - 10px);
-        height: 480px;
+        min-height: 620px;
+        height: fit-content;
         display: flex;
         flex-direction: column;
         border-radius: 12px;
-        overflow: hidden;
         position: relative;
         cursor: pointer;
         text-align: left;
@@ -161,7 +167,7 @@
           linear-gradient(to bottom right, #fefae0, #e9f5ff),
           repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
           repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
-        border: 3px double #b39068;
+        /*border: 3px solid #b39068;*/
         box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
       }
@@ -173,25 +179,29 @@
 
       .festCard a img {
         width: 100%;
-        height: 200px;
+        height: 300px;
         object-fit: cover;
         border-bottom: 1px solid #e2d7c3;
       }
 
       .festCard::before {
-        content: "ongoing";
+        content: "Happening Now";
         position: absolute;
         top: 10px;
         left: 10px;
-        background: linear-gradient(45deg, #cc5c48, #e2905b);
+        background: #F66989;
+        /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
         color: #fff;
-        font-size: 11px;
-        padding: 3px 7px;
+        font-size: 12px;
+        padding: 5px 7px;
         border-radius: 8px;
         font-weight: bold;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         z-index: 1;
       }
+
+
+
 
       /* 공통 텍스트 스타일 */
       .festCard p {
@@ -216,22 +226,17 @@
         margin-bottom: 8px;
       }
 
-      .festCard p.date-info,
-      .festCard p.region-info,
-      .festCard p.tags {
-        font-size: 12px;
+      
+      .festCard p.date-info {
+        font-size: 14px;
         color: #5a4632;
         background: rgba(243, 234, 204, 0.6);
         padding: 6px 10px;
         border-radius: 8px;
-      }
-
-      .festCard p.date-info {
-        margin-top: auto;
         padding-bottom: 8px;
-      }
+      }      
 
-      /* 상세 설명 영역 (배너 아래) */
+      /* 상세 설명 영역 (배너 아래)
       .festival-info-under-banner {
         padding: 16px 24px;
         background: #fff;
@@ -258,13 +263,15 @@
         color: #555;
         margin-top: 6px;
       }
+      */
 
       .festival-info-under-banner .festival-tags,
       .festival-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 12px;
+        margin: 12px 20px 20px;
+        /*padding: 0 20px;*/
       }
 
       .festival-info-under-banner .tag,
@@ -306,10 +313,15 @@
         color: #333;
       }
 
+      .rating-region {
+        margin: 0 20px 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
       .festival-rating {
         font-size: 18px;
         color: #ff9800;
-        margin-left: 8px;
       }
 
       .festival-info-row {
@@ -323,49 +335,26 @@
         color: #5a5a4d;
       }
 
-            #loadMoreBtn {
-              display:block; 
-              margin:10px auto 0; 
-              padding:12px 32px; 
-              font-size:1.1rem;  
-              border:1px solid #ccc; 
-              background:#f8f8f8; 
-              cursor:pointer;
-            }
-          
-            #footer {
-              padding: 20px;
-              background-color: #f1f1f1;
-              font-size: 14.4px;
-              color: #666;
-              text-align: center;
-            }
-          
-            .footer-links {
-              display: flex;
-              justify-content: center;
-              flex-wrap: wrap;
-              gap: 15px;
-              list-style: none;
-              margin-top: 10px;
-            }
-          
-            .footer-links a {
-              text-decoration: none;
-              color: #666;
-            }
-          
-            .footer-links a:hover {text-decoration: underline;}
-          
-            .fest-info-row {
+      #loadMoreBtn {
+        display:block; 
+        margin:10px auto 50px; 
+        /*
+        padding:12px 32px; 
+        font-size:1.1rem;  
+        border:1px solid #ccc; 
+        cursor:pointer;
+        */
+      }
+                
+      .fest-info-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: 0 12px 4px;
         gap: 10px;
       }
-        .festival-name {
-        margin-left: 8px; /* 또는 padding-left: 8px; */
+      .festival-name {
+        margin: 0 20px 10px;
       }
 
     </style>
@@ -374,7 +363,7 @@
     <div id="wrap">
       {% include "header.html" %}
         <div id="banner_blur">
-            <h1>여행지를 검색해보세요</h1>
+            <h1>Explore festivals</h1>
             <form id='searchForm' action="#" method="GET">
                 <div id="searchBlocks">
                     <div class="searchBlock name">
@@ -390,19 +379,19 @@
                       <h3>날짜검색</h3>
                       <div class="stardToEnd">
                           <div>
-                          <label for="startDate">시작일</label>
-                          <input type="date" name="startDate" id="startDate">
-                          </div>
-                          <span>~</span>
-                          <div>
-                          <label for="endDate">종료일</label>
-                          <input type="date" name="endDate" id="endDate">
+                            <label for="startDate">시작일</label>
+                            <input type="date" name="startDate" id="startDate">
+                            </div>
+                            <span>~</span>
+                            <div>
+                            <label for="endDate">종료일</label>
+                            <input type="date" name="endDate" id="endDate">
                           </div>
                       </div>
                     </div>
 
                     <div class="searchBlock button">
-                    <button type="submit">검색</button>
+                      <button type="submit">Search</button>
                     </div>
                 </div>
             </form>
@@ -412,7 +401,7 @@
             <div id="festList">
                 
             </div>
-            <button id="loadMoreBtn" >view more +</button>
+            <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
         </div>
     </div>
     <script>
@@ -445,12 +434,14 @@
                     </a>
                     <p>
                       <div class="festival-header">
-                        <span class="festival-name">${data.name}</span>
-                        <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                        <div class="festival-name">${data.name}</div>
+                        <div class="rating-region">
+                          <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                          <span class="region-info">🌏 ${data.region}</span>
+                        </div>
                         <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
-                        <p class="region-info">📍 ${data.region}</p>
                       </div>
-
+                    </p>
 
                     <div class="festival-tags">
                         ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
