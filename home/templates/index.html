@@ -488,7 +488,7 @@
             Promise.all([
             // sList AJAX 요청 (쇼츠 데이터)
               $.ajax({
-                url: `/slist/${initialShortformId}/`,
+                url: `/slist/${initialShortformId}`,
                 type: 'GET',
                 dataType: 'json'
               }),
@@ -826,10 +826,10 @@
         <ul>
           <li><a href="/festivals/list/">festivals</a></li>
           {% if user_id %}
-              <li><a href="/accounts/logout/">logout</a></li>
+              <li><a href="/accounts/logout/" onclick="return confirm('Are you sure you want to logout?');">logout</a></li>
               <li><a href="/accounts/mypage1/">my page</a></li>
           {% else %}
-              <li><a href="/accounts/login/">login</a></li>
+              <li><a href="/accounts/login/"  onclick="alert('Redirecting to login page.');">login</a></li>
               <li><a href="/accounts/signup/terms/">sign up</a></li>
           {% endif %}
           <li><a href="/inquiry/support/">support</a></li>  

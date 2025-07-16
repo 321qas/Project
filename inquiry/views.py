@@ -108,6 +108,14 @@ def inquiry_write(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content_box')
+        # 작성여부
+        if not title or not content:
+            msg = {'error_msg':'Both title and content should be written',
+                   'written_title': title,
+                   'written_content': content}
+            return render(request, 'inquiry_write.html', {"msg":msg})
+    
+        # store in db
         Inquiry.objects.create(
             user=request.user,
             title=title,
