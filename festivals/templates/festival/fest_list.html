@@ -44,25 +44,32 @@
         padding: 20px;
         border: 1px solid #ddd;
         border-radius: 10px;
-        gap: 5px;
+        gap: 20px;
         width: 60%;
-        height: 150px;
+        height: 145px;
         
       }
 
       .searchBlock {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        /*gap: 8px;*/
       }
+
+
       .region {
-        width: 25%;
+        width: 15%;
         
       }
 
+      .name {
+        width: 35%;
+      }
+
       .date {
-        width: 55%;
+        width: 35%;
         justify-content: space-between;
+      
       }
 
       .button {
@@ -72,8 +79,8 @@
       }
 
       .searchBlock h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
+        font-size: 18px;
+        /*margin-bottom: 8px;*/
         color: #333;
         min-height: 22px;
       }
@@ -354,7 +361,7 @@
         gap: 10px;
       }
       .festival-name {
-        margin: 0 20px 10px;
+        margin: 5px 20px 10px;
       }
 
     </style>
@@ -363,38 +370,38 @@
     <div id="wrap">
       {% include "header.html" %}
         <div id="banner_blur">
-            <h1>Explore festivals</h1>
-            <form id='searchForm' action="#" method="GET">
-                <div id="searchBlocks">
-                    <div class="searchBlock name">
-                      <h3>이름검색</h3>
-                      <input type="text" name='name' id="name" placeholder="Name Search">
-                    </div>
-                    <div class="searchBlock region">
-                      <h3>지역검색</h3>
-                      <input type="text" name="region" id="region" placeholder="예: 서울, 부산">
-                    </div>
+          <h1>Explore festivals</h1>
+          <form id='searchForm' action="#" method="GET">
+            <div id="searchBlocks">
+              <div class="searchBlock name">
+                <h3>Festival Name</h3>
+                <input type="text" name='name' id="name" placeholder="Name Search">
+              </div>
+              <div class="searchBlock region">
+                <h3>Region</h3>
+                <input type="text" name="region" id="region" placeholder="Ex: Seoul, Busan">
+              </div>
 
-                    <div class="searchBlock date">
-                      <h3>날짜검색</h3>
-                      <div class="stardToEnd">
-                          <div>
-                            <label for="startDate">시작일</label>
-                            <input type="date" name="startDate" id="startDate">
-                            </div>
-                            <span>~</span>
-                            <div>
-                            <label for="endDate">종료일</label>
-                            <input type="date" name="endDate" id="endDate">
-                          </div>
-                      </div>
-                    </div>
-
-                    <div class="searchBlock button">
-                      <button type="submit">Search</button>
-                    </div>
+              <div class="searchBlock date">
+                <h3>Date</h3>
+                <div class="stardToEnd">
+                  <div>
+                    <label for="startDate">Start Date</label>
+                    <input type="date" name="startDate" id="startDate">
+                  </div>
+                  <span>~</span>
+                  <div>
+                    <label for="endDate">End Date</label>
+                    <input type="date" name="endDate" id="endDate">
+                  </div>
                 </div>
-            </form>
+              </div>
+
+              <div class="searchBlock button">
+                <button type="submit">Search</button>
+              </div>
+            </div>
+          </form>
         </div>
             
         <div class="contents">  
