@@ -50,7 +50,7 @@ def view(request, id):  # 축제 상세 페이지
     avg_rating = Review.objects.filter(festival=qs).aggregate(avg=Avg('rating'))['avg']
     review_count = Review.objects.filter(festival=qs).count()
 
-    # ----------- 상태 텍스트 계산 부분 -----------
+    # ----------- 현재 및 축제 날짜 계산 부분 -----------
     today = date.today()
     # qs.start_date와 qs.end_date가 datetime일 수도 있으니 .date()로 맞추는 것이 안전
     start = qs.start_date if isinstance(qs.start_date, date) else qs.start_date.date()
