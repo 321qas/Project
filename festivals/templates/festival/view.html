@@ -797,6 +797,34 @@
       show(current);
     };
   });
+
+  {% comment %} 위시리스트 기능 {% endcomment %}
+  $(function() {
+    $('#wishlist-btn').click(function(e){
+      e.preventDefault();
+      if(!window.IS_LOGGED_IN) {
+        alert('로그인 후 사용 가능합니다!');
+        window.location.href = "{% url 'accounts:login' %}?next={{ request.path }}";
+        return;
+      }
+      var festivalId = $(this).data('festival-id');
+      $.ajax({
+        url: '{% url "wishlist:add_wishlist" %}',
+        type: 'POST',
+        data: {
+          'festival_id': festivalId,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(res){
+          if(res.result === 'ok') {
+            $('#badge').text(res.count.toLocaleString());
+          } else if(res.result === 'fail') {
+            alert('에러: '+res.error);
+          }
+        }
+      });
+    });
+  });
   </script>
 
 </head>
@@ -872,7 +900,7 @@
             <span>Notify Me</span>
         </button>
 
-        <button class="info-btn">
+        <button id="wishlist-btn" class="info-btn" data-festival-id="{{ list.id }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="#f97316" viewBox="0 0 24 24" stroke="none">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
             4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 
@@ -880,7 +908,7 @@
             8.5c0 3.78-3.4 6.86-8.55 
             11.54L12 21.35z"/>
             </svg>
-            <span id="badge">6,654</span>
+            <span id="badge">{{ total_wishlist_count }}</span>
             <span>Wishlist</span>
         </button>
     </div>

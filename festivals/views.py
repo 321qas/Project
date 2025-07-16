@@ -7,6 +7,8 @@ from django.views.decorators.http import require_POST
 from reviews.models import Review
 import json
 from datetime import date
+from wishlist.models import Wishlist
+from accounts.models import User
 
 def festival_detail(request, pk): # 해당 축제의 상세 페이지 접속 빈도를 지역카운트로 반환하는 로직
     # 해당 축제 불러오기
@@ -47,12 +49,24 @@ def view(request, id):  # 축제 상세 페이지
     tags_list = [{'name': tag.name} for tag in qs.tags.all()]
     is_logged_in = request.session.get('user_id') is not None
 
+    # ★ (1) 위시리스트 개수와 내 위시리스트 상태
+    total_wishlist_count = Wishlist.objects.filter(festival=qs).count()
+    is_wishlisted = False
+    if is_logged_in:
+        try:
+            user = User.objects.get(user_id=request.session['user_id'])
+            user_wishlist_count = Wishlist.objects.filter(user=user).count()
+            is_wishlisted = Wishlist.objects.filter(user=user, festival=qs).exists()
+        except User.DoesNotExist:
+            user = None  # 비정상 세션
+    else:
+        user = None
+
     avg_rating = Review.objects.filter(festival=qs).aggregate(avg=Avg('rating'))['avg']
     review_count = Review.objects.filter(festival=qs).count()
 
     # ----------- 현재 및 축제 날짜 계산 부분 -----------
     today = date.today()
-    # qs.start_date와 qs.end_date가 datetime일 수도 있으니 .date()로 맞추는 것이 안전
     start = qs.start_date if isinstance(qs.start_date, date) else qs.start_date.date()
     end = qs.end_date if isinstance(qs.end_date, date) else qs.end_date.date()
     if start > today:
@@ -69,7 +83,10 @@ def view(request, id):  # 축제 상세 페이지
         'is_logged_in': is_logged_in,
         'avg_rating': avg_rating,      # None or float
         'review_count': review_count,  # 0 이상 int
-        'status_text': status_text,    # 여기에 상태 텍스트 추가!
+        'status_text': status_text,
+        'total_wishlist_count': total_wishlist_count,
+        'is_wishlisted': is_wishlisted,
+        # (필요시 user도 넘겨줄 수 있음)
     }
     return render(request, 'festival/view.html', content)
 

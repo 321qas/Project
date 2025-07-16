@@ -15,6 +15,7 @@ urlpatterns = [
     path('inquiry/', include('inquiry.urls')),
     path('shortforms/', include('shortforms.urls')),
     path('api/', include('reviews.urls')),  # 리뷰 관련 API URL 추가
+    path('wishlist/', include('wishlist.urls')), # 0716
 ]
 
 if settings.DEBUG:
