@@ -488,7 +488,7 @@
             Promise.all([
             // sList AJAX 요청 (쇼츠 데이터)
               $.ajax({
-                url: `/slist/${initialShortformId}/`,
+                url: `/slist/${initialShortformId}`,
                 type: 'GET',
                 dataType: 'json'
               }),
@@ -843,18 +843,4 @@
   </div>
 
   {% include "footer.html" %}
-
-  {% comment %} <div id="footer">
-    <h4>© 2025 FastFest | 사이트 개발자 정보</h4>
-    <ul class="footer-links">
-      <li><a href="#">개인정보처리방침</a></li>
-      <li><a href="#">이용약관</a></li>
-      <li><a href="#">관리자페이지 이동</a></li>
-      <li>
-        <div id="ldMode">
-          <button type="button" class="ldBtn" onclick="ldBtn()">다크모드</button>
-        </div>
-      </li>
-    </ul>
-  </div>  {% endcomment %}
 </body>
