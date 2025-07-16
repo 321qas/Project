@@ -1,118 +1,135 @@
+import random
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from festivals.models import Festival,FestivalImage
+from festivals.models import Festival, FestivalImage
 from django.db.models import Prefetch
 from tags.models import Tag
-from shortforms.models import ShortForm,ShortFormImage
+from shortforms.models import ShortForm, ShortFormImage
 from datetime import datetime
 
-current_datetime = datetime.now()
-current_month = current_datetime.month
-month_to_season = {1:"Winter",2:"Winter",3:"Spring",4:"Spring",5:"Spring",6:"Summer",7:"Summer",8:"Summer",9:"Autumn",10:"Autumn",11:"Autumn",12:"Winter"}
-season = month_to_season.get(current_month, "잘못된 월")
 
+# ------------------ 메인 인덱스 페이지 ------------------
 def index(request):
     try:
-        first_shortform = ShortForm.objects.first() # 예시: 첫 번째 쇼츠
+        # 첫 번째 쇼츠 객체 가져오기 (없으면 None)
+        first_shortform = ShortForm.objects.first()
     except ShortForm.DoesNotExist:
         first_shortform = None
-        
+    
+    # 세션에서 유저 정보 읽기
     user_id = request.session.get('user_id')
     nickname = request.session.get('nickname')
+    # 인덱스 렌더링 (쇼츠, 유저정보, 현재 쇼츠번호 전달)
     return render(request, 'index.html', {
         'user_id': user_id,
         'nickname': nickname,
-        'shortform': first_shortform, # <-- shortform 객체 전달
+        'shortform': first_shortform,
         'current_sno': first_shortform.id if first_shortform else None,
     })
     
+# ------------------ 쇼츠 상세페이지 ------------------
 def first(request, sno):
+    # 주어진 id(sno)에 해당하는 ShortForm 객체와 관련 정보 미리 가져오기
     shortform_obj = get_object_or_404(
-        ShortForm.objects.select_related(
-            'festival', 'user'
-        ).prefetch_related(
+        ShortForm.objects.select_related('festival', 'user').prefetch_related(
             Prefetch('images', queryset=ShortFormImage.objects.order_by('uploaded_at')),
             Prefetch('festival__tags', queryset=Tag.objects.all())
         ),
         id=sno
     )
+    # 컨텍스트에 쇼츠 객체 및 id 전달
     context = {
         'shortform': shortform_obj,
-        'current_sno': sno, # 현재 보고 있는 쇼츠의 ID를 템플릿에 전달 (JavaScript에서 활용 가능)
+        'current_sno': sno,
     }
-    
     return render(request, 'index.html', context)
 
-def jlist(request):
-    qs = Festival.objects.filter(
-        tags__name=season).order_by('?').prefetch_related(
-        Prefetch(
-            'images',
-            queryset=FestivalImage.objects.order_by('uploaded_at'),
-            to_attr='sorted_images'
-        )
-    )[:8]
-    
+# ------------------ 시즌별 축제 8개 json 리스트 ------------------
+
+def get_season(month): # 계절 계산 함수
+    if month in [3, 4, 5]:
+        return 'Spring'
+    elif month in [6, 7, 8]:
+        return 'Summer'
+    elif month in [9, 10, 11]:
+        return 'Autumn'
+    else:
+        return 'Winter'
+
+def jlist(request): # 시즌별 축제 8개 json 응답
+    current_month = datetime.now().month
+    current_season = get_season(current_month)
+
+    # 축제 전체에서 이미지 미리 읽기
+    qs = Festival.objects.prefetch_related(
+        Prefetch('images', queryset=FestivalImage.objects.order_by('uploaded_at'), to_attr='sorted_images')
+    )
+
     festival_data = []
     for festival in qs:
-        # 1. 첫 번째 이미지 URL 가져오기
-        first_festival_image = festival.sorted_images[0] if festival.sorted_images else None
-        image_url = first_festival_image.image.url if first_festival_image and first_festival_image.image else None
+        # 시작월로 계절 계산
+        if not festival.start_date:
+            continue
+        season = get_season(festival.start_date.month)
+        if season != current_season:
+            continue
 
-        festival_data.append({  
+        # 대표이미지 추출
+        first_image = festival.sorted_images[0] if festival.sorted_images else None
+        image_url = first_image.image.url if first_image and first_image.image else None
+
+        festival_data.append({
             'id': festival.id,
             'name': festival.name,
             'region': festival.region,
-            'start_date': festival.start_date.strftime('%Y-%m-%d') if festival.start_date else None,
+            'start_date': festival.start_date.strftime('%Y-%m-%d'),
             'end_date': festival.end_date.strftime('%Y-%m-%d') if festival.end_date else None,
             'image': image_url,
-            'tag' : season,
+            'tag': season,
         })
-    
-    return JsonResponse(festival_data, safe=False)
-# 쇼츠 데이터 보내기
-def slist(request, sno=None): # sno 매개변수를 추가하고 기본값을 None으로 설정
-    # 모든 ShortForm 객체를 미리 로드합니다.
-    all_shortforms_qs = ShortForm.objects.select_related(
-        'festival', 'user'
-    ).prefetch_related(
+
+    # 8개만 랜덤 추출
+    result = random.sample(festival_data, min(8, len(festival_data)))
+    return JsonResponse(result, safe=False)
+
+
+# ------------------ 쇼츠 데이터 json 응답 ------------------
+
+def slist(request, sno=None):
+    # 모든 쇼츠(ShortForm) 미리 가져오기
+    all_shortforms_qs = ShortForm.objects.select_related('festival', 'user').prefetch_related(
         Prefetch('images', queryset=ShortFormImage.objects.order_by('uploaded_at')),
         Prefetch('festival__tags', queryset=Tag.objects.all())
     )
 
     ordered_shortforms = []
-    
-    # sno가 제공되면, 해당 쇼츠를 먼저 찾아서 리스트의 시작에 추가합니다.
+    # sno가 있으면 해당 쇼츠를 맨 앞에 두고, 나머지는 랜덤
     if sno:
         try:
             requested_shortform = all_shortforms_qs.get(id=sno)
             ordered_shortforms.append(requested_shortform)
-            # 요청된 쇼츠를 제외한 나머지 쇼츠들을 가져옵니다.
             remaining_shortforms_qs = all_shortforms_qs.exclude(id=sno).order_by('?')
-            ordered_shortforms.extend(list(remaining_shortforms_qs)) # 리스트로 변환하여 추가
+            ordered_shortforms.extend(list(remaining_shortforms_qs))
         except ShortForm.DoesNotExist:
-            # sno에 해당하는 쇼츠가 없으면, 전체 쇼츠를 랜덤으로 가져옵니다.
+            # sno 잘못됐으면 전체 랜덤
             ordered_shortforms = list(all_shortforms_qs.order_by('?'))
     else:
-        # sno가 제공되지 않으면, 전체 쇼츠를 랜덤으로 가져옵니다.
+        # sno 없으면 전체 랜덤
         ordered_shortforms = list(all_shortforms_qs.order_by('?'))
 
     data = []
     for sf in ordered_shortforms:
+        # 축제 정보 json화
         festival_data = None
         if sf.festival:
-            tags_list = []
-            for tag in sf.festival.tags.all():
-                tags_list.append({
-                    'id': tag.id,
-                    'name': tag.name,
-                })
+            tags_list = [{'id': tag.id, 'name': tag.name} for tag in sf.festival.tags.all()]
             festival_data = {
                 'id': sf.festival.id,
                 'name': sf.festival.name,
                 'tags': tags_list,
             }
 
+        # 유저 정보
         user_info = {
             'id': sf.user.id,
             'nickname': sf.user.nickname,
@@ -121,13 +138,12 @@ def slist(request, sno=None): # sno 매개변수를 추가하고 기본값을 No
             'nickname': '탈퇴한 사용자',
         }
 
-        shortform_images_data = []
-        for img in sf.images.all():
-            shortform_images_data.append({
-                'id': img.id,
-                'image_url': request.build_absolute_uri(img.image.url),
-                'uploaded_at': img.uploaded_at.isoformat(),
-            })
+        # 이미지 리스트
+        shortform_images_data = [{
+            'id': img.id,
+            'image_url': request.build_absolute_uri(img.image.url),
+            'uploaded_at': img.uploaded_at.isoformat(),
+        } for img in sf.images.all()]
         
         data.append({
             'id': sf.id,
