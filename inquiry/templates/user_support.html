@@ -70,12 +70,26 @@
         border-radius: 6px;
         }
 
+        .faq-question, .faq-answer {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+        }
+
+        .faq-question strong {
+            color: #4B5563;
+        }
+
+        .faq-answer strong {
+            color: var(--color-primary);
+        }
         .faq-item {
         background: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin-bottom: 10px;
         overflow: hidden;
+    
         }
 
         .faq-question {
@@ -304,14 +318,15 @@
                 <h2>Frequently Asked Questions</h2>
 
                 <div id="faqContainer">
-                    <!-- FAQ 항목 예시 -->
                      {% for faq in faq_list %}
                     <div class="faq-item">
-                        <div class="faq-question" onclick="toggleAnswer(this)">
-                            Q. {{ faq.question }}
+                        <div class="faq-question" onclick="toggleAnswer(this)"> 
+                            <strong>Q:</strong>
+                            <span>{{ faq.question }}</span>
                         </div>
                         <div class="faq-answer">
-                            A. {{ faq.answer }}
+                            <strong>A:</strong>
+                            <span>{{ faq.answer }}</span>
                         </div>   
                     </div>
                     {% endfor %}    
