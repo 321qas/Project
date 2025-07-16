@@ -11,15 +11,15 @@ def user_support(request):
     # faq
     keyword = request.GET.get('key', '').strip().lower()
     faq_list = [
-    {"question" : "예매 후 취소 시 환불은 언제 되나요?", "answer" : "예매 취소 요청 시 영업일 기준 2~3일 내 환불이 진행됩니다. 카드사 사정에 따라 지연될 수 있습니다."},
-    {"question" : "축제 당일 현장 구매도 가능한가요?", "answer" : "네, 현장에서도 일부 티켓 구매가 가능합니다. 다만 수량이 한정되어 있으니 사전 예매를 권장드립니다."},
-    {"question" : "티켓 양도나 환불은 어떻게 하나요?", "answer" : "마이페이지에서 취소 요청을 하거나, 고객센터를 통해 양도 신청을 하실 수 있습니다."},
-    {"question" : "축제 관련 숏폼은 어떻게 만드나요?", "answer" : "숏폼 기능이 있는 메인페이지에서 숏폼 우측에 가장 상단에 위치한 (+) 버튼을 누르면 업로드 하실 수 있습니다"},
-    {"question" : "숏폼은 사이트 내에 존재하는 축제를 주제로만 생성 가능한가요?", "answer" : "네, 축제 제목 및 태그를 입력할 때 존재하는 축제의 정보를 불러오기 때문에 업데이트 되지 않은 축제는 불가능합니다"},
-    {"question" : "모바일에서도 사이트가 작동하나요?", "answer" : "현재까지는 모바일 버전을 지원하지 않으나 차후 업데이트 예정입니다"},
-    {"question" : "무료/유료 축제를 구별해 주나요?", "answer" : "현재까지는 지원하지 않는 기능입니다"},
-    {"question" : "사이트에 없는 축제를 추천하고 싶으면 어떻게 해야 하나요?", "answer" : "고객센터페이지(현재 페이지입니다) 하단에 inquiry에서 추천 축제를 올려드리면 검토 후 업데이트 하겠습니다."},
-    {"question" : "숏폼이 추천되는 원리는 어떻게 되나요?", "answer" : "로그인 시에는 사용자 관심 태그 기반 알고리즘으로 작동하며, 비회원에 경우 인기 태그를 포함한 숏폼이 추천됩니다"}
+    {"question" : "When can I get a refund if I cancel after booking?", "answer" : "If you request a reservation cancellation, a refund will be issued within 2-3 business days. There may be delays depending on the credit card company's circumstances."},
+    {"question" : "Is it possible to purchase on-site on the day of the festival?", "answer" : "Yes, you can purchase some tickets on-site. However, since the number is limited, advance reservations are recommended."},
+    {"question" : "How do I transfer or refund a ticket?", "answer" : "You can request cancellation on My Page or request a transfer through the customer center."},
+    {"question" : "How do I create a festival-related short form?", "answer" : "On the main page with the short form function, you can upload by clicking the (+) button located at the top to the right of the short form."},
+    {"question" : "Can short forms only be created with the theme of festivals that exist on the site?", "answer" : "es, when entering the festival title and tag, information about existing festivals is retrieved, so festivals that are not updated are not possible."},
+    {"question" : "Does the site work on mobile?", "answer" : "Currently, the mobile version is not supported, but it will be updated in the future."},
+    {"question" : "Do you distinguish between free and paid festivals?", "answer" : "This feature is not currently supported."},
+    {"question" : "What if I want to recommend a festival that isn't on the site?", "answer" : "If you post a recommended festival through inquiry at the bottom of the customer center page (this is the current page), we will update it after reviewing it."},
+    {"question" : "How is short form recommended?", "answer" : "When logging in, it operates using an algorithm based on user interest tags, and for non-members, short forms containing popular tags are recommended."}
     ]
     
     if keyword:
