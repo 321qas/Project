@@ -18,7 +18,7 @@
 
       #banner_blur {
         height: 400px;       
-        justify-content: center;    
+         
         align-items: center;       
         background: #f0f0f0;     
       }
@@ -26,15 +26,15 @@
       #banner_blur h1 {
         font-size: 40px;
         display: inline-block;
-        width: 80%;
-        text-align: center;
+        width: 100%;
+        text-align: left;
       }
 
       .title-search-wrap {
         display: flex;
         width: 52%;
         height: 150px;
-        margin: 0 auto;
+        margin-left: 20%;
         align-items: center;
         justify-content: space-between;
         gap: 10px;
@@ -59,7 +59,7 @@
         border: 1px solid #ddd;
         border-radius: 10px;
         gap: 5px;
-        width: 50%;
+        width: 60%;
         height: 150px;
         
       }
@@ -181,9 +181,8 @@
         margin: 50px auto;
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px;
-        /*border-top: 1px solid #ccc;*/
+        gap: 1%;
+        border-top: 1px solid #ccc;
         padding-top: 30px;
       }
 
@@ -192,14 +191,55 @@
       }
 
       .festCard {
-        width: 200px;
-        height: 250px;
+        width: 24%;
+        height: 430px;
         border-radius: 5px;
         overflow: hidden;
         text-align: center;
         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
         background-color: white;
+        margin-bottom: 15px;
+        background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
+        border: 3px double #b39068;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
       }
+
+      .festCard:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      }
+
+      .festHeader {
+        width: 90%;
+        margin: 0 auto;
+        
+      }
+
+      .festHeader p {
+        text-align: left;
+        font-size: 15px;
+      }
+
+
+      .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 10px;
+            padding: 10px;
+          }
+     
+
+      .tags span{
+        background-color: #E6F5FF;
+        color: #4fc3f7;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: default;
+      }
+
 
 
       #footer {
@@ -265,7 +305,13 @@
           
         <div class="contents">  
             <div id="festList">
-                <div class="festCard"><img src="" alt="축제1"><p>서울 불꽃축제</p></div>
+                <div class="festCard"><img src="" alt="축제1">
+                  <div class="festHeader">
+                    <p>서울 불꽃축제</p>
+                  </div>
+                  
+                  
+              </div>
             </div>  
         </div> 
     </div>
@@ -305,8 +351,8 @@
                     card.dataset.tags = JSON.stringify(festival.tags || []);
 
                     card.innerHTML = `
-                        <a href="#"><img src="${imageUrl}" alt="${festival.name} 이미지" width='100%' height='60%'></a>
-                        <p>${festival.name}</p>
+                        <a href="#"><img src="${imageUrl}" alt="${festival.name} 이미지" width='100%' height='40%'></a>
+                        <div class="festHeader"><p>${festival.name}</p></div>
                         ${tagsHtml}
                     `;
                     fragment.appendChild(card);

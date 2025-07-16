@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from inquiry.models import Inquiry
 from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
+from django.contrib import messages
+
 
 
 # Create your views here.
@@ -19,6 +21,7 @@ def user_support(request):
     {"question" : "사이트에 없는 축제를 추천하고 싶으면 어떻게 해야 하나요?", "answer" : "고객센터페이지(현재 페이지입니다) 하단에 inquiry에서 추천 축제를 올려드리면 검토 후 업데이트 하겠습니다."},
     {"question" : "숏폼이 추천되는 원리는 어떻게 되나요?", "answer" : "로그인 시에는 사용자 관심 태그 기반 알고리즘으로 작동하며, 비회원에 경우 인기 태그를 포함한 숏폼이 추천됩니다"}
     ]
+    
     if keyword:
         faq_list = [faq for faq in faq_list
                     if keyword in faq["question"].lower() or keyword in faq["answer"].lower()]
@@ -108,13 +111,23 @@ def inquiry_write(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content_box')
+        # 작성여부
+        if not title or not content:
+            msg = {'error_msg':'Both title and content should be written',
+                   'written_title': title,
+                   'written_content': content}
+            return render(request, 'inquiry_write.html', {"msg":msg})
+    
+        # store in db
         Inquiry.objects.create(
             user=request.user,
             title=title,
             content=content,
             status='waiting',
         )
-        return redirect('/inquiry/support/')  # 문의글 목록 페이지 URL 이름
+        messages.success(request, 'Thanks for your opinion')
+        return redirect('/inquiry/support/')
+
     else:
         return render(request, 'inquiry_write.html')
         
