@@ -144,11 +144,13 @@
       @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
       .contents {
-          width: 60%;
-          margin: 0 auto; /* 중앙 정렬 */
-        }
+        width: 60%;
+        margin: 0 auto; /* 중앙 정렬 */
+      }
 
       
+      /* 리스트 부분 */
+
       #festList {
         width: 100%;
         margin-bottom: 50px;
@@ -156,7 +158,6 @@
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 20px;
-        font-family: 'Nanum Gothic', sans-serif;
       }
 
       .festCard {
@@ -242,45 +243,13 @@
         padding-bottom: 8px;
       }      
 
-      /* 상세 설명 영역 (배너 아래)
-      .festival-info-under-banner {
-        padding: 16px 24px;
-        background: #fff;
-        border-top: 1px solid #ddd;
-        font-family: 'Nanum Gothic', sans-serif;
-      }
-
-      .festival-info-under-banner h2.festival-name {
-        margin: 0;
-        font-size: 24px;
-        font-weight: bold;
-        color: #222;
-      }
-
-      .festival-info-under-banner .festival-rating {
-        font-size: 20px;
-        color: #ff9800;
-        margin-top: 4px;
-      }
-
-      .festival-info-under-banner .festival-period,
-      .festival-info-under-banner .festival-location {
-        font-size: 16px;
-        color: #555;
-        margin-top: 6px;
-      }
-      */
-
-      .festival-info-under-banner .festival-tags,
       .festival-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         margin: 12px 20px 20px;
-        /*padding: 0 20px;*/
       }
 
-      .festival-info-under-banner .tag,
       .festival-tags .tag,
       .tag {
         background-color: #E6F5FF;
@@ -290,33 +259,6 @@
         border-radius: 4px;
         font-size: 13px;
         cursor: default;
-      }
-
-      /* 카드 밖에서 사용되는 독립적인 카드 스타일 */
-      .festival-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 12px;
-        width: 280px;
-        background: #fff;
-        font-family: Arial, sans-serif;
-      }
-
-      .festival-image {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 8px 8px 0 0;
-      }
-
-      .festival-description {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 8px;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
       }
 
       .rating-region {
@@ -330,35 +272,11 @@
         color: #ff9800;
       }
 
-      .festival-info-row {
-        display: flex;
-        justify-content: space-between;
-        background: #f9f1db;
-        border-radius: 6px;
-        padding: 6px 10px;
-        margin: 8px 0;
-        font-size: 14px;
-        color: #5a5a4d;
-      }
-
       #loadMoreBtn {
         display:block; 
         margin:10px auto 50px; 
-        /*
-        padding:12px 32px; 
-        font-size:1.1rem;  
-        border:1px solid #ccc; 
-        cursor:pointer;
-        */
       }
-                
-      .fest-info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0 12px 4px;
-        gap: 10px;
-      }
+
       .festival-name {
         margin: 5px 20px 10px;
       }

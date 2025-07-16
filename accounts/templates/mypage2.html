@@ -8,69 +8,49 @@
     <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
-        /* 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #ffffff;
-            border-bottom: 2px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .contents {
+            max-width: none;
+            width: 60%;
         }
-        .header a {
-            text-decoration: none;
-            color: #333;
-            margin: 0 15px;
-            font-weight: bold;
+
+        h3 {
+            margin: 10px 0 30px;
         }
-        .header a.active {
-            text-decoration: underline;
-        }
-        */
 
         /* 프로필 사진, 아이디, 닉네임 */
-        .profile-section {
+        .profile-card {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            /*border: 2px solid #2563eb;*/
+            border-radius: 12px;
+            background-color: #ffffff;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
             text-align: center;
-            margin: 20px auto;
-            width: 600px;
-            height: 200px;
-            border: none;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-        
         }
-        /*
-        .profile-picture {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #ddd;
-        }
-        */
         .profile-details {
             margin-top: 10px;
-            width:250px;
-            height: 100px;
-            border: none;
-            text-align: left;
         }
-
+        
         /* my plans, My Reviews, notification, settings 탭 */
 
         .tabs {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
-            gap: 15px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            gap: 30px;
         }
         .tabs button {
             border: none;
             background-color: transparent;
             cursor: pointer;
+            color: #2563eb;
             font-weight: bold;
-            color: #333;
+        }
+        .tabs button:hover {
+            color: #f97316;
         }
         .tabs button.active {
             color: #f97316;
@@ -85,8 +65,141 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* my plans 탭 */ 
+        /* wishlist 탭 */ 
 
+        #festList {
+            width: 100%;
+            margin-bottom: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .festCard {
+            width: calc(32% - 10px);
+            min-height: 620px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+        
+            background: 
+            linear-gradient(to bottom right, #fefae0, #e9f5ff),
+            repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
+            repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
+            /*border: 3px solid #b39068;*/
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .festCard:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+        }
+
+        .festCard a img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid #e2d7c3;
+        }
+
+        .festCard::before {
+            content: "Happening Now";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #F66989;
+            /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 7px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+
+
+
+
+        /* 공통 텍스트 스타일 */
+        .festCard p {
+            margin: 4px 12px;
+            white-space: normal;
+            overflow: visible;
+            line-height: 1.6em;
+        }
+
+        .festCard p.title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #b35c1e;
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .festCard p.rating {
+            font-size: 14px;
+            color: #e2a934;
+            white-space: nowrap;
+            margin-bottom: 8px;
+        }
+
+        
+        .festCard p.date-info {
+            font-size: 14px;
+            color: #5a4632;
+            background: rgba(243, 234, 204, 0.6);
+            padding: 6px 10px;
+            border-radius: 8px;
+            padding-bottom: 8px;
+        }      
+
+        .festival-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 20px 20px;
+        }
+
+        .festival-tags .tag,
+        .tag {
+            background-color: #E6F5FF;
+            color: #4fc3f7;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: default;
+        }
+
+        .rating-region {
+            margin: 0 20px 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .festival-rating {
+            font-size: 18px;
+            color: #ff9800;
+        }
+
+        #loadMoreBtn {
+            display:block; 
+            margin:10px auto 40px; 
+        }
+
+        .festival-name {
+            margin: 5px 20px 10px;
+        }
+
+
+        /*
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -123,6 +236,7 @@
         .card-content .tags {
             margin-top: 10px;
         }
+        */
 
         /* My Reviews 탭 */
 
@@ -326,58 +440,78 @@
     <div id="wrap">
         {% include "header.html" %}
         <div class="contents">
-            <section class="profile-section">
-                <!-- <div class="profile-picture"></div> -->
+            <div class="profile-card">
                 <div class="profile-details">
-                    <p><strong>아이디:</strong> user123</p>
-                    <p><strong>닉네임:</strong> User</p>
+                    <span>{{ nickname }}</span>'s festival hub
                 </div>
-            </section>
+            </div>
 
             <div class="tabs">
-                <button class="tab-link active" onclick="showTab('my-plans')">My Plans</button>
+                <button class="tab-link active" onclick="showTab('wishlist')">Wishlist</button>
                 <button class="tab-link" onclick="showTab('my-reviews')">My Reviews</button>
                 <button class="tab-link" onclick="showTab('my-shorts')">My Shorts</button>
                 <button class="tab-link" onclick="showTab('settings')">Settings</button>
             </div>
 
-            <div id="my-plans" class="content">
-                <h3>My Plans</h3>
-                <div class="card-container">
-                    <div class="card">
-                        <img src="example1.jpg" alt="축제 사진">
-                        <div class="card-content">
-                            <h4>축제 이름</h4>
-                            <p>축제 기간: 2025.06.01 ~ 2025.06.10</p>
-                            <p>위치: 서울</p>
-                            <div class="tags">
-                                <span>#음악</span><span>#공연</span>
+            <div id="wishlist" class="content">
+                <h3>Wishlist</h3>
+                <div id="festList">
+                    <div class="festCard">
+                        <a href="/festivals/view/${data.id}">
+                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
+                        </a>
+                        <p>
+                        <div class="festival-header">
+                            <div class="festival-name">${data.name}</div>
+                            <div class="rating-region">
+                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                            <span class="region-info">🌏 ${data.region}</span>
                             </div>
+                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                        </div>
+                        </p>
+                        <div class="festival-tags">
+                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
                         </div>
                     </div>
-                    <div class="card">
-                        <img src="example2.jpg" alt="축제 사진">
-                        <div class="card-content">
-                            <h4>축제 이름</h4>
-                            <p>축제 기간: 2025.07.15 ~ 2025.07.20</p>
-                            <p>위치: 부산</p>
-                            <div class="tags">
-                                <span>#전통</span><span>#문화</span>
+                    <div class="festCard">
+                        <a href="/festivals/view/${data.id}">
+                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
+                        </a>
+                        <p>
+                        <div class="festival-header">
+                            <div class="festival-name">${data.name}</div>
+                            <div class="rating-region">
+                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                            <span class="region-info">🌏 ${data.region}</span>
                             </div>
+                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                        </div>
+                        </p>
+                        <div class="festival-tags">
+                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
                         </div>
                     </div>
-                    <div class="card">
-                        <img src="example3.jpg" alt="축제 사진">
-                        <div class="card-content">
-                            <h4>축제 이름</h4>
-                            <p>축제 기간: 2025.08.05 ~ 2025.08.10</p>
-                            <p>위치: 대구</p>
-                            <div class="tags">
-                                <span>#야경</span><span>#사진</span>
+                    <div class="festCard">
+                        <a href="/festivals/view/${data.id}">
+                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
+                        </a>
+                        <p>
+                        <div class="festival-header">
+                            <div class="festival-name">${data.name}</div>
+                            <div class="rating-region">
+                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                            <span class="region-info">🌏 ${data.region}</span>
                             </div>
+                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                        </div>
+                        </p>
+                        <div class="festival-tags">
+                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
                         </div>
                     </div>
                 </div>
+                <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
             </div>
             <div id="my-reviews" class="content" style="display: none;">
                 <h3>My Festivals</h3>
