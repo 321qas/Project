@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-k!wle-@v3l*2!@#(gy(p2y3r0a5v0o)u_xf3fcdf+-!n#h0s03
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['pastpest.vercel.app']
 
 SITE_URL = "http://localhost:8000"  # 실제 배포시 도메인으로 수정 # Gmail 인증 링크에서 사용할 URL
 # Application definition
