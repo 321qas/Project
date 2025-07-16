@@ -105,7 +105,7 @@
 
     #overlayShorts {
       width: 405px;
-      height: 650px;
+      height: 625px;
       /*background: #fff;*/
       margin-top: 25px;
       background: url('') center/cover no-repeat; {% comment %} 기본이미지 {% endcomment %}
@@ -136,11 +136,10 @@
 
     #shortsMeta {
       width: 405px; /*90%*/
-      
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px;
+      gap: 0px;
       font-size: 1.08rem;
       color: #222;
       flex-wrap: nowrap;
@@ -150,6 +149,7 @@
       font-weight: bold;
       color: #fff;
       text-decoration: none;
+      margin-bottom: 0px;
     }
 
     #shortsMeta span a {
@@ -165,7 +165,7 @@
 
     #overlayShortsMeta {
       width: 405px; /*90%*/
-      padding-top: 15px;
+      
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -182,6 +182,7 @@
 
     #overlayshortsMeta span{
       padding-bottom:10px;
+      
     }
 
     #overlayShortsMeta span a {
@@ -201,6 +202,7 @@
       gap: 8px 8px;   /* [row-gap column-gap] 형식 */
       align-items: center;
       max-width: 100%;  /* 필요 시 줄바꿈 조건 설정 */
+      margin-top: 10px;
     }
     
     #shortsEditor {
