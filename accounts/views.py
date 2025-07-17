@@ -8,6 +8,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
+from festivals.models import Festival
+from wishlist.models import Wishlist
 
 import uuid
 import datetime
@@ -395,7 +397,11 @@ def mypage1(request):
     return render(request,'mypage1.html',context)
 
 def mypage2(request):
-    return render(request,'mypage2.html')
+    user = request.user
+    my_wish = Wishlist.objects.filter(user=user).select_related('festival').prefetch_related('festival__tags', 'festival__images')
+    context = {'my_wish': my_wish}
+    
+    return render(request,'mypage2.html', context)
 
 # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
 def pw_reset(request):

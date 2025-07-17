@@ -4,7 +4,7 @@ from festivals.models import Festival
 
 class Wishlist(models.Model):  
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,   
         on_delete=models.CASCADE,
         help_text="이 위시리스트를 등록한 회원입니다. (회원 탈퇴 시 삭제)"
     )

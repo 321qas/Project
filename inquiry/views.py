@@ -78,7 +78,7 @@ def all_posts(request):
 
     data = []
     for inquiry in inquiries:
-        reply = inquiry.replies.first()
+        reply = inquiry.replies.first() 
         data.append({
             'title': inquiry.title,
             'content': inquiry.content,

@@ -445,61 +445,31 @@
             <div id="wishlist" class="content">
                 <h3>Wishlist</h3>
                 <div id="festList">
+                    {% for data in my_wish %}
                     <div class="festCard">
-                        <a href="/festivals/view/${data.id}">
-                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
-                        </a>
+                        {% with data.festival.images.all|first as first_img %}
+                        {% if first_img %}
+                            <img src="{{ first_img.image.url }}" alt="{{ data.festival.name }}">
+                        {% else %}
+                            <p>대표 이미지가 없습니다 🖼️</p>
+                        {% endif %}
+                        {% endwith %}
                         <p>
                         <div class="festival-header">
-                            <div class="festival-name">${data.name}</div>
+                            <div class="festival-name">{{data.festival.name}}</div>
                             <div class="rating-region">
-                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
-                            <span class="region-info">🌏 ${data.region}</span>
+                            <span class="festival-rating">⭐ {{data.festival.rating}}</span>
+                            <span class="region-info">🌏 {{data.festival.region}}</span>
                             </div>
-                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                            <p class="date-info">📅 {{data.festival.start_date}} ~ {{data.festival.end_date}}</p>
                         </div>
                         </p>
-                        <div class="festival-tags">
-                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
-                        </div>
-                    </div>
-                    <div class="festCard">
-                        <a href="/festivals/view/${data.id}">
-                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
-                        </a>
-                        <p>
-                        <div class="festival-header">
-                            <div class="festival-name">${data.name}</div>
-                            <div class="rating-region">
-                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
-                            <span class="region-info">🌏 ${data.region}</span>
-                            </div>
-                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
-                        </div>
-                        </p>
-                        <div class="festival-tags">
-                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
-                        </div>
-                    </div>
-                    <div class="festCard">
-                        <a href="/festivals/view/${data.id}">
-                            <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
-                        </a>
-                        <p>
-                        <div class="festival-header">
-                            <div class="festival-name">${data.name}</div>
-                            <div class="rating-region">
-                            <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
-                            <span class="region-info">🌏 ${data.region}</span>
-                            </div>
-                            <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
-                        </div>
-                        </p>
-                        <div class="festival-tags">
-                            ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
-                        </div>
-                    </div>
+                        {% for tag in data.festival.tags.all %}
+                            <span class="tag">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>     
                 </div>
+                {% endfor %}
                 <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
             </div>
             <div id="my-reviews" class="content" style="display: none;">
