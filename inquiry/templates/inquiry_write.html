@@ -82,7 +82,6 @@
 
             $(function() {
                 $('#writeBtn').on('click', function(e) {
-                    
                     const confirmed = confirm('Sure to post this inquiry?');
                     if (!confirmed) {
                         e.preventDefault();
@@ -92,6 +91,7 @@
         }); // jquery
     </script>
 </head>
+
 <body>
     <div id="wrap">
         {% include "header.html" %}

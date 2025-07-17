@@ -399,8 +399,7 @@ def mypage1(request):
 def mypage2(request):
     user = request.user
     my_wish = Wishlist.objects.filter(user=user).select_related('festival').prefetch_related('festival__tags', 'festival__images')
-    today = datetime.date.today()
-    context = {'my_wish': my_wish, "today":today}
+    context = {'my_wish': my_wish}
     return render(request,'mypage2.html', context)
 
 # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
