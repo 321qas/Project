@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+    <style>
+      * {margin:0; padding: 0; box-sizing: border-box;}
+      ul, li {list-style: none;}
+      a {text-decoration: none; color: inherit;}
+
+      #wrap {flex: 1;}
+
+      
+
+      #banner_blur {
+        height: 400px;       
+         
+        align-items: center;       
+        background: #f0f0f0;     
+      }
+
+      #banner_blur h1 {
+        font-size: 40px;
+        display: inline-block;
+        width: 100%;
+        text-align: left;
+      }
+
+      .title-search-wrap {
+        display: flex;
+        width: 52%;
+        height: 150px;
+        margin-left: 20%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 40px 20px 0 20px; /* 상단 여백만 약간 */
+        flex-wrap: wrap; /* 화면 작을 때 줄바꿈 허용 */
+      }
+
+      #quickSearch {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      
+      #searchBlocks {
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: stretch;
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        gap: 5px;
+        width: 60%;
+        height: 150px;
+        
+      }
+
+      .searchBlock {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .searchBlock.tag select {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        width: 100%;
+        margin-top: 25px;
+      }  
+
+      .searchBlock.tag { width: 18%; }
+
+      #quickSearch input {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        margin-top: 12px;
+      }
+
+      #quickSearch button {
+        padding: 10px 16px;
+        font-size: 15px;
+        
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+
+
+      .date { width: 46%; }
+
+      .button { width: 8%; }
+
+      .searchBlock h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+        min-height: 22px;
+      }
+
+
+      .searchBlocks input[type="text"]
+       {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        width: 100%;
+
+      }    
+
+
+      #searchBtn {
+        margin-top: auto;
+        padding: 12px;
+        font-size: 15px;
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #resetBtn {
+        width: 60%;
+        height: 18px;
+        margin: 0 auto;
+        background-color: rgb(180, 7, 7);
+        color: white;
+        border: none;
+        border-radius: 3px;
+      }
+
+      #resetBtn:hover {
+        background-color: #0056b3;
+      }
+
+      #bannerList {
+        width: 60%;
+        margin: 0 auto;
+        display: flex;
+        border: 1px solid black;
+        overflow: hidden;
+        justify-content: space-evenly;
+        flex-wrap: nowrap;
+        gap: 20px;
+
+      }
+
+      .smallBanner {
+        height: 200px;
+        width: 300px;  
+        background-color: #e09e9e;
+        border: 1px solid black;
+        flex-shrink: 0;
+      }
+   
+
+      #festList {
+        width: 60%;
+        margin: 50px auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1%;
+        border-top: 1px solid #ccc;
+        padding-top: 30px;
+      }
+
+      #festList:focus {
+        outline: none;
+      }
+
+      .festCard {
+        width: 24%;
+        height: 430px;
+        border-radius: 5px;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        background-color: white;
+        margin-bottom: 15px;
+        background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
+        
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .festCard:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      }
+
+      .festHeader {
+        width: 90%;
+        margin: 0 auto;
+        
+      }
+
+      .festHeader p {
+        text-align: left;
+        font-size: 15px;
+      }
+
+
+      .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 10px;
+            padding: 10px;
+          }
+     
+
+      .tags span{
+        background-color: #E6F5FF;
+        color: #4fc3f7;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: default;
+      }
+
+
+
+      #footer {
+        padding: 20px;
+        background-color: #f1f1f1;
+        font-size: 14.4px;
+        color: #666;
+        text-align: center;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        list-style: none;
+        margin-top: 10px;
+      }
+
+      .footer-links a {
+        text-decoration: none;
+        color: #666;
+      }
+
+      .footer-links a:hover {text-decoration: underline;}
+
+    </style>
+</head>
+<body>
+  {% include "header.html" %}
+    <div id="wrap">
+
+        <div id="banner_blur">
+          <div class="title-search-wrap">
+            <h1>Select the festival to create shorts</h1>
+          </div>
+              
+          <div id="searchBlocks">
+            <div class="searchBlock tag">
+              <h3>태그검색</h3>
+              <select id="tagSelect">
+              <option value="">Choice Tag</option>
+              {% for tag in tags%}
+              <option value="{{tag}}">{{tag}}</option>
+              {% endfor%}
+            </select>
+            
+          </div>
+
+          <div class="searchBlock">
+            <h3>키워드검색</h3>
+          <div id="quickSearch">
+                <input type="text" id="quickSearchInput" placeholder="빠른 검색어 입력">
+            </div>
+          </div>
+          <div class="searchBlock button">
+              <button type="button" id="resetBtn">reset</button>
+              <button type="button" id="searchBtn">검색</button> 
+          </div>
+        </div>
+
+        </div>
+          
+        <div class="contents">  
+            <div id="festList">
+                <div class="festCard"><img src="" alt="축제1">
+                  <div class="festHeader">
+                    <p>서울 불꽃축제</p>
+                  </div>
+                  
+                  
+              </div>
+            </div>  
+        </div> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            // 1. DOM 요소 캐싱 및 변수 정의
+            const festList = $('#festList');
+            const tagSelect = $('#tagSelect');
+            const quickSearchInput = $('#quickSearchInput');
+            const searchBtn = $('#searchBtn');
+            const resetBtn = $('#resetBtn');
+            const detailedSearchBtn = $('#detailedSearchBtn'); // 상세 검색 버튼이 있다면
+
+            // 2. 축제 카드 렌더링 함수
+            function renderFestCards(festivals) {
+                festList.empty(); // 기존 검색 결과 모두 지우기
+                festList.attr('aria-busy', 'true'); // 접근성을 위한 속성
+
+                if (festivals.length === 0)  {
+                    festList.html('<p style="text-align: center; padding: 20px;">검색 결과가 없습니다.</p>');
+                    festList.attr('aria-busy', 'false');
+                    return; // 결과가 없으면 여기서 함수 종료
+                }
+
+                const fragment = document.createDocumentFragment(); // DOM 조작 최소화를 위한 DocumentFragment
+
+                festivals.forEach(festival => {
+                    const tagsHtml = (festival.tags && festival.tags.length > 0)
+                        ? `<p class="tags">${festival.tags.map(tag => `<span>#${tag}</span>`).join(' ')}</p>`
+                        : '';
+                    const imageUrl = festival.image_url || 'https://via.placeholder.com/150?text=No+Image';
+
+                    const card = document.createElement('div');
+                    card.className = 'festCard';
+                    // data-* 속성 정의 시 JSON.stringify를 사용하여 배열을 문자열로 저장
+                    card.dataset.name = festival.name;
+                    card.dataset.tags = JSON.stringify(festival.tags || []);
+
+                    card.innerHTML = `
+                        <a href="#"><img src="${imageUrl}" alt="${festival.name} 이미지" width='100%' height='40%'></a>
+                        <div class="festHeader"><p>${festival.name}</p></div>
+                        ${tagsHtml}
+                    `;
+                    fragment.appendChild(card);
+                });
+
+                festList.append(fragment); // 한 번에 DOM에 추가
+                festList.attr('aria-busy', 'false'); // 렌더링 완료
+                festList.attr('tabindex', '-1').focus(); // 렌더링 후 리스트로 스크롤 및 포커스
+            }
+
+            // 3. 범용 검색 실행 함수 (AJAX 호출)
+            function performSearch(params) {
+                $.ajax({
+                    url: '/shortforms/search/', // Django search 뷰의 URL
+                    type: 'GET',
+                    data: params, // 검색 파라미터 객체
+                    dataType: 'json',
+                    success: function(data) {
+                        renderFestCards(data); // 서버에서 필터링된 데이터를 바로 렌더링
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("검색 중 오류 발생:", status, error);
+                        festList.html('<p style="text-align: center; padding: 20px; color: red;">검색 데이터를 불러오는 중 오류가 발생했습니다.</p>');
+                    }
+                });
+            }
+
+            // 4. URL 파라미터 업데이트 함수
+            function updateUrlParams(params) {
+                const url = new URL(window.location.href);
+                for (const key in params) {
+                    if (Object.prototype.hasOwnProperty.call(params, key)) { // hasOwnProperty 권장
+                        if (params[key]) {
+                            url.searchParams.set(key, params[key]);
+                        } else {
+                            url.searchParams.delete(key);
+                        }
+                    }
+                }
+                history.replaceState(null, '', url.toString()); // history.replaceState 사용
+            }
+
+            // 5. 검색 및 필터링 로직
+            function handleSearch(isDetailed = false) { // isDetailed 매개변수로 상세/빠른 검색 구분
+                const keyword = quickSearchInput.val().trim();
+                const tag = isDetailed ? tagSelect.val() : ''; // 상세 검색일 때만 태그 사용
+
+                updateUrlParams({ keyWord: keyword, tag: tag });
+                performSearch({ name: keyword, tag: tag });
+            }
+
+            function resetFilter() {
+                quickSearchInput.val('');
+                tagSelect.val('');
+                updateUrlParams({}); // URL 파라미터 모두 제거
+                performSearch({}); // 모든 파라미터를 빈 값으로 보내 전체 축제 반환
+            }
+
+            // 6. 축제 카드 선택 함수 (팝업/모달 연동)
+            // 이 함수는 $(document).ready 블록 바깥에 정의되어야 전역에서 접근 가능합니다.
+            // 하지만, Jquery ready 내부에서만 사용된다면 내부에서 정의해도 상관 없습니다.
+            // 여기서는 최적화를 위해 ready 블록 내부로 옮겼습니다.
+            function selectFestival(name, tags) {
+                // 디버깅용 로그 (성공적으로 작동하면 나중에 삭제해도 좋습니다)
+                console.log("selectFestival 함수 호출됨.");
+                console.log("전달받은 이름:", name);
+                console.log("전달받은 태그:", tags); // 이미 배열로 넘어와야 함
+
+                if (window.opener) { // 팝업 창일 경우
+                    const openerDoc = window.opener.document;
+
+                    // 1. 축제 이름 전달
+                    const openerFestnameInput = openerDoc.getElementById("shorts_festname");
+                    if (openerFestnameInput) {
+                        openerFestnameInput.value = name;
+                        // 중요: input 이벤트를 강제로 발생시켜 upload 페이지의 실시간 반영 로직을 트리거
+                        const event = new Event('input', { bubbles: true });
+                        openerFestnameInput.dispatchEvent(event);
+                        console.log("축제 이름 input 이벤트 트리거됨.");
+                    } else {
+                        console.warn("경고: 'shorts_festname' input을 부모 창에서 찾을 수 없습니다.");
+                    }
+
+                    // 2. 태그들을 'searchedTags div'에 시각적으로 추가
+                    const openerTagWrapper = openerDoc.querySelector(".searchedTags > div");
+                    if (openerTagWrapper) {
+                        openerTagWrapper.innerHTML = ""; // 기존 태그들 모두 지우기
+                        tags.forEach(tag => {
+                            const span = openerDoc.createElement("span");
+                            span.className = "tag-badge";
+                            span.textContent = `#${tag} `; // 태그 앞에 # 붙이기
+                            openerTagWrapper.appendChild(span);
+                        });
+                        console.log("태그들이 searchedTags div에 추가됨.");
+                    } else {
+                        console.warn("경고: '.searchedTags > div'를 부모 창에서 찾을 수 없습니다.");
+                    }
+
+                    // 3. 숨겨진 input 필드에 태그들 문자열로 저장 (폼 제출용)
+                    const openerHiddenTagInput = openerDoc.getElementById("selected_tags"); 
+                    if (openerHiddenTagInput) {
+                        openerHiddenTagInput.value = tags.join(",");
+                        console.log("'selected_tags' hidden input에 태그 저장됨:", openerHiddenTagInput.value);
+                    } else {
+                        console.warn("경고: 'selected_tags' hidden input을 부모 창에서 찾을 수 없습니다.");
+                    }
+                    
+                    // 모든 데이터 전달 후 현재 팝업 창 (list 페이지) 닫기
+                    window.close(); 
+                    console.log("팝업 창이 닫힘 요청됨.");
+
+                } else {
+                    console.error("오류: window.opener가 null입니다. 이 기능은 팝업으로 열렸을 때만 작동합니다.");
+                    alert("이 창은 팝업으로 열려야 합니다. 직접 접근 시 데이터 전달 및 창 닫기 기능이 작동하지 않습니다.");
+                }
+            }
+
+
+            // 7. 이벤트 핸들러 연결
+            searchBtn.on('click', () => handleSearch(false)); // 빠른 검색
+              quickSearchInput.on('keypress', function(event) {
+                  if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleSearch(false);
+                  }
+            });
+
+            resetBtn.on('click', resetFilter);
+
+            if (detailedSearchBtn.length) {
+                detailedSearchBtn.on('click', () => handleSearch(true)); // 상세 검색
+            }
+            tagSelect.on('change', () => handleSearch(true)); // 태그 선택 시 상세 검색
+
+            // 축제 카드 클릭 시 selectFestival 함수 호출 (이벤트 위임)
+            // `tags`가 JSON 문자열로 넘어왔을 때 `JSON.parse`를 확실히 적용
+            festList.on('click', '.festCard', function() {
+                const name = $(this).data('name');
+                let tags = $(this).data('tags'); // 이미 JSON.parse 된 상태일수도 있고, 문자열일 수도 있음
+
+                // data() 함수는 내부적으로 JSON.parse를 시도하므로, `tags`는 이미 배열일 가능성이 높습니다.
+                // 하지만 만약을 대비해 한 번 더 확인합니다.
+                const tagsArray = (typeof tags === 'string') ? JSON.parse(tags) : tags;
+                
+                selectFestival(name, tagsArray); // 올바르게 파싱된 배열을 전달
+            });
+
+            // 8. 초기 페이지 로딩 시 URL 파라미터에 따른 검색 실행
+            function initializePage() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tag = urlParams.get('tag');
+                const keyword = urlParams.get('keyWord');
+
+                // URL 파라미터에 따라 검색 필드 값 설정
+                if (tag) tagSelect.val(tag);
+                if (keyword) quickSearchInput.val(keyword);
+
+                // URL 파라미터가 하나라도 있으면 해당 조건으로 검색, 없으면 전체 목록 로드
+                if (tag || keyword) {
+                    performSearch({ tag, name: keyword });
+                } else {
+                    performSearch({}); // 모든 파라미터를 빈 값으로 보내 전체 축제 목록을 가져옵니다.
+                }
+            }
+
+            initializePage(); // 페이지 초기화 함수 호출
+        });
+    </script>
+    {% include "footer.html" %}
+</body>
+</html>

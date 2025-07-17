@@ -1,0 +1,657 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>My Page</title>
+    <style>
+
+        .contents {
+            max-width: none;
+            width: 60%;
+        }
+
+        h3 {
+            margin: 30px 0 40px;
+            font-size: 20px;
+        }
+
+        /* 프로필 사진, 아이디, 닉네임 */
+        .profile-card {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            /*border: 2px solid #2563eb;*/
+            border-radius: 12px;
+            background-color: #ffffff;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+            text-align: center;
+        }
+        .profile-details {
+            margin-top: 10px;
+        }
+        
+        /* my plans, My Reviews, notification, settings 탭 */
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            gap: 30px;
+        }
+        .tabs button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: #2563eb;
+            font-weight: bold;
+        }
+        .tabs button:hover {
+            color: #f97316;
+        }
+        .tabs button.active {
+            color: #f97316;
+        }
+        .content {
+            text-align: center;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* wishlist 탭 */ 
+
+        #festList {
+            width: 100%;
+            margin-bottom: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .festCard {
+            width: calc(32% - 10px);
+            min-height: 620px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+        
+            background: 
+            linear-gradient(to bottom right, #fefae0, #e9f5ff),
+            repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
+            repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /*
+        .festCard:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+        }
+        */
+
+        .festCard img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .festCard::before {
+            content: "Happening Now";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #F66989;
+            /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 7px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+
+
+
+        /* 공통 텍스트 스타일 */
+        .festCard p {
+            margin: 4px 12px;
+            white-space: normal;
+            overflow: visible;
+            line-height: 1.6em;
+        }
+
+        .festCard p.title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #b35c1e;
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .festCard p.rating {
+            font-size: 14px;
+            color: #e2a934;
+            white-space: nowrap;
+            margin-bottom: 8px;
+        }
+
+        
+        .festCard p.date-info {
+            font-size: 14px;
+            color: #5a4632;
+            background: rgba(243, 234, 204, 0.6);
+            padding: 6px 10px;
+            border-radius: 8px;
+            padding-bottom: 8px;
+        }      
+
+        .festival-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 20px 20px;
+        }
+
+        .festival-tags .tag,
+        .tag {
+            background-color: #E6F5FF;
+            color: #4fc3f7;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: default;
+        }
+
+        .rating-region {
+            margin: 0 20px 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .festival-rating {
+            font-size: 18px;
+            color: #ff9800;
+        }
+
+        #loadMoreBtn {
+            display:block; 
+            margin:10px auto 40px; 
+        }
+
+        .festival-name {
+            margin: 5px 20px 10px;
+        }
+
+
+
+        /* My Reviews 탭 */
+
+        .reviews {
+            margin-bottom: 20px;
+        }
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .review-content {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .review-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .review-meta {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .review-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background-color: #ddd;
+            flex-shrink: 0;
+        }
+
+        #recommendFestList {
+            width: 100%;
+            margin: 10px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            /*padding: 20px 0 60px 0;*/
+        }
+
+        /*
+        #recommendFestList a {
+            display: inline-block;
+            width: fit-content;
+        }
+        */
+
+        .festCard_name {
+            width: 200px;
+            height: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /*
+        .festCard_name:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+        }
+        */
+
+        .festCard_name img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .festHeader {
+            width: 90%;
+            height: 32%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .festHeader p {
+            text-align: left;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        /* My shotrs 탭 */
+
+        .short-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        
+        .short-item {
+            width: calc(33.333% - 10px);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .short-item img {
+            width: 100%;
+            height: auto;
+        }
+        .short-item .short-title {
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .more-button {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 20px;
+            border: 1px solid #f97316;
+            background-color: transparent;
+            color: #f97316;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .more-button:hover {
+            background-color: #f97316;
+            color: #fff;
+        }
+
+        /* Settings 탭 */
+
+        #settings {
+            text-align: left;
+        }
+
+        #settings h3 {
+            text-align: center;
+        }
+
+        /* 회원 정보 수정 폼 */
+
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .radio-group label {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+        .radio-group input {
+            display: none;
+        }
+        .radio-group input:checked + label {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        /* 버튼 설정 */
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .button.signup {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .space {
+            height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <!--
+    <header class="header">
+        <a href="#">로고</a>
+        <nav>
+            <a href="#">축제 정보</a>
+            <a href="#" class="active">마이페이지</a>
+            <a href="#">고객센터</a>
+        </nav>
+    </header>
+    -->
+    <div id="wrap">
+        {% include "header.html" %}
+        <div class="contents">
+            <div class="profile-card">
+                <div class="profile-details">
+                    <span>{{ nickname }}</span>'s festival hub
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-link active" onclick="showTab('wishlist')">Wishlist</button>
+                <button class="tab-link" onclick="showTab('my-reviews')">My Reviews</button>
+                <button class="tab-link" onclick="showTab('my-shorts')">My Shorts</button>
+                <button class="tab-link" onclick="showTab('settings')">Settings</button>
+            </div>
+
+            <div id="wishlist" class="content">
+                <h3>Wishlist</h3>
+                <div id="festList">
+                    {% for data in my_wish %}
+                    <div class="festCard">
+                        {% with data.festival.images.all|first as first_img %}
+                        {% if first_img %}
+                            <img src="{{ first_img.image.url }}" alt="{{ data.festival.name }}">
+                        {% else %}
+                            <p>대표 이미지가 없습니다 🖼️</p>
+                        {% endif %}
+                        {% endwith %}
+                        <p>
+                        <div class="festival-header">
+                            <div class="festival-name">{{data.festival.name}}</div>
+                            <div class="rating-region">
+                            <span class="festival-rating">⭐ {{data.festival.rating}}</span>
+                            <span class="region-info">🌏 {{data.festival.region}}</span>
+                            </div>
+                            <p class="date-info">📅 {{data.festival.start_date}} ~ {{data.festival.end_date}}</p>
+                        </div>
+                        </p>
+                        {% for tag in data.festival.tags.all %}
+                            <span class="tag">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>     
+                </div>
+                {% endfor %}
+                <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
+            </div>
+            <div id="my-reviews" class="content" style="display: none;">
+                <h3>My Festivals</h3>
+                <div class="festivals">
+                    <div id="recommendFestList">
+                        <a href="/festivals/view/${festival.id}/">
+                            <div class="festCard_name">
+                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
+                                <div class="festHeader"><p>${festival.name}</p></div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${festival.id}/">
+                            <div class="festCard_name">
+                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
+                                <div class="festHeader"><p>${festival.name}</p></div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${festival.id}/">
+                            <div class="festCard_name">
+                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
+                                <div class="festHeader"><p>${festival.name}</p></div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${festival.id}/">
+                            <div class="festCard_name">
+                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
+                                <div class="festHeader"><p>${festival.name}</p></div>
+                            </div>
+                        </a>
+                    </div>
+                    <button class="more-button">More</button>
+                </div>
+                <div class="space"></div>
+                <h3>My Reviews</h3>
+                <div class="reviews">
+                    <div class="review-item">
+                        <div class="review-content">
+                            <p class="review-title">[Now] 광복절 송룬+알틴아라산 키르기스스탄 5박 7일</p>
+                            <p class="review-meta">25.08.14 / 사용자: 활발한밴디23</p>
+                            <p>키르기스스탄 어드벤처 여행을 떠나려고 해요...</p>
+                        </div>
+                        <div class="review-image"></div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-content">
+                            <p class="review-title">7월 3일-7일(런던), 7일-11일(에든버러) 여행 같이 하실 분</p>
+                            <p class="review-meta">사용자: 그니</p>
+                            <p>이번에 영국으로 혼자 여행 가는데...</p>
+                        </div>
+                        <div class="review-image"></div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-content">
+                            <p class="review-title">7/16~21 홍콩 마카오 동행구합니다</p>
+                            <p class="review-meta">사용자: nnnnew</p>
+                            <p>이번 일정은 당일차이로...</p>
+                        </div>
+                        <div class="review-image"></div>
+                    </div>
+                    <button class="more-button">More</button>
+                </div>
+
+            </div>
+            <div id="my-shorts" class="content" style="display: none;">
+                <div class="short-contents">
+                    <h3>Short Contents</h3>
+                    <div class="short-container">
+                        <div class="short-item">
+                            <img src="short1.jpg" alt="숏폼 사진">
+                            <div class="short-title">축제 이름</div>
+                        </div>
+                        <div class="short-item">
+                            <img src="short2.jpg" alt="숏폼 사진">
+                            <div class="short-title">축제 이름</div>
+                        </div>
+                        <div class="short-item">
+                            <img src="short3.jpg" alt="숏폼 사진">
+                            <div class="short-title">축제 이름</div>
+                        </div>
+
+                        <button class="more-button">More</button>
+                    </div>
+                </div>
+            </div>
+            <div id="settings" class="content" style="display: none;">
+                <h3>Settings</h3>
+                <form action="#" method="post">
+                <label for="id">ID *</label>
+                <input type="text" id="id" placeholder="Enter your ID">
+                <button class="button id_check">check for duplicates</button>
+                
+                <label for="password">Password *</label>
+                <input type="password" id="password" placeholder="Enter your password">
+
+                <label for="confirm-password">Confirm password *</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password">
+
+                <label for="name">Name *</label>
+                <input type="text" id="name" placeholder="Enter your name">
+
+                <label for="nickname">Nickname *</label>
+                <input type="text" id="nickname" placeholder="10 characters maximum">
+                <button class="button nname_check">check for duplicates</button>
+
+                <label for="email">E-mail *</label>
+                <input type="text" id="email" placeholder="Enter your email">
+                <button class="button mail_check">check for duplicates</button>
+
+                <p>Would you like to subscribe to FastFest email notifications? </p>
+                <div class="radio-group">
+                    <input type="radio" id="subscribe-yes" name="subscribe" value="yes">
+                    <label for="subscribe-yes">Yes!</label>
+
+                    <input type="radio" id="subscribe-no" name="subscribe" value="no">
+                    <label for="subscribe-no">No thanks.</label>
+                </div>
+                <p>By subscribing to FastFest email notifications, you will receive updates on FastFest announcements, events, content, and more.<br>
+                Non-subscribers will still receive email notifications on important policy updates, individual winner announcement, etc.</p>
+
+                <label for="dob">Date of birth</label>
+                <input type="date" id="dob">
+
+                <div class="radio-group">
+                    <input type="radio" id="gender-male" name="gender" value="male">
+                    <label for="gender-male">Male</label>
+
+                    <input type="radio" id="gender-female" name="gender" value="female">
+                    <label for="gender-female">Female</label>
+                </div>
+
+                <!--
+                <label for="country">Country / Region *</label>
+                <select id="country">
+                    <option value="">Select your country/region</option>
+                    <option value="korea">Korea</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>-->
+                <!-- Add more countries as needed -->
+                
+                <!--
+                <div class="interests">
+                    <div class="interest">
+                        <img src="city.jpg" alt="City">
+                        <p>City</p>
+                    </div>
+                    <div class="interest">
+                        <img src="culture.jpg" alt="Culture">
+                        <p>Culture</p>
+                    </div>
+                    <div class="interest">
+                        <img src="nature.jpg" alt="Nature">
+                        <p>Nature</p>
+                    </div>
+                </div>-->
+                <!-- Add more interests as needed -->
+
+                <div class="actions">
+                    <button type="submit" class="button signup">Save</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.content');
+            const buttons = document.querySelectorAll('.tab-link');
+
+            tabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

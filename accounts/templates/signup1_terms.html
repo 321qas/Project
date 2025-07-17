@@ -1,0 +1,153 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <link rel="stylesheet" href="/static/css/signup.css">
+    <title>Membership Agreement</title>
+    <style>
+        .agreement {
+            margin-bottom: 40px;
+        }
+        .agreement textarea {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .agreement label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .button.cancel {
+            background-color: #ddd;
+            color: #333;
+        }
+        .button.confirm {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        {% include "header.html" %}
+        <div class="contents">
+            <h1>Member Registration</h1>
+            
+            <div class="steps">
+                <div class="step current">
+                    <span>1</span>
+                    Membership Agreement
+                </div>
+                <span class="next">></span>
+                <div class="step">
+                    <span>2</span>
+                    Enter Basic Information
+                </div>
+                <span class="next">></span>
+                <div class="step">
+                    <span>3</span>
+                    Verification
+                </div>
+            </div>
+
+            <section class="section-card padding">
+                <p>Read and consent to the FastFest Terms & Conditions and Privacy Policy before proceeding to the next step.</p>
+                <br>
+                <!-- Django 에러 메시지 표시 영역 -->
+                {% if messages %}
+                    <ul class="messages">
+                    {% for message in messages %}
+                        <li style="color: red;">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- form: 반드시 POST, action은 비워두거나 url 템플릿 태그 사용 -->
+                <form method="post" action="">
+                    {% csrf_token %}
+
+                    <div class="agreement">
+                        <p><strong>(Required) FastFest Terms & Conditions</strong></p>
+                        <textarea readonly>
+    Chapter 1 General
+
+    Article 1 (Purpose)
+    The purpose of these Terms is to set out the rights, obligations, and responsibilities of the Korea Tourism Organization and those of the users, and other necessary matters concerning the use of the FastFest service ("the Service") provided by the Korea Tourism Organization.
+                        </textarea>
+                        <label>
+                            <input type="radio" name="terms" value="agree" required> I agree
+                        </label>
+                        <label>
+                            <input type="radio" name="terms" value="disagree"> I disagree
+                        </label>
+                    </div>
+
+                    <div class="agreement">
+                        <p><strong>(Required) FastFest Privacy Policy</strong></p>
+                        <textarea readonly>
+    FastFest Privacy Policy for FastFest Members
+    2024. 9. 23
+
+    FastFest Website/App Personal Information Collection and Use Agreement
+                        </textarea>
+                        <label>
+                            <input type="radio" name="privacy" value="agree" required> I agree
+                        </label>
+                        <label>
+                            <input type="radio" name="privacy" value="disagree"> I disagree
+                        </label>
+                    </div>
+
+                    <div class="agreement">
+                        <p><strong>(Required) Consent to the collection & use of MANDATORY information</strong></p>
+                        <label>
+                            <input type="radio" name="mandatory" value="agree" required> I agree
+                        </label>
+                        <label>
+                            <input type="radio" name="mandatory" value="disagree"> I disagree
+                        </label>
+                    </div>
+
+                    <div class="agreement">
+                        <p><strong>(Optional) Consent to the collection & use of OPTIONAL information</strong></p>
+                        <label>
+                            <input type="radio" name="optional" value="agree"> I agree
+                        </label>
+                        <label>
+                            <input type="radio" name="optional" value="disagree"> I disagree
+                        </label>
+                    </div>
+            </section>
+
+                <div class="actions">
+                    <button class="button cancel" type="button" onclick="window.location.href='/'">Cancel</button>
+                    <button class="button confirm" type="submit">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include "footer.html" %}
+</body>
+</html>

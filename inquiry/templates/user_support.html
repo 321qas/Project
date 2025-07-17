@@ -1,0 +1,594 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/components.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/font.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <title>My Page</title>
+    <style>
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 100px;
+            margin-top: 40px;
+        }
+
+        button {
+            font-weight: normal;
+        }
+
+        /* FAQ, Inquiry 탭 */
+
+        .content {
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            max-width: 900px;
+        }
+
+        #FAQ.content {
+            margin-top: 60px;
+        }
+
+        /* FAQ 내용 */
+
+        #FAQ {
+            text-align: left;
+        }
+
+        h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        text-align: left;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto 40px;
+            width:860px;
+            gap: 10px;
+            
+        }
+
+        .search-bar input {
+        width: 90%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        }
+
+        .faq-question, .faq-answer {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+        }
+
+        .faq-question strong {
+            color: #4B5563;
+        }
+
+        .faq-answer strong {
+            color: var(--color-primary);
+        }
+        .faq-item {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 10px;
+        overflow: hidden;
+    
+        }
+
+        .faq-question {
+        padding: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        }
+
+        .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.1s ease;
+        padding: 0 15px;
+        background: #fafafa;
+        }
+
+        .faq-answer.open {
+        padding: 15px;
+        max-height: 300px;
+        }
+
+        .no-result {
+        text-align: center;
+        margin-top: 20px;
+        color: #888;
+        }
+
+
+        /* Inquiry 내용 */
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            border: none;
+            width: 45%;
+            gap: 10px;
+        }
+        .search-container input[type="text"] {
+            width: calc(100% - 150px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f97316;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border: none;
+            width: 100%;
+        }
+
+        .controls-left {
+            display: flex;
+            width: fit-content;
+            gap: 20px; 
+        }
+        
+        .controls-left a {
+            cursor: pointer;
+        }
+
+        {% comment %} 
+        .controls .exclude-private {
+            display: flex;
+            margin-right: auto;
+            align-items: center;
+        } 
+        {% endcomment %}
+
+        .controls input[type="checkbox"] {
+            margin-right: 10px;
+            
+        }
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            padding: 10px;
+        }
+        .table th {
+            background-color: #f5f5f5;
+        }
+
+        .table td.center {
+            text-align: center;
+        }
+        .table td.center span {
+            display: inline-block;
+        }
+
+        .table tr.collapsible-content td {
+            background-color: #f9fafb;
+            border-top: 2px solid var(--color-primary);
+            padding: 20px;
+        }
+        .table tr.collapsible-content p strong {
+            display: inline-block;
+            width: 30px;
+            font-weight: 600;
+        }
+        .table tr.collapsible-content p.q strong {
+            color: #4B5563;
+        }
+        .table tr.collapsible-content p.a strong {
+            color: var(--color-primary);
+        }
+        
+        .q-row, .a-row {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .q-row strong {
+            color: #4B5563;
+        }
+
+        .a-row strong {
+            color: var(--color-primary);
+        }
+
+        #inquiry-table tr[data-id] td:nth-child(2) {
+            cursor: pointer;
+        }
+
+
+        .pagination {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .pagination a, .page-link {
+            text-decoration: none;
+            color: #555;
+            margin: 0 3px;
+            padding: 4px 8px;
+            font-size: 14px; /* 글씨 크기 줄이기 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .page-link {
+            text-decoration: none;
+            color: #555;
+            margin: 0 3px;
+            padding: 4px 8px;
+            font-size: 14px; /* 글씨 크기 줄이기 */
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        
+    </style>
+    <script>
+        $(function() {
+        {% if messages %}
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        {% endif %}
+        });
+
+        function searchFaq() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const faqItems = document.querySelectorAll("#faqContainer .faq-item"); 
+        
+
+        faqItems.forEach(row => {
+            const question = row.querySelector(".faq-question").textContent.toLowerCase();
+            const answer = row.querySelector(".faq-answer").textContent.toLowerCase();
+            
+
+            if (question.includes(input) || answer.includes(input)) {
+                row.style.display = ""; // 보이기
+                matchFound = true;
+
+            } else {
+                row.style.display = "none"; // 숨기기
+            }
+        });
+        if (noResult) {
+        noResult.style.display = matchFound ? "none" : "block";
+    }
+    }
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        {% include "header.html" %}
+        <div class="contents">
+            {% if msg %}
+                    <li style="color: #a4161a; font-size: 15px; font-weight: bold; background-color: #ffe0e0; border: 1px solid #e63946; padding: 5px 10px;">{{ message }}</li>
+            {% endif %}
+            <h1>User Support</h1>
+
+            <form method="get" action="/inquiry/support/" class="search-bar">
+                <input type="text" name="key" id="searchInput" placeholder="Search for anything you're curious about..." value="{{ keyword }}">
+                <button type="submit" class="clickBtn orange">Search</button>
+            </form>
+
+            <div id="FAQ" class="content">
+                <h2>Frequently Asked Questions</h2>
+
+                <div id="faqContainer">
+                     {% for faq in faq_list %}
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleAnswer(this)"> 
+                            <strong>Q:</strong>
+                            <span>{{ faq.question }}</span>
+                        </div>
+                        <div class="faq-answer">
+                            <strong>A:</strong>
+                            <span>{{ faq.answer }}</span>
+                        </div>   
+                    </div>
+                    {% endfor %}    
+                    
+                </div>
+
+                <div id="noResult" class="no-result" style="display: none;">
+                    관련된 FAQ가 없습니다.
+                </div>
+
+                    <div class="pagination">
+                    {% if faq_list.has_previous %}
+                        <a href="?faq_page={{ faq_list.previous_page_number }}">before</a>
+                    {% endif %}
+                    <span>{{ faq_list.number }} / {{ faq_list.paginator.num_pages }}</span>
+                    {% if faq_list.has_next %}
+                        <a href="?faq_page={{ faq_list.next_page_number }}">next</a>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div id="Inquiry" class="content">
+                <h2>Inquiry</h2>
+                <div class="top-bar">
+            
+                    <div class="controls">
+                        <div class="controls-left">
+                            {% comment %} 
+                            <div class="exclude-private">
+                                <input type="checkbox" id="exclude-private">
+                                <label for="exclude-private">Exclude Private</label>
+                            </div> 
+                            {% endcomment %}
+                            <a class="moreBtn white-orange" id="my-posts-toggle">My posts</a>
+                            <a class="moreBtn white-orange" style="display: none;" id="all-posts-toggle">All posts</a>
+                            
+                    
+                        </div>
+                        <button type="button" onclick="writeBtn()" class="clickBtn orange" >Write</button>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <colgroup>
+                            <col style="width: 10%">
+                            <col style="width: *">
+                            <col style="width: 15%">
+                            <col style="width: 20%">
+                            <col style="width: 15%">
+                        </colgroup>
+                        <tr>
+                            <th style="text-align: center;">No</th>
+                            <th>Title</th>
+                            <th>User</th>
+                            <th>Date</th>
+                            <th style="text-align: center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiry-table">
+                        {% for inquiry in inquiries %}
+                        <tr data-id="{{ forloop.counter }}">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{inquiry.title}}</td>
+                            <td style="{% if not inquiry.user.nickname %}color: gray;{% endif %}">
+                                {{ inquiry.user.nickname|default:"탈퇴한 회원입니다" }}
+                            </td>
+
+                            <td>{{ inquiry.created_at|date:"Y-m-d H:i" }}</td>
+                            <td class="center">
+                                {% if inquiry.status == 'answered' %}
+                                <span style="color: green;">Answerd</span>
+                                {% else %}
+                                <span style="color: orange;">Receiving</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="collapsible-content" data-id="{{ forloop.counter }}">
+                            <td colspan="5">
+                                <div class="q-row">
+                                    <strong>Q:</strong>
+                                    <span>{{ inquiry.content }}</span>
+                                </div>
+                                <br>
+                                <div class="a-row">
+                                    <strong>A:</strong>
+                                    <span>
+                                        {% if inquiry.status == 'answered' %}
+                                            {{ inquiry.replies.first.content }}
+                                        {% else %}
+                                            This question has not yet been registered for an answer.
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor%}
+                    </tbody>
+                </table>
+                
+            <!-- Ajax에서 사용하는 영역 -->
+            <div id="pagination" class="ajax-pagination"></div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+
+    <script>
+        // toggles
+        function toggleAnswer(element) {
+            const answerDiv = element.nextElementSibling;
+
+            if (answerDiv.classList.contains("open")) {
+                answerDiv.classList.remove("open");
+            } else {
+                // 다른 FAQ는 닫고 이거만 열기
+                document.querySelectorAll(".faq-answer.open").forEach(el => el.classList.remove("open"));
+                answerDiv.classList.add("open");
+            }
+        }
+   
+    $(".collapsible-content").hide();
+    $(".collapsible-content").hide();
+    $("#inquiry-table tr[data-id] td:nth-child(2)").off("click").on("click", function () {
+        const id = $(this).closest("tr").data("id");
+        const contentRow = $(`.collapsible-content[data-id='${id}']`);
+        $(".collapsible-content").not(contentRow).hide();
+        contentRow.toggle();
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    function writeBtn() {
+    {% if session_user_id %}
+        location.href = "/inquiry/write/";
+    {% else %}
+        if (confirm("You need to log in. Should I go to the login page?")) {
+            window.location.href = "/accounts/login/";
+        }
+    {% endif %}
+    }
+    
+    function formatDate(isoString) {
+    const date = new Date(isoString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const mi = String(date.getMinutes()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+    }
+
+    function renderInquiries(inquiries) {
+        const tbody = $("#inquiry-table");
+        tbody.empty();
+
+        inquiries.forEach(function (item, index) {
+            const no = index + 1;
+            const statusHtml = item.status === 'answered'
+                ? '<span style="color: green;">Answerd</span>'
+                : '<span style="color: orange;">Receiving</span>';
+            const createdAtFormatted = formatDate(item.created_at);
+
+            const row = `
+                <tr data-id="${no}">
+                    <td class="center">${no}</td>
+                    <td>${item.title}</td>
+                    <td>${item.user__nickname}</td>
+                    <td>${createdAtFormatted}</td>
+                    <td class="center">${statusHtml}</td>
+                </tr>
+                <tr class="collapsible-content" data-id="${no}" style="display:none;">
+                    <td colspan="5">
+                        <div class="q-row"><strong>Q:</strong> ${item.content}</div><br>
+                        <div class="a-row"><strong>A:</strong> ${item.answer}</div>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+
+        $(".collapsible-content").hide();
+        $("#inquiry-table tr[data-id] td:nth-child(2)").off("click").on("click", function () {
+            const id = $(this).closest("tr").data("id");
+            const contentRow = $(`.collapsible-content[data-id='${id}']`);
+            $(".collapsible-content").not(contentRow).hide();
+            contentRow.toggle();
+            this.scrollIntoView({ behavior: "smooth", block: "center" });
+            });
+        }
+
+        let currentIsMyPosts = false;
+
+        function loadInquiries(url, isMyPosts = false) {
+            currentIsMyPosts = isMyPosts;
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (response) {
+                    renderInquiries(response.inquiries);
+                    renderPagination(response.pagination, url);
+
+                    $("#my-posts-toggle").toggle(!isMyPosts);
+                    $("#all-posts-toggle").toggle(isMyPosts);
+                },
+                error: function () {
+                    alert("목록을 불러오는 중 오류가 발생했습니다.");
+                }
+            });
+        }
+
+        function renderPagination(pagination) {
+            const container = $("#pagination");
+            container.empty();
+
+            if (pagination.total_pages <= 1) return;
+
+            if (pagination.has_previous) {
+                container.append(`<a href="#" class="page-link" data-page="${pagination.current - 1}">이전</a>`);
+            }
+
+            container.append(`<span> ${pagination.current} / ${pagination.total_pages} </span>`);
+
+            if (pagination.has_next) {
+                container.append(`<a href="#" class="page-link" data-page="${pagination.current + 1}">다음</a>`);
+            }
+        }
+
+        $(document).on("click", ".page-link", function (e) {
+            e.preventDefault();
+            const page = $(this).data("page");
+            const url = currentIsMyPosts ? "/inquiry/support/my_posts/" : "/inquiry/support/all_posts/";
+            loadInquiries(`${url}?page=${page}`, currentIsMyPosts);
+        });
+        $(document).ready(function () {
+            const isLoggedIn = "{{ session_user_id|default:'' }}" !== "";
+            loadInquiries("/inquiry/support/all_posts/?page=1", false);  // 최초 로드
+
+            $("#my-posts-toggle").on("click", function (e) {
+                if (!isLoggedIn) {
+                    e.preventDefault();
+                    if (confirm("You need to log in. Should I go to the login page?")) {
+                        window.location.href = `/accounts/login/`;
+                    }
+                } else {
+                    loadInquiries("/inquiry/support/my_posts/", true);
+                }
+            });
+
+            $("#all-posts-toggle").on("click", function () {
+                loadInquiries("/inquiry/support/all_posts/", false);
+            });
+        });
+
+        
+
+    </script>
+
+</body>
+</html>

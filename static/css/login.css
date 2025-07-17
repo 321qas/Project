@@ -1,0 +1,80 @@
+
+body {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.card {
+    width: 450px;
+    padding: 20px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ffffff;
+    text-align: center;
+}
+.card img {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.card input[type="text"],
+.card input[type="password"],
+.card input[type="email"] {
+    width: 100%;
+    padding: 10px 10px 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.card .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+.card .checkbox a {
+    text-decoration: none;
+    color: var(--color-primary);
+}
+/*
+.card .checkbox a:hover {
+    text-decoration: underline;
+}
+*/
+.card button {
+    font-weight: normal;
+}
+.card p {
+    margin: 20px 0;
+}
+.card .social-login {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    /*margin-top: 15px;*/
+}
+.card .social-login img {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.social-login img:hover {
+  opacity: 0.7;
+}
+.card img {
+           margin-bottom:35px;
+        }
+        .divider-links {
+         font-size: 1em;
+         white-space: nowrap;
+        }
+        .divider-links * {
+         margin: 5px;
+        }

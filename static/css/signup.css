@@ -1,0 +1,36 @@
+h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 60px;
+}
+
+/* 회원가입 step 진행상황 */
+
+.steps {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 45px;
+}
+.steps .next {
+    font-size: 24px;
+    line-height: 30px;
+}
+.step {
+    text-align: center;
+    font-size: 1.0rem;
+}
+.step span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background-color: #ddd;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+.step.current span {
+    background-color: var(--color-primary);
+}

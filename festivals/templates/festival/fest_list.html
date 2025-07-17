@@ -1,0 +1,490 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/components.css">
+    {% comment %} <link rel="stylesheet" type="text/css" href="/static/css/main.css"> {% endcomment %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+    <style>
+      * {
+        margin:0; padding: 0; box-sizing: border-box; font-family: "Poppins", "Noto Sans KR", sans-serif;
+      }
+      ul, li {list-style: none;}
+      a {text-decoration: none; color: inherit;}
+
+      #wrap {
+        flex: 1;
+      }
+
+      #banner_blur {
+        height: 400px;
+                  
+        justify-content: center;    
+        align-items: center;       
+      }
+
+      #banner_blur h1 {
+        display: inline-block;
+        width: 60%;
+        margin: 6% 20% 1% 20%;
+      }
+
+      #searchBlocks {
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: stretch;
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        gap: 20px;
+        width: 60%;
+        height: 145px;
+        
+      }
+
+      .searchBlock {
+        display: flex;
+        flex-direction: column;
+        /*gap: 8px;*/
+      }
+
+
+      .region {
+        width: 15%;
+        
+      }
+
+      .name {
+        width: 35%;
+      }
+
+      .date {
+        width: 35%;
+        justify-content: space-between;
+      
+      }
+
+      .button {
+        width: 10%;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .searchBlock h3 {
+        font-size: 18px;
+        /*margin-bottom: 8px;*/
+        color: #333;
+        min-height: 22px;
+      }
+
+      .region input {
+        margin-top: auto; /* input을 아래로 밀기 */
+      }
+
+      .name input {
+        margin-top: auto; /* input을 아래로 밀기 */
+      }
+
+      .searchBlock input[type="text"],
+      .searchBlock input[type="date"] {
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        height: 45px;
+        width: 100%;
+
+      }
+
+      .searchBlock button {
+        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+      }
+
+      .date .stardToEnd {
+        display: flex;
+        width: 90%;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .date .stardToEnd > div {
+        flex: 1;
+      }
+
+      .date label {
+        font-size: 13px;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      .button button {
+        margin-top: auto;
+        padding: 12px;
+        font-size: 17px;
+        font-weight: 500;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button button:hover {
+        background-color: #0056b3;
+      }
+
+      @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+
+      .contents {
+        width: 60%;
+        margin: 0 auto; /* 중앙 정렬 */
+      }
+
+      
+      /* 리스트 부분 */
+
+      #festList {
+        width: 100%;
+        margin-bottom: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .festCard {
+        width: calc(32% - 10px);
+        min-height: 620px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        position: relative;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        background: 
+        linear-gradient(to bottom right, #fefae0, #e9f5ff),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
+        
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .festCard:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      }
+
+      .festCard img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+
+      .festCard::before {
+        content: "Happening Now";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #F66989;
+        /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
+        color: #fff;
+        font-size: 12px;
+        padding: 5px 7px;
+        border-radius: 8px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        z-index: 1;
+      }
+
+
+
+
+      /* 공통 텍스트 스타일 */
+      .festCard p {
+        margin: 4px 12px;
+        white-space: normal;
+        overflow: visible;
+        line-height: 1.6em;
+      }
+
+      .festCard p.title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #b35c1e;
+        margin-top: 8px;
+        margin-bottom: 6px;
+      }
+
+      .festCard p.rating {
+        font-size: 14px;
+        color: #e2a934;
+        white-space: nowrap;
+        margin-bottom: 8px;
+      }
+
+      
+      .festCard p.date-info {
+        font-size: 14px;
+        color: #5a4632;
+        background: rgba(243, 234, 204, 0.6);
+        padding: 6px 10px;
+        border-radius: 8px;
+        padding-bottom: 8px;
+      }      
+
+      .festival-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 20px 20px;
+      }
+
+      .festival-tags .tag,
+      .tag {
+        background-color: #E6F5FF;
+        color: #4fc3f7;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: default;
+      }
+
+      .rating-region {
+        margin: 0 20px 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .festival-rating {
+        font-size: 18px;
+        color: #ff9800;
+      }
+
+      #loadMoreBtn {
+        display:block; 
+        margin:10px auto 50px; 
+      }
+
+      .festival-name {
+        margin: 5px 20px 10px;
+      }
+
+    </style>
+</head>
+<body>
+    <div id="wrap">
+      {% include "header.html" %}
+        <div id="banner_blur">
+          <h1>Explore festivals</h1>
+          <form id='searchForm' action="#" method="GET">
+            <div id="searchBlocks">
+              <div class="searchBlock name">
+                <h3>Festival Name</h3>
+                <input type="text" name='name' id="name" placeholder="Name Search">
+              </div>
+              <div class="searchBlock region">
+                <h3>Region</h3>
+                <input type="text" name="region" id="region" placeholder="Ex: Seoul, Busan">
+              </div>
+
+              <div class="searchBlock date">
+                <h3>Date</h3>
+                <div class="stardToEnd">
+                  <div>
+                    <label for="startDate">Start Date</label>
+                    <input type="date" name="startDate" id="startDate">
+                  </div>
+                  <span>~</span>
+                  <div>
+                    <label for="endDate">End Date</label>
+                    <input type="date" name="endDate" id="endDate">
+                  </div>
+                </div>
+              </div>
+
+              <div class="searchBlock button">
+                <button type="submit">Search</button>
+              </div>
+            </div>
+          </form>
+        </div>
+            
+        <div class="contents">  
+            <div id="festList">
+                
+            </div>
+            <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
+        </div>
+    </div>
+    <script>
+        let allFestivalData = []; // AJAX 검색 결과를 저장할 배열
+        let loadedCount = 0;      // 현재까지 로드된 카드 수
+        const LOAD_COUNT = 9;     // 초기 로드 개수 (검색 시)
+        const LOAD_MORE_COUNT = 9; // '더보기' 클릭 시 추가 로드 개수
+
+        // DOM 요소 캐싱 (자주 사용하므로 변수에 저장)
+        const festList = document.getElementById('festList');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const searchForm = $('#searchForm'); // jQuery 객체로 캐싱
+
+        function appendCards(dataArray, count) {
+            // '검색 결과가 없습니다.' 메시지가 있다면 제거
+            $('#no-results-message').remove();
+
+            let appendedThisCall = 0; // 이번 호출에서 실제로 추가된 카드 수
+
+            for (let i = 0; i < count; i++) {
+                if (loadedCount >= dataArray.length) {
+                    break; // 더 이상 데이터가 없으면 반복 중단
+                }
+                const data = dataArray[loadedCount];
+                const card = document.createElement('div');
+                card.className = 'festCard';
+                card.innerHTML = `
+                    <a href="/festivals/view/${data.id}">
+                        <img src="${data.image}" width='100%' height='60%' alt="${data.name}">
+                    </a>
+                    <p>
+                      <div class="festival-header">
+                        <div class="festival-name">${data.name}</div>
+                        <div class="rating-region">
+                          <span class="festival-rating">⭐ ${data.rating || '0.0'}</span>
+                          <span class="region-info">🌏 ${data.region}</span>
+                        </div>
+                        <p class="date-info">📅 ${data.start_date || '날짜 미정'} ~ ${data.end_date || '날짜 미정'}</p>
+                      </div>
+                    </p>
+
+                    <div class="festival-tags">
+                        ${(data.tags || []).map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                      </div>
+
+                    
+                `;
+                festList.appendChild(card);
+                loadedCount++;
+                appendedThisCall++;
+            }
+
+            // '더보기' 버튼 표시 여부 업데이트
+            if (loadMoreBtn) { // 버튼 요소가 존재할 때만 처리
+                if (loadedCount < dataArray.length) {
+                    loadMoreBtn.style.display = 'block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+
+            // 데이터가 아예 없거나, 이번 호출에서 아무것도 추가되지 않았고, 이미 모든 데이터를 다 로드했음에도 불구하고 데이터가 없는 경우
+            if (loadedCount === 0 && dataArray.length === 0) {
+                // 메시지가 아직 없다면 추가
+                if (!$('#no-results-message').length) {
+                    festList.innerHTML = '<p id="no-results-message">검색 결과가 없습니다.</p>';
+                }
+            }
+        }
+
+        // 초기화 및 데이터 로딩을 담당하는 함수
+        function loadAndDisplayFestivals(isSearch = false) {
+            // 검색 요청이거나 첫 로드가 아닐 때만 기존 결과 초기화
+            if (isSearch) {
+                festList.innerHTML = ''; // 이전 결과 모두 지우기
+                loadedCount = 0;         // 로드 카운트 초기화
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none'; // 버튼 숨김
+                allFestivalData = []; // 새로운 검색을 위해 데이터 배열 초기화
+            }
+
+            // 폼 데이터 가져오기 (초기 로드 시에는 모두 빈 문자열이 될 것임)
+            const name = $('#name').val();
+            const region = $('#region').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+
+            const queryParams = {
+                name:name,
+                region: region,
+                startDate: startDate,
+                endDate: endDate
+            };
+
+            $.ajax({
+                url: '/festivals/search/',
+                type: 'GET',
+                data: queryParams,
+                dataType: 'json',
+                success: function(data) {
+                    allFestivalData = data; // AJAX 검색 결과를 allFestivalData에 저장
+                    appendCards(allFestivalData, LOAD_COUNT); // 첫 카드 묶음 출력
+
+                    const newUrl = new URL(window.location.origin + window.location.pathname);
+                    // 모든 쿼리 파라미터를 URL에 추가
+                    for (const key in queryParams) {
+                        if (queryParams[key]) { // 값이 있을 때만 추가
+                            newUrl.searchParams.set(key, queryParams[key]);
+                        } else {
+                            newUrl.searchParams.delete(key); // 값이 없으면 URL에서 제거
+                        }
+                    }
+
+                    if (isSearch) { // 새로운 검색일 때만 히스토리 스택에 추가
+                        window.history.pushState(null, '', newUrl.toString());
+                    } else { // '더보기'나 초기 로드 등 검색 상태를 바꾸지 않는 경우 (선택 사항)
+                            // replaceState를 사용하여 현재 URL을 대체 (히스토리 스택에 추가 안 함)
+                        window.history.replaceState(null, '', newUrl.toString());
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error: " + textStatus, errorThrown, jqXHR.responseText);
+                    festList.innerHTML = '<p id="no-results-message">검색 중 오류가 발생했습니다. 다시 시도해주세요.</p>';
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', () => {
+                    appendCards(allFestivalData, LOAD_MORE_COUNT);
+                });
+            }
+
+            searchForm.on('submit', function(event) {
+                event.preventDefault(); // 폼 기본 제출 동작 방지
+                loadAndDisplayFestivals(true); // 검색임을 알리고 데이터 로드
+            });
+
+            const currentUrl = new URL(window.location.href);
+            const urlSearchParams = currentUrl.searchParams;
+
+            // URL에 검색 파라미터가 있는지 확인
+            const hasSearchParams = Array.from(urlSearchParams.values()).some(param => param.length > 0);
+
+            if (hasSearchParams) {
+                // URL 파라미터가 있다면, 폼 필드에 값을 채워넣고 바로 검색 실행
+                $('#name').val(urlSearchParams.get('name') || '');
+                $('#region').val(urlSearchParams.get('region') || '');
+                $('#startDate').val(urlSearchParams.get('startDate') || '');
+                $('#endDate').val(urlSearchParams.get('endDate') || '');
+                
+                loadAndDisplayFestivals(false); // 초기 로드임을 알리며 검색 실행
+            } else {
+                // URL 파라미터가 없다면, 초기 데이터 로드 (빈 검색으로)
+                loadAndDisplayFestivals(false);
+            } 
+        });
+    </script>
+    {% include "footer.html" %}
+    
+</body>
+</html>
