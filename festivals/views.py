@@ -112,7 +112,7 @@ def search(request): # 축제 검색
     return JsonResponse(festival_data, safe=False)
 
 
-# --------------- 위시리스트 통계 차트 -------------------
+# --------------- 통계 차트 -------------------
 def Statistics_chart(request):
     # 지역별 위시리스트 카운트
     region_counts = (
