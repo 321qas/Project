@@ -73,13 +73,12 @@
             margin-bottom: 50px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
             gap: 20px;
         }
         .festCard {
             width: calc(32% - 10px);
             min-height: 620px;
-            height: fit-content;
             display: flex;
             flex-direction: column;
             border-radius: 12px;
@@ -87,13 +86,13 @@
             cursor: pointer;
             text-align: left;
             font-family: inherit;
-        
             background: 
             linear-gradient(to bottom right, #fefae0, #e9f5ff),
             repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
             repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.08);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
+            margin-bottom: 10px;
         }
 
         /*
@@ -109,22 +108,8 @@
             object-fit: cover;
         }
 
-        .festCard::before {
-            content: "Happening Now";
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #F66989;
-            /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
-            color: #fff;
-            font-size: 12px;
-            padding: 5px 7px;
-            border-radius: 8px;
-            font-weight: bold;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            z-index: 1;
-        }
 
+        
 
 
         /* 공통 텍스트 스타일 */
@@ -198,6 +183,7 @@
             margin: 5px 20px 10px;
         }
 
+        
 
 
         /* My Reviews 탭 */
@@ -246,12 +232,6 @@
             /*padding: 20px 0 60px 0;*/
         }
 
-        /*
-        #recommendFestList a {
-            display: inline-block;
-            width: fit-content;
-        }
-        */
 
         .festCard_name {
             width: 200px;
@@ -455,21 +435,27 @@
                         {% endif %}
                         {% endwith %}
                         <p>
-                        <div class="festival-header">
-                            <div class="festival-name">{{data.festival.name}}</div>
-                            <div class="rating-region">
-                            <span class="festival-rating">⭐ {{data.festival.rating}}</span>
-                            <span class="region-info">🌏 {{data.festival.region}}</span>
+                            <div class="festival-header">
+                                <div class="festival-name">{{data.festival.name}}</div>
+                                <div class="rating-region">
+                                <span class="festival-rating">⭐ {{data.festival.rating}}</span>
+                                <span class="region-info">🌏 {{data.festival.region}}</span>
                             </div>
                             <p class="date-info">📅 {{data.festival.start_date}} ~ {{data.festival.end_date}}</p>
-                        </div>
+                            </div>
+                            <div class="festival-tags">
+                            {% for tag in data.festival.tags.all %}
+                                <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                            </div>
                         </p>
-                        {% for tag in data.festival.tags.all %}
-                            <span class="tag">#{{ tag.name }}</span>
-                        {% endfor %}
-                    </div>     
+                    </div>  
+                    {% endfor %}   
                 </div>
-                {% endfor %}
+            </div>
+                
+                
+                
                 <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
             </div>
             <div id="my-reviews" class="content" style="display: none;">
