@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
-
         .contents {
             max-width: none;
             width: 60%;
@@ -32,6 +31,19 @@
         }
         .profile-details {
             margin-top: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(90deg, #fc7311 0%, #00f2ff 100%);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: fit-content;
+            margin: 2rem auto;
         }
         
         /* my plans, My Reviews, notification, settings 탭 */
@@ -431,7 +443,7 @@
         <div class="contents">
             <div class="profile-card">
                 <div class="profile-details">
-                    <span>{{ nickname }}</span>'s festival hub
+                    <span>{{nickname}}'s festival hub </span>
                 </div>
             </div>
 
@@ -467,9 +479,9 @@
                         {% for tag in data.festival.tags.all %}
                             <span class="tag">#{{ tag.name }}</span>
                         {% endfor %}
-                    </div>     
+                    </div>
+                    {% endfor %}     
                 </div>
-                {% endfor %}
                 <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
             </div>
             <div id="my-reviews" class="content" style="display: none;">
@@ -536,22 +548,14 @@
             </div>
             <div id="my-shorts" class="content" style="display: none;">
                 <div class="short-contents">
+                    {% for short in my_short %}
                     <h3>Short Contents</h3>
                     <div class="short-container">
                         <div class="short-item">
-                            <img src="short1.jpg" alt="숏폼 사진">
-                            <div class="short-title">축제 이름</div>
+                            <img src="{{short.image}}" alt="숏폼 사진">
+                            <div class="short-title">{{short.title}}</div>
                         </div>
-                        <div class="short-item">
-                            <img src="short2.jpg" alt="숏폼 사진">
-                            <div class="short-title">축제 이름</div>
-                        </div>
-                        <div class="short-item">
-                            <img src="short3.jpg" alt="숏폼 사진">
-                            <div class="short-title">축제 이름</div>
-                        </div>
-
-                        <button class="more-button">More</button>
+                    {% endfor %} 
                     </div>
                 </div>
             </div>

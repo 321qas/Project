@@ -1,277 +1,297 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
-  <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"> 
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <title>HOME</title>
-  <style>
-    a {
-        color: inherit;        
-        text-decoration: none; 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/navigation.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>HOME</title>
+    <style>
+      a {
+        color:inherit;
+        text-decoration: none;
       }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background: #f8fafc;
-    }
+      body {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          background: #f8fafc;
+      }
 
-    #wrap {
-      flex: 1;
-    }
+      #wrap {
+          flex: 1;
+      }
 
-    #searchAll{
-      position: absolute;
-      right: 700px;
-    }
+      #searchAll{
+          position: absolute;
+          right: 700px;
+      }
 
-    #searchAll .searchIco{
-      width: 48px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      margin-right: 10px
-    }
+      #searchAll .searchIco{
+          width: 48px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          margin-right: 10px
+      }
 
-    .searchKey {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+      .searchKey {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+      }
 
-    .searchKey input {
-      padding: 12px 18px;
-      font-size: 1.2rem;
-      border: 2px solid #ffb300;
-      border-radius: 6px;
-      height: 60px;
-      width: 400px;
-    }
+      .searchKey input {
+          padding: 12px 18px;
+          font-size: 1.2rem;
+          border: 2px solid #ffb300;
+          border-radius: 6px;
+          height: 60px;
+          width: 400px;
+      }
 
-    .searchKey input:focus {
-      outline: none;
-      border: 2px solid #4fc3f7;
-    }
+      .searchKey input:focus {
+          outline: none;
+          border: 2px solid #4fc3f7;
+      }
 
-    .searchKey button {
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      height: 60px;
-      border-radius: 6px;
-      background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%); 
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+      .searchKey button {
+          padding: 12px 24px;
+          font-size: 1.1rem;
+          height: 60px;
+          border-radius: 6px;
+          background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
 
-    .contents::selection{
-      background-color: red;
-    }
+      .contents::selection{
+          background-color: red;
+      }
 
-    .contents {
-      width: 100%;
-      min-height: 1000px;
-      height:1600px;
-      position: relative;
-    }
+      .contents {
+          width: 100%;
+          min-height: 1000px;
+          height:1600px;
+      }
 
-    .ad-banner {
-      position: absolute;
-      top: 230px;
-      width: 170px;
-      height: 570px;
-    }
+      .ad-banner {
+        position: absolute;
+        width: 170px;
+        height: 570px;
+        margin:80px;
+      }
 
-    .ad-banner img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+      .ad-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-    /* --- 기본 쇼츠 관련 CSS (이전과 동일) --- */
-    #shortsContainer {
-        width: 32%; /* 일반 모드 너비 */
-        height: 800px;
-        margin: 43px auto;
-        display: flex;
-        justify-content: space-evenly;
-        transition: all 0.3s ease-in-out; /* 부드러운 전환 효과 */
-    }
+      /* --- 기본 쇼츠 관련 CSS --- */
+      #shortsContainer {
+          width: 32%; /* 일반 모드 너비 */
+          height: 800px;
+          margin: 20px auto;
+          display: flex;
+          justify-content: space-evenly;
+          position: relative; /* 자식 absolute 기준 */
+          overflow: hidden; /* 슬라이드 시 넘치는 부분 숨김 */
+      }
 
-    .shorts_title {
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        font-size: 17px;
-        padding: 6px 12px;
-        font-weight: bold;
-        color: #fff;
-        max-width: fit-content;
-    }
+      /* 쇼츠 콘텐츠 래퍼의 기본 스타일 */
+      .shorts-content-wrapper {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+          display: flex; /* 내부 요소들을 flex로 정렬 */
+          justify-content: space-evenly; /* #shortsBorder와 #shortsIcoContainer 정렬 */
+          align-items: center; /* 수직 중앙 정렬 (필요시) */
+      }
 
-    .creator {
-        top: 630px; /* 이 top 속성은 #shorts 내에서 position: absolute일 때 작동 */
-        z-index: 2;
-        color: #222;
-        font-weight: bold;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        font-size: 1.00rem;
-        background:#fff;
-        margin-bottom:10px;
-        border: 1px solid #ddd;
-        padding: 6px 12px;
-        max-width: fit-content;
-    }
+      /* 초기에는 next-shorts를 숨김 */
+      .next-shorts {
+          opacity: 0;
+          transform: translateY(100%); /* 아래쪽으로 숨김 */
+      }
 
-    #shortsBorder {
-        width: 75%; /* #shortsContainer의 75% 너비 */
-        height: 100%; /* #shortsContainer와 같은 높이 */
-        margin: 0 0 0 40px;
-        background: #39555e;
-        border: 1px solid #ddd;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
+      /* #shortsBorder 및 .shorts-border-next 스타일 (유사하므로 함께 정의) */
+      #shortsBorder, .shorts-border-next {
+          width: 75%; /* shortsContainer의 75% 너비 */
+          height: 100%; /* shortsContainer와 같은 높이 */
+          margin: 0 0 0 40px;
+          background: #39555e;
+          border: 1px solid #ddd;
+          border-radius: 16px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+      }
+
+      /* #shorts 및 .shorts-image-next 스타일 */
+      #shorts, .shorts-image-next {
+          width: 90%; /* #shortsBorder의 90% 너비 */
+          height: 85%; /* #shortsBorder의 85% 높이 */
+          margin-top: 25px;
+          background: url('') center/cover no-repeat;
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+          justify-content: flex-end; /* 제목과 작성자를 하단으로 배치 */
+          position: relative; /* 자식 요소의 absolute 포지셔닝 기준 */
+      }
+
+      .shorts_title, .shorts_title-next {
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 8px;
+          font-size: 17px;
+          padding: 6px 12px;
+          font-weight: bold;
+          color: #fff;
+          max-width: fit-content;
+      }
+
+      .creator, .creator-next {
+          /* 이 top 속성은 #shorts 내에서 position: absolute일 때 작동 */
+          z-index: 2;
+          color: #222;
+          font-weight: bold;
+          border-radius: 16px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          font-size: 1.00rem;
+          background:#fff;
+          margin-bottom:10px;
+          border: 1px solid #ddd;
+          padding: 6px 12px;
+          max-width: fit-content;
+      }
+
+      /* #shortsMeta 및 .shorts-meta-next 스타일 */
+      #shortsMeta, .shorts-meta-next {
+          width: 90%;
+          padding-top: 18px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          font-size: 1.08rem;
+          color: #222;
+      }
+
+      #shortsMeta a, .shorts-meta-next a {
+          font-weight: bold;
+          color: #fff;
+          text-decoration: none;
+      }
+
+      #shortsMeta span, .shorts-meta-next span {
+          padding-bottom:10px;
+      }
+
+      #shortsMeta span a, .shorts-meta-next span a {
+          color: #000000;
+          font-size:12px;
+          text-decoration: none;
+          margin-left: 10px;
+          margin-top: 10px;
+          display: inline-block;
+          border-radius: 10px;
+          padding: 5px 5px 5px 10px;
+          background: #ffffff;
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 1);
+      }
+
+      /* #shortsIcoContainer 및 .shorts-ico-container-next 스타일 */
+      #shortsIcoContainer, .shorts-ico-container-next {
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* 아이콘 중앙 정렬 */
+          justify-content: flex-end; /* 하단 정렬 */
+          padding: 20px 0;
+          gap: 20px; /* 아이콘 간 간격 */
+          height: 95%; /* shortsContainer 높이에 맞춰 */
+      }
+
+      .iconBtn {
+          font-size: 23px;
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 0; /* 기본 패딩 제거 */
+      }
+
+      .createBtn {
+          margin-bottom: auto; /* 맨 위로 보내기 */
+          background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+          color: white;
+          border-radius: 10%;
+          width:100%;
+      }
+
+      .list {
+          width: 100%;
+          min-height: 1000px;
+          padding: 30px 0;
+      }
+
+      .listTitle {
+        width: 60%;
+        height: 100px;
+        margin: 0 auto;
+        text-align: center;
+        border-top: 1px solid #ccc;
         align-items: center;
+        display: flex;
         justify-content: center;
-    }
+      }
 
-    #shorts {
-        width: 90%; /* #shortsBorder의 90% 너비 */
-        height: 85%; /* #shortsBorder의 85% 높이 */
-        margin-top: 25px;
-        background: url('') center/cover no-repeat;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        justify-content: flex-end; /* 제목과 작성자를 하단으로 배치 */
-        position: relative; /* 자식 요소의 absolute 포지셔닝 기준 */
-    }
-
-    #shortsMeta {
-        width: 90%;
-        padding-top: 18px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        font-size: 1.08rem;
-        color: #222;
-    }
-
-    #shortsMeta a {
+      .listTitle h3 {
+        margin: auto;
+        font-size: 2rem;
         font-weight: bold;
-        color: #fff;
-        text-decoration: none;
-    }
+        text-align: center;
+      }
 
-    #shortsMeta span {
-        padding-bottom:10px;
-    }
-
-    #shortsMeta span a {
-        color: #000000;
-        font-size:12px;
-        text-decoration: none;
-        margin-left: 10px;
-        margin-top: 10px;
-        display: inline-block;
-        border-radius: 10px;
-        padding: 5px 5px 5px 10px;
-        background: #ffffff;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 1);
-    }
-
-    #shortsIcoContainer {
+      .recommendFestList {
+        border-top: 1px solid #ccc;
+        width: 60%;
+        margin: 10px auto;
         display: flex;
-        flex-direction: column;
-        align-items: center; /* 아이콘 중앙 정렬 */
-        justify-content: flex-end; /* 하단 정렬 */
-        padding: 20px 0;
-        gap: 20px; /* 아이콘 간 간격 */
-        height: 95%; /* #shortsContainer 높이에 맞춰 */
-    }
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        padding: 20px 0 60px 0;
+      }
 
-    .iconBtn {
-        font-size: 23px;
-        cursor: pointer;
-        background: none;
-        border: none;
-        padding: 0; /* 기본 패딩 제거 */
-    }
+      .festCard {
+        width: 200px;
+        height: 250px;
+        border-radius: 10px;
+        overflow: hidden;
+        text-align: center;
+        background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
 
-    .createBtn {
-        margin-bottom: auto; /* 맨 위로 보내기 */
-        background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%); 
-        color: white;
-        border-radius: 10%;
-        width:100%;
-    } 
-
-    .list {
-      width: 100%;
-      min-height: 1000px;
-
-      padding: 30px 0;
-    }
-
-    .listTitle {
-      width: 60%;
-      height: 100px;
-      margin: 0 auto;
-      text-align: center;
-      border-top: 1px solid #ccc;
-      align-items: center;
-      display: flex;
-      justify-content: center;
-    }
-
-    .listTitle h3 {
-      margin: auto;
-      font-size: 2rem;
-      font-weight: bold;
-      text-align: center;
-    }
-    .recommendFestList {
-      border-top: 1px solid #ccc;
-      width: 60%;
-      margin: 10px auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      padding: 20px 0 60px 0;
-    }
-
-    .festCard {
-      width: 200px;
-      height: 250px;
-      border-radius: 10px;
-      overflow: hidden;
-      text-align: center;
-      background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .festCard:hover {
+      .festCard:hover {
         transform: translateY(-6px);
         box-shadow: 0 10px 24px rgba(0,0,0,0.15);
       }
 
-    .festCard img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
+      .festCard img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
 
-    .festHeader {
+      .festHeader {
         width: 90%;
         height: 32%;
         margin: 0 auto;
@@ -286,375 +306,340 @@
         text-align: center;
       }
 
-     /* .dark 모드가 걸리면 전체 배경·글자색 변경 */
-    body.dark {
-      background-color: #121212;
-      color: #e0e0e0;
-    }
+      /* .dark 모드 CSS */
+      body.dark {
+          background-color: #121212;
+          color: #e0e0e0;
+      }
 
-    body.dark .contents {
-      background-color: #121212; /* 또는 #1a1a1a 등 어두운 회색 */
-    }
+      body.dark .contents {
+          background-color: #121212;
+      }
 
-    /* 네비게이션, 푸터 등도 함께 스타일링 */
-    body.dark #nav,
-    body.dark #footer,
-    body.dark #pageMove,
-    body.dark #shortsBorder {
-      background-color: #1f1f1f;
-      color: #e0e0e0;
-      border-color: #333;
-    }
+      body.dark #nav,
+      body.dark #footer,
+      body.dark #pageMove,
+      body.dark #shortsBorder,
+      body.dark .shorts-border-next { /* .next-shorts 내부 border에도 적용 */
+          background-color: #1f1f1f;
+          color: #e0e0e0;
+          border-color: #333;
+      }
 
-    /* 버튼 호버 효과를 더 눈에 띄게 */
-    body.dark .searchKey button:hover,
-    body.dark .iconBtn:hover,
-    body.dark .ldBtn:hover {
-      filter: brightness(1.2);
-    }
+      body.dark .searchKey button:hover,
+      body.dark .iconBtn:hover,
+      body.dark .ldBtn:hover {
+          filter: brightness(1.2);
+      }
 
-    /* 검색창, 카드 등 박스 배경 */
-    body.dark .searchKey input,
-    body.dark .festCard {
-      background-color: #1e1e1e;
-      border: #333;
-      color: #f0f0f0;
-    }
+      body.dark .searchKey input,
+      body.dark .festCard {
+          background-color: #1e1e1e;
+          border-color: #333;
+          color: #f0f0f0;
+      }
 
-    /* 카드 내부 텍스트 */
-    body.dark .festCard p {
-      color: #ffffff;
-    }
+      body.dark .festCard p {
+          color: #ffffff;
+      }
 
-    /* tags */
-    body.dark #shortsMeta span a {
-      background-color: #2a2a2a;
-      color: #ffffff;
-      border: 1px solid #444;
-    }
+      body.dark #shortsMeta span a, body.dark .shorts-meta-next span a {
+          background-color: #2a2a2a;
+          color: #ffffff;
+          border: 1px solid #444;
+      }
 
-    /* 링크 hover */
-    body.dark a:hover {
-      color: #6ef8f1;
-      text-decoration: underline;
-    }
+      body.dark a:hover {
+          color: #6ef8f1;
+          text-decoration: underline;
+      }
 
-    /* 다크모드에서 선택 영역 색상 변경 */
-    body.dark ::selection {
-      background-color: #4fc3f7;
-      color: #000;
-    }
+      body.dark ::selection {
+          background-color: #4fc3f7;
+          color: #000;
+      }
 
-    #shortsContainer:fullscreen,
-    #shortsContainer:-webkit-full-screen,
-    #shortsContainer:-moz-full-screen,
-    #shortsContainer:-ms-fullscreen {
-        width: 100vw !important; /* 뷰포트 너비 전체 */
-        height: 100vh !important; /* 뷰포트 높이 전체 */
-        margin: 0 !important; /* 마진 제거 */
-        position: fixed !important; /* 화면에 고정 */
-        background-color: #fff !important;
-        z-index: 2147483647 !important; /* 다른 요소 위에 표시 */
-        
-        /* 내부의 #shortsBorder와 #shortsIcoContainer를 세로형으로 중앙에 배치 */
-        display: flex !important;
-        flex-direction: row !important; /* 쇼츠 콘텐츠와 아이콘을 가로로 나란히 배치 */
-        justify-content: space-evenly !important; /* 수평 중앙 정렬 */
-        align-items: center !important; /* 수직 중앙 정렬 */
-    }
+    </style>
+<script>
+    let scrollTimer, season;
+    let currentShortIdx = 0;
+    let currentImgIdx = 0;
+    let shortformsData = [], festivalsData = [];
+    const initialShortformId = '{{shortform.id}}';
 
-    /* 전체 화면일 때 #shortsBorder 스타일 조정 (쇼츠 콘텐츠의 메인 영역) */
-    #shortsContainer:fullscreen #shortsBorder,
-    #shortsContainer:-webkit-full-screen #shortsBorder,
-    #shortsContainer:-moz-full-screen #shortsBorder,
-    #shortsContainer:-ms-fullscreen #shortsBorder {
-        /* 기존 450px에서 더 줄임 */
-        width: 380px !important; /* 쇼츠처럼 좁은 가로 길이로 조정 (원하는 값으로 변경 가능) */
-        max-width: 80vw !important; /* 너무 큰 화면에서는 최대 뷰포트 너비의 80%로 제한 */
-        
-        height: 100vh !important; /* 뷰포트 높이 전체로 최대한 길게 늘림 */
-        
-        margin: 0 !important; /* 마진 제거 */
-        background: #fff !important; /* 배경색 (내용이 잘 보이도록 하얀색 유지) */
-        border: none !important; /* 테두리 제거 */
-        border-radius: 0 !important; /* 둥근 모서리 제거 */
-        
-        /* 내부 #shorts (이미지)를 중앙에 배치하기 위함 */
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
+    let currentShortsWrapper; // 현재 보이는 쇼츠 래퍼 DOM 요소
+    let nextShortsWrapper;    // 다음/이전 쇼츠 래퍼 DOM 요소 (애니메이션에 사용)
 
-    /* 전체 화면일 때 #shorts (실제 이미지 표시 영역) 스타일 조정 */
-    #shortsContainer:fullscreen #shorts,
-    #shortsContainer:-webkit-full-screen #shorts,
-    #shortsContainer:-moz-full-screen #shorts,
-    #shortsContainer:-ms-fullscreen #shorts {
-        width: 100% !important; /* #shortsBorder 너비에 꽉 채움 */
-        height: 100% !important; /* #shortsBorder 높이에 꽉 채움 */
-        margin: 0 !important; /* 마진 제거 */
-        padding: 0 !important; /* 패딩 제거 */
-        background-size: cover !important; /* 이미지가 잘려도 공간을 꽉 채우도록 */
-        background-position: center !important;
-        background-repeat: no-repeat !important;
-        
-        /* 줌/패닝 기능을 위한 transform 속성은 건드리지 않음 */
-        /* position: relative;와 justify-content: flex-end;는 기존과 같이 유지 */
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        // AOS 관련 코드 제거됨
 
-    /* 전체 화면일 때 #shortsIcoContainer (아이콘 컨테이너) 스타일 조정 */
-    #shortsContainer:fullscreen #shortsIcoContainer,
-    #shortsContainer:-webkit-full-screen #shortsIcoContainer,
-    #shortsContainer:-moz-full-screen #shortsIcoContainer,
-    #shortsContainer:-ms-fullscreen #shortsIcoContainer {
-        height: 100vh !important; /* #shortsBorder와 같은 높이로 늘림 */
-        justify-content: center !important; /* 전체 화면에서 세로 중앙 정렬 */
-        padding: 0 40px !important; /* 좌우 패딩으로 콘텐츠와 아이콘 분리 */
-        gap: 30px !important; /* 아이콘 간 간격 넓힘 */
-        margin-left: 20px !important;
-    }
+        currentShortsWrapper = document.querySelector('.current-shorts');
+        nextShortsWrapper = document.querySelector('.next-shorts');
 
-    /* 전체 화면일 때 .iconBtn (개별 아이콘 버튼) 스타일 조정 */
-    #shortsContainer:fullscreen .iconBtn,
-    #shortsContainer:-webkit-full-screen .iconBtn,
-    #shortsContainer:-moz-full-screen .iconBtn,
-    #shortsContainer:-ms-fullscreen .iconBtn {
-        font-size: 40px !important; /* 아이콘 크기 확대 */
-        width: 100% !important; /* 버튼 자체 크기 확대 */
-        height: 100% !important;
-    }
+        Promise.all([
+            $.ajax({ url: `/slist/${initialShortformId}`, type: 'GET', dataType: 'json' }),
+            $.ajax({ url: '/jlist/', type: 'GET', dataType: 'json' })
+        ]).then(results => {
+            const [shortformsRes, festivalsRes] = results;
+            season = festivalsRes[0].tag;
 
-    /* 전체 화면일 때 .createBtn (특별한 아이콘 버튼) 스타일 조정 */
-    #shortsContainer:fullscreen .createBtn,
-    #shortsContainer:-webkit-full-screen .createBtn,
-    #shortsContainer:-moz-full-screen .createBtn,
-    #shortsContainer:-ms-fullscreen .createBtn {
-        margin-bottom: auto !important; /* 여전히 맨 위로 배치 */
-        width: 100% !important; /* 크기 확대 */
-        height: 100% !important;
-    }
+            shortformsData = shortformsRes.shortforms || [];
+            festivalsData = festivalsRes || [];
 
-    /* 전체 화면일 때 텍스트 요소들 위치 및 크기 조정 */
-    /* #shorts 내부의 position: absolute 기준으로 위치 조정 */
-    #shortsContainer:fullscreen .creator,
-    #shortsContainer:-webkit-full-screen .creator,
-    #shortsContainer:-moz-full-screen .creator,
-    #shortsContainer:-ms-fullscreen .creator {
-        font-size: 2.0rem !important;
-        position: absolute !important;
-        bottom: 120px !important; /* 하단에서 좀 더 위로 */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        white-space: nowrap; /* 줄바꿈 방지 */
-    }
-
-    #shortsContainer:fullscreen .shorts_title,
-    #shortsContainer:-webkit-full-screen .shorts_title,
-    #shortsContainer:-moz-full-screen .shorts_title,
-    #shortsContainer:-ms-fullscreen .shorts_title {
-        font-size: 2.2em !important; /* 제목 글꼴 확대 */
-        position: absolute !important;
-        bottom: 60px !important; /* 하단에서 좀 더 위로 */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        text-align: center !important;
-        max-width: 90% !important; /* 화면을 너무 벗어나지 않도록 제한 */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    #shortsContainer:fullscreen #shortsMeta,
-    #shortsContainer:-webkit-full-screen #shortsMeta,
-    #shortsContainer:-moz-full-screen #shortsMeta,
-    #shortsContainer:-ms-fullscreen #shortsMeta {
-        position: absolute !important;
-        bottom: 20px !important; /* 가장 하단에 배치 */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        flex-direction: row !important; /* 가로로 배치 (태그와 축제 이름) */
-        justify-content: center !important;
-        align-items: center !important;
-        width: auto !important; /* 너비 자동 조절 */
-        padding-top: 0 !important;
-    }
-
-    #shortsContainer:fullscreen .festNameInShorts,
-    #shortsContainer:-webkit-full-screen .festNameInShorts {
-        font-size: 1.2em !important; /* 축제 이름 글꼴 확대 */
-        margin-right: 15px !important; /* 태그와의 간격 */
-    }
-
-    #shortsContainer:fullscreen .tags,
-    #shortsContainer:-webkit-full-screen .tags {
-        font-size: 0.9em !important; /* 태그 글꼴 확대 */
-        display: flex !important; /* 태그들을 플렉스 박스로 처리 */
-        flex-wrap: wrap; /* 태그가 많을 경우 줄바꿈 */
-        gap: 5px; /* 각 태그 간 간격 */
-    }
-
-    #shortsContainer:fullscreen #shortsMeta span a,
-    #shortsContainer:-webkit-full-screen #shortsMeta span a {
-        font-size: 0.9em !important; /* 개별 태그 글꼴 조정 */
-        padding: 8px 15px !important; /* 패딩 조정 */
-        margin-left: 0 !important; /* 기존 마진 제거 */
-    }
-
-  </style>
-  <script>
-        let scrollTimer,season,shortsContainer,shortsBorder,shortsIcoContainer,iconButtons;
-        let currentShortIndex = 0; // 현재 표시 중인 쇼츠의 인덱스 (shortformsData 배열 기준)
-        let currentImageIndex = 0; // 현재 쇼츠 내에서 이미지 순환을 위한 인덱스
-        let startX, isDragging = false; // 드래그 관련 변수
-        let shortformsData = [],festivalsData = []; // sList에서 받아온 모든 쇼츠 데이터를 저장할 변// jList에서 받아온 모든 축제 데이터를 저장할 변수
-        let initialShortformId = '{{shortform.id}}';
-        let originalShortsBorderWidth = '', originalShortsBorderHeight = '' ,originalShortsContainerBackgroundColor = '';
-        // DOM이 로드되면 바로 실행
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({
-                duration: 1000, // 기본 애니메이션 지속 시간
-                once: true, // 애니메이션을 한 번만 실행
-            }); 
-            
-            // 모든 AJAX 요청이 완료된 후에 실행될 Promise.all 사용
-            Promise.all([
-            // sList AJAX 요청 (쇼츠 데이터)
-              $.ajax({
-                url: `/slist/${initialShortformId}`,
-                type: 'GET',
-                dataType: 'json'
-              }),
-              // jList AJAX 요청 (축제 리스트 데이터)
-              $.ajax({
-                url: '/jlist/',
-                type: 'GET',
-                dataType: 'json'
-              })
-            ]).then(function(results) {
-              // 모든 AJAX 요청이 성공적으로 완료되었을 때 실행
-              const shortformsResponse = results[0]; // sList 응답
-              const festivalsResponse = results[1]; // jList 응답
-              season = festivalsResponse[0].tag
-
-              // shortformsData 할당 (data.shortforms로 접근)
-              shortformsData = shortformsResponse.shortforms || []; 
-              
-              // festivalsData 할당 (jList 응답 그대로 할당)
-              festivalsData = festivalsResponse || []; 
-              
-              // 데이터 유효성 검사
-              if (!Array.isArray(festivalsData) || festivalsData.length === 0) {
-                console.error("Error: No festival data received from jlist or data is not an array.");
+            if (!Array.isArray(festivalsData) || festivalsData.length === 0) {
+                console.error("No festival data.");
                 $('.listTitle').html('<p>축제 데이터를 불러올 수 없습니다.</p>');
-              } else {
-                addlist(festivalsData); // 축제 리스트 UI 업데이트
-              }
-              
-              if (!Array.isArray(shortformsData) || shortformsData.length === 0) {
-                console.error("Error: No shortform data received from slist or data is not an array.");
-                $('#shorts').html('<p>쇼츠 데이터를 불러올 수 없습니다.</p>');
-              } else {
-                // 초기 쇼츠 UI 업데이트 (첫 번째 쇼츠 데이터로)
-                updateShortsContent(shortformsData[currentShortIndex]); 
-                // 5초마다 이미지 순환 시작 (현재 쇼츠 내 이미지)
-                setInterval(changeShortsImage, 5000); 
-              }
-            })
-            .catch(function(error) {
-              // Promise.all 중 하나라도 실패하면 실행
-              console.error('데이터 로드 중 오류 발생:', error);
-              $('#shortsContainer').html('<p>데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>');
-              $('.listTitle').html('<p>축제 정보를 불러오는 중 오류가 발생했습니다.</p>');
-            });
+            } else {
+                addlist(festivalsData);
+            }
 
-            shortsContainer = document.getElementById('shortsContainer');
-            shortsBorder = document.getElementById('shortsBorder');
-            shortsIcoContainer = document.getElementById('shortsIcoContainer'); // 할당
-            iconButtons = document.querySelectorAll('.iconBtn'); // 할당 (NodeList)
-            
-            document.addEventListener('fullscreenchange', () => {
-                if (document.fullscreenElement) {
-                    // 1. #shortsContainer 배경색 변경
-                    originalShortsContainerBackgroundColor = window.getComputedStyle(shortsContainer).backgroundColor;
-                    shortsContainer.style.backgroundColor = '#f8fafc';
-                    // **전체 화면 모드로 진입 시 (viewBtn 클릭이 아니더라도)**
-                    console.log('Entered fullscreen mode. CSS :fullscreen rules should now apply.');
-                    shortsBorder.style.width = '30%'; 
-                    shortsBorder.style.height = '100vh';
-                    // 2. #shortsContainer justify-content 변경
-                    originalShortsContainerJustifyContent = window.getComputedStyle(shortsContainer).justifyContent;
-                    shortsContainer.style.justifyContent = 'center';
+            if (!Array.isArray(shortformsData) || shortformsData.length === 0) {
+                console.error("No shortform data.");
+                currentShortsWrapper.innerHTML = '<p style="text-align:center; color:#666;">쇼츠 데이터를 불러올 수 없습니다.</p>';
+            } else {
+                setupInitialShortsUI();
+                updateShortsContent(shortformsData[currentShortIdx], currentShortsWrapper); // 초기 로드
+                setInterval(changeShortsImage, 5000);
+            }
+        }).catch(error => {
+            console.error('데이터 로드 중 오류 발생:', error);
+            const contentArea = $('#shortsContainer').length ? $('#shortsContainer') : $('.contents');
+            contentArea.html('<p>데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>');
+            $('.listTitle').html('<p>축제 정보를 불러오는 중 오류가 발생했습니다. </p>');
+        });
 
-                    // 3. #shortsIcoContainer margin-left 추가
-                    originalShortsIcoContainerMarginLeft = window.getComputedStyle(shortsIcoContainer).marginLeft;
-                    shortsIcoContainer.style.marginLeft = '20px';
+        $('#wrap').on('wheel', '#shortsContainer', function(e) {
+            e.preventDefault();
+            clearTimeout(scrollTimer);
 
-                    // 4. .iconBtn font-size 변경
-                    if (iconButtons.length > 0) {
-                        originalIconBtnFontSize = window.getComputedStyle(iconButtons[0]).fontSize; // 첫 번째 버튼 기준으로 저장
-                        iconButtons.forEach(btn => {
-                            btn.style.fontSize = '40px';
-                        });
+            if (!shortformsData || shortformsData.length === 0) return;
+
+            scrollTimer = setTimeout(() => {
+                const prevShortIdx = currentShortIdx;
+                let newIdx = currentShortIdx;
+                let direction;
+
+                if (e.originalEvent.deltaY > 0) { // Scrolling down
+                    if (currentShortIdx < shortformsData.length - 1) {
+                        newIdx++;
+                        direction = 'down';
                     }
-                } else {
-                    // **전체 화면 모드에서 나갈 때 (Esc 키, F11, 또는 exitFullscreen 호출 시)**
-                    shortsContainer.style.removeProperty('background-color');
-                    console.log('Exited fullscreen mode. Reverting specific inline styles.');
-                    shortsBorder.style.removeProperty('width'); // CSS로 충분히 제어된다면 제거
-                    shortsBorder.style.removeProperty('height'); // CSS로 충분히 제어된다면 제거
-                    shortsContainer.style.removeProperty('justify-content');
-                    shortsIcoContainer.style.removeProperty('margin-left');
-                    iconButtons.forEach(btn => btn.style.removeProperty('font-size'));
-                }
-            });
-            setupInitialShortsUI('bottom',season); 
-            // #shortsContainer에 대한 휠 이벤트 리스너 (jQuery ready 함수 안으로 이동)
-            $('#wrap').on('wheel', '#shortsContainer', function(e) {
-                e.preventDefault();
-                clearTimeout(scrollTimer);
-
-                if (!shortformsData || shortformsData.length === 0) { 
-                    return; // 쇼츠 데이터가 없으면 스크롤 동작 안 함
-                }
-
-                if (e.originalEvent.deltaY > 0) { // 휠을 내리면 (다음 쇼츠)
-                    if (currentShortIndex < shortformsData.length - 1) { 
-                        scrollTimer = setTimeout(function() {
-                            currentShortIndex++;
-                            currentImageIndex = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
-                            applyAOSAnimation('up'); // 쇼츠 컨테이너 AOS 애니메이션
-                            updateShortsContent(shortformsData[currentShortIndex]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                        }, 500); // 0.5초 디바운스
-                    }
-                } else { // 휠을 올리면 (이전 쇼츠)
-                    if (currentShortIndex > 0) { 
-                        scrollTimer = setTimeout(function() {
-                            currentShortIndex--;
-                            currentImageIndex = 0; // 새 쇼츠로 이동하면 이미지 인덱스 초기화
-                            applyAOSAnimation('down'); // 쇼츠 컨테이너 AOS 애니메이션
-                            updateShortsContent(shortformsData[currentShortIndex]); // 데이터 기반으로 쇼츠 콘텐츠 업데이트
-                        }, 500); // 0.5초 디바운스
+                } else { // Scrolling up
+                    if (currentShortIdx > 0) {
+                        newIdx--;
+                        direction = 'up';
                     }
                 }
-              });
-        }); // document.ready end
-        
-        // setupInitialShortsUI 함수 (DOMContentLoaded 안에 있었으므로, 필요에 따라 외부로 뺄 수 있습니다)
-        function setupInitialShortsUI(animove) {
-            const initialShortsHtml = `
-                <div class="ad-banner">
+
+                if (newIdx !== prevShortIdx && direction) {
+                    currentShortIdx = newIdx;
+                    currentImgIdx = 0; // 새 쇼츠로 바뀌면 이미지 인덱스 초기화
+                    applySlideAnimation(direction, shortformsData[currentShortIdx]);
+                }
+            }, 500);
+        });
+    });
+
+    // Helper 함수: 쇼츠 콘텐츠 래퍼에 데이터 업데이트
+    function updateShortsWrapperContent(wrapperElement, item) {
+        if (!item || !wrapperElement) {
+            console.warn("updateShortsWrapperContent: Invalid wrapperElement or item provided.", wrapperElement, item);
+            return;
+        }
+
+        const creatorEl = wrapperElement.querySelector('.creator, .creator-next');
+        const titleEl = wrapperElement.querySelector('.shorts_title, .shorts_title-next');
+        const imageEl = wrapperElement.querySelector('#shorts, .shorts-image-next');
+        const festNameEl = wrapperElement.querySelector('.festNameInShorts, .festNameInShorts-next');
+        const tagsEl = wrapperElement.querySelector('.tags, .tags-next');
+        const borderEl = wrapperElement.querySelector('#shortsBorder, .shorts-border-next');
+
+        if (creatorEl) creatorEl.textContent = '@' + item.user.nickname;
+        if (titleEl) titleEl.textContent = item.title;
+
+        const imgUrl = item.images && item.images.length > currentImgIdx ? item.images[currentImgIdx].image_url : '';
+        if (imageEl) {
+            imageEl.style.backgroundImage = `url('${imgUrl}')`;
+            imageEl.style.backgroundSize = 'cover';
+            imageEl.style.backgroundPosition = 'center';
+            imageEl.style.backgroundRepeat = 'no-repeat';
+        }
+
+        const festival = item.festival;
+        const festName = festival && festival.name ? festival.name : '없어진 축제입니다';
+        const festId = festival && festival.id ? festival.id : null;
+
+        if (festNameEl) {
+            festNameEl.textContent = festName;
+            if (festId) festNameEl.setAttribute('href', `/festivals/view/${festId}/`);
+            else festNameEl.removeAttribute('href').style.cursor = 'default';
+        }
+
+        const tagsHtml = (festival && festival.tags && Array.isArray(festival.tags) && festival.tags.length > 0) ?
+            festival.tags.map(tag => `<a href="result_list.html?tag=${encodeURIComponent(tag.name)}">#${tag.name}</a>`).join(' ') : '';
+        if (tagsEl) tagsEl.innerHTML = tagsHtml;
+
+        if (borderEl) borderEl.style.background = item.frame_color || '#39555e';
+    }
+    
+    function applySlideAnimation(direction, nextShortItem) {
+        // 1. 다음 쇼츠 콘텐츠 업데이트
+        updateShortsWrapperContent(nextShortsWrapper, nextShortItem);
+
+        // 2. 현재 쇼츠를 사라지게 할 위치 설정 및 transition 제거 (즉시 이동)
+        currentShortsWrapper.style.transition = 'none';
+        currentShortsWrapper.style.transform = direction === 'down' ? 'translateY(-100%)' : 'translateY(100%)';
+        currentShortsWrapper.style.opacity = '0';
+
+        // 3. 다음 쇼츠의 초기 위치 설정 (화면 밖)
+        nextShortsWrapper.style.transition = 'none'; // 애니메이션 없이 즉시 이동
+        nextShortsWrapper.style.transform = direction === 'down' ? 'translateY(100%)' : 'translateY(-100%)';
+        nextShortsWrapper.style.opacity = '0';
+
+        // 4. 다음 애니메이션 프레임에서 transition 추가 및 최종 위치로 이동
+        requestAnimationFrame(() => {
+            // 브라우저가 이전 프레임의 스타일 변경을 확실히 적용하도록 강제
+            void nextShortsWrapper.offsetHeight; // <-- 이 부분이 핵심
+            nextShortsWrapper.style.transition = 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out';
+            nextShortsWrapper.style.transform = 'translateY(0%)';
+            nextShortsWrapper.style.opacity = '1';
+            currentShortsWrapper.style.transition = 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out'; // 원래는 currentShortsWrapper도 애니메이션 시켜야 함
+        });
+
+        // 5. 애니메이션 완료 후 상태 정리 (currentShortsWrapper를 다음 cycle에서 다시 사용하기 위해 초기화)
+        setTimeout(() => {
+            // 현재 보이는 래퍼와 다음 래퍼를 교체
+            const temp = currentShortsWrapper;
+            currentShortsWrapper = nextShortsWrapper;
+            nextShortsWrapper = temp;
+
+            // 다음 쇼츠 래퍼는 초기 상태로 되돌림 (화면 밖, 투명)
+            nextShortsWrapper.style.transition = 'none';
+            nextShortsWrapper.style.transform = direction === 'down' ? 'translateY(100%)' : 'translateY(-100%)'; // 원래 위치로
+            nextShortsWrapper.style.opacity = '0';
+            // URL 업데이트
+            if (nextShortItem.id !== undefined) {
+                history.pushState({ shortformId: nextShortItem.id }, '', `/${nextShortItem.id}/`);
+            }
+        }, 550); // CSS transition 시간 + 약간의 여유
+    }
+
+    function setupInitialShortsUI() {
+        document.querySelector('.listTitle h3').textContent = `${season} Festivals`;
+        // AOS.refresh(); // AOS 관련 코드 제거됨
+    }
+
+    function updateShortsContent(item, targetWrapper) {
+        updateShortsWrapperContent(targetWrapper, item);
+    }
+
+    function changeShortsImage() {
+        if (!shortformsData || shortformsData.length === 0) return;
+
+        const currentShort = shortformsData[currentShortIdx];
+        if (currentShort && currentShort.images && currentShort.images.length > 0) {
+            currentImgIdx = (currentImgIdx + 1) % currentShort.images.length;
+            const currentImageEl = currentShortsWrapper.querySelector('#shorts'); // #shorts ID만 가진 요소 선택
+            if (currentImageEl) {
+                currentImageEl.style.backgroundImage = `url('${currentShort.images[currentImgIdx].image_url}')`;
+            }
+        }
+    }
+
+    function addlist(data) {
+        let jdata = ``;
+        for (let k = 0; k < data.length && k < 8; k++) {
+            const festival = data[k];
+            const imgUrl = festival.image || '경로/기본_이미지.png';
+            jdata += `<a href="/festivals/view/${festival.id}/"><div class="festCard"><img src="${imgUrl}" alt="${festival.name} 축제 이미지"><p>${festival.name}</p></div></a>`;
+        }
+        $('.recommendFestList').html(jdata);
+    }
+
+    function createBtn() {
+        if (festivalsData[0] && festivalsData[0].user_id == 'none') {
+            alert('login');
+            location.href='/accounts/login/';
+        } else {
+            alert('short');
+            location.href='/shortforms/upload/';
+        }
+    }
+    function likeBtn() { console.log('Like Button clicked'); }
+    function reviewBtn() { console.log('Review Button clicked'); }
+
+    function viewBtn() {
+       console.log('big shorts');
+    }
+
+    function searchBtn(event) {
+        event.preventDefault();
+        const keyword = $('input[name="keyWord"]').val().trim();
+        location.href = `http://127.0.0.1:8000/festivals/list/?name=${encodeURIComponent(keyword)}`;
+    }
+    function ldBtn() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    }
+    function logoBtn() { location.href='/'; }
+    function shareBtn() {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl)
+            .then(() => alert('현재 페이지 주소가 클립보드에 복사되었습니다!'))
+            .catch(err => alert('URL 복사에 실패했습니다. 주소를 직접 복사해주세요:\n' + currentUrl));
+    }
+</script>
+</head>
+<body>
+    <div id="wrap">
+        <div id="nav">
+
+            <div id="logo">
+                <a href="/"><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="Logo" ></a>
+                {% if user_id %}
+                <span>for　<span><a href="/accounts/mypage1/">{{nickname}}</a></span></span>
+                {% endif %}
+            </div>
+
+            <div id="searchAll">
+                <form action="fest_list.html" method="GET" onsubmit="searchBtn(event)">
+                    <div class="searchKey">
+                        <input name="keyWord" type="text" placeholder="name Search" />
+                        <button type="submit">검색</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="pageMove">
+                <ul>
+                    <li><a href="/festivals/list/">festivals</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="/accounts/logout/">logout</a></li>
+                        <li><a href="/accounts/mypage1/">my page</a></li>
+                    {% else %}
+                        <li><a href="/accounts/login/">login</a></li>
+                        <li><a href="/accounts/signup/terms/">sign up</a></li>
+                    {% endif %}
+                    <li><a href="/inquiry/support/">support</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="contents">
+            <div class="ad-banner">
                   <img src='/static/image/2.jpg'>
-                </div>
-                <div id="shortsContainer" data-aos="fade-${animove}"> 
-                    <div id="shortsBorder"> 
+            </div>
+            <div id="shortsContainer">
+                <div class="shorts-content-wrapper current-shorts">
+                    <div id="shortsBorder">
                         <data id="shorts">
-                            <a class="creator">@축제모아</a>
-                            <a class="shorts_title">요즘 입소문 탄다는 축제</a>
+                            <a class="creator"></a>
+                            <a class="shorts_title"></a>
                         </data>
                         <div id="shortsMeta">
                             <a href="#" class="festNameInShorts"></a>
-                            <span class="tags" style="font-size: 15px;"></span>
+                            <span class="tags"></span>
                         </div>
                     </div>
                     <div id="shortsIcoContainer">
@@ -665,222 +650,31 @@
                         <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
                     </div>
                 </div>
-                <div class="listTitle"><h3> Festivals</h3></div>
-                <div class="recommendFestList"></div>`; // 닫는 <div> 태그는 addlist에서 추가될 것이므로 여기서 제거
-            $('.contents').html(initialShortsHtml);
-            AOS.refresh(); 
-        }
 
-        // shortsContainer의 AOS 애니메이션만 적용하는 함수
-        function applyAOSAnimation(animove) {
-            $('#shortsContainer').attr('data-aos', `fade-${animove}`);
-            AOS.refresh(); 
-        }
-
-        // shortsContainer 내부의 콘텐츠를 데이터에 맞춰 업데이트하는 함수
-        function updateShortsContent(shortformItem) {
-            if (!shortformItem) {
-                console.warn("shortformItem이 유효하지 않습니다.");
-                return;
-            }
+                <div class="shorts-content-wrapper next-shorts">
+                    <div class="shorts-border-next">
+                        <data class="shorts-image-next">
+                            <a class="creator-next"></a>
+                            <a class="shorts_title-next"></a>
+                        </data>
+                        <div class="shorts-meta-next">
+                            <a href="#" class="festNameInShorts-next"></a>
+                            <span class="tags-next"></span>
+                        </div>
+                    </div>
+                    <div class="shorts-ico-container-next">
+                        <button class="iconBtn createBtn" onclick="createBtn()">+</button>
+                        <button class="iconBtn likeBtn" onclick="likeBtn()">❤️</button>
+                        <button class="iconBtn shareBtn" onclick="shareBtn()">🔄</button>
+                        <button class="iconBtn reviewBtn" onclick="reviewBtn()">📝</button>
+                        <button class="iconBtn viewBtn" onclick="viewBtn()">👁️</button>
+                    </div>
+                </div>
+            </div>
             
-            // 쇼츠 제목 업데이트
-            $('#shorts .creator').text('@'+shortformItem.user.nickname);
-            $('#shorts .shorts_title').text(shortformItem.title); // 'shorts_title' 클래스 사용
-
-            // 1. 쇼츠 이미지 업데이트
-            const imageUrl = shortformItem.images && shortformItem.images.length > currentImageIndex ?
-                            shortformItem.images[currentImageIndex].image_url : ''; 
-            
-            // 배경 이미지로 설정합니다.
-            $('#shorts').css('background-image', `url('${imageUrl}')`); 
-            $('#shorts').css('background-size', 'cover');      // 이미지가 요소를 꽉 채우도록 설정
-            $('#shorts').css('background-position', 'center'); // 이미지를 중앙에 위치시킴
-            $('#shorts').css('background-repeat', 'no-repeat'); 
-
-            // 2. 축제 이름 업데이트
-            const festival = shortformItem.festival;
-            const festivalName = festival && festival.name ? festival.name : '없어진 축제입니다';
-            const festivalId = festival && festival.id ? festival.id : null;
-
-            $('.festNameInShorts').text(festivalName);
-            if (festivalId) {
-                $('.festNameInShorts').attr('href', `/festivals/view/${festivalId}/`);
-            } else {
-                $('.festNameInShorts').removeAttr('href').css('cursor', 'default'); 
-            }
-
-            // 3. 축제 태그 업데이트
-            const tagsHtml = (festival && festival.tags && Array.isArray(festival.tags) && festival.tags.length > 0) ?
-                festival.tags.map(tag => `<a href="result_list.html?tag=${encodeURIComponent(tag.name)}">#${tag.name}</a>`).join(' ') : '';
-            $('.tags').html(tagsHtml);
-
-            if (shortformItem.frame_color) {
-                $('#shortsBorder').css('background', shortformItem.frame_color);
-            } else {
-                // frame_color가 없는 경우 기본 색상으로 설정하거나 아무것도 하지 않습니다.
-                $('#shortsBorder').css('background', '#39555e'); // CSS에 정의된 기본값으로 명시적으로 되돌릴 수 있습니다.
-            }
-            document.querySelector('.listTitle h3').textContent = `${season} Festivals`;
-
-            const shortformId = shortformItem.id;
-            if (shortformId !== undefined) {
-                const newUrl = `/${shortformId}/`; // Django URL 패턴과 일치하도록 경로 설정
-                history.pushState({shortformId: shortformId}, '', newUrl);
-            }
-        }
-
-        // 현재 쇼츠 내에서 이미지를 순환하는 함수
-        function changeShortsImage() {
-            if (!shortformsData || shortformsData.length === 0) return; // 데이터 없으면 종료
-
-            const currentShort = shortformsData[currentShortIndex]; // 현재 표시 중인 쇼츠 데이터
-            if (currentShort && currentShort.images && currentShort.images.length > 0) {
-                currentImageIndex++;
-                if (currentImageIndex >= currentShort.images.length) { 
-                    currentImageIndex = 0; // 현재 쇼츠의 모든 이미지를 봤으면 다시 첫 번째 이미지로
-                }
-                // 현재 쇼츠 (currentShortIndex)의 currentImageIndex번째 이미지로 업데이트
-                updateShortsContent(currentShort); 
-            }
-        }
-
-        // addlist 함수 (추천 축제 리스트를 동적으로 생성)
-        function addlist(data){ // data 인자로 festivalsData를 받습니다
-            let jdata = ``;
-            for (let k = 0; k < data.length && k < 8; k++) { // 최대 8개 또는 data.length 만큼
-                const festival = data[k];
-                // image 필드는 jlist 응답의 festival 객체에 직접 있어야 합니다.
-                // 예를 들어, festival.image_url 또는 festival.main_image_url
-                // 현재 코드에서는 `festival.image`를 사용하고 있으므로, `jlist`에서 해당 필드를 제공한다고 가정합니다.
-                const imageUrl = festival.image || '경로/기본_이미지.png'; // 이미지가 없으면 기본 이미지
-                jdata += `<a href="/festivals/view/${festival.id}/">
-                <div class="festCard">
-                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
-                <div class="festHeader"><p>${festival.name}</p></div>
-                </div></a>`;
-            }
-            $('.recommendFestList').html(jdata); // div 닫는 태그는 HTML 구조에 따라 처리
-        }
-
-        // 아이콘 버튼 핸들러 함수들
-        function createBtn() { location.href='/shortforms/upload/'; }
-        function likeBtn() { console.log('Like Button clicked'); }
-        
-        function reviewBtn() { console.log('Review Button clicked'); }
-        function viewBtn() {
-            if (!shortsContainer) { // DOMContentLoaded에서 이미 할당되지만, 안전을 위해 재확인
-                shortsContainer = document.getElementById('shortsContainer');
-                shortsBorder = document.getElementById('shortsBorder');
-                shortsIcoContainer = document.getElementById('shortsIcoContainer');
-                iconButtons = document.querySelectorAll('.iconBtn');
-                if (!shortsContainer || !shortsBorder || !shortsIcoContainer || iconButtons.length === 0) {
-                    console.error("Shorts elements not found before fullscreen request.");
-                    return;
-                }
-            }
-
-            if (document.fullscreenElement) {
-                document.exitFullscreen(); // 전체 화면 종료 요청
-            } else {
-                // 전체 화면 진입 요청
-                if (shortsContainer.requestFullscreen) {
-                    shortsContainer.requestFullscreen();
-                } else if (shortsContainer.mozRequestFullScreen) {
-                    shortsContainer.mozRequestFullScreen();
-                } else if (shortsContainer.webkitRequestFullscreen) {
-                    shortsContainer.webkitRequestFullscreen();
-                } else if (shortsContainer.msRequestFullscreen) {
-                    shortsContainer.msRequestFullscreen();
-                }
-            }
-        }
-        function searchBtn(event) {
-          event.preventDefault();
-          const keyword = $('input[name="keyWord"]').val().trim();
-          console.log(keyword);
-          const url = `http://127.0.0.1:8000/festivals/list/?name=${encodeURIComponent(keyword)}`;
-          window.location.href = url
-          window.history.pushState(null, '', newUrl.toString());
-        }
-        function ldBtn() {
-          document.body.classList.toggle('dark');
-          // (선택) 로컬 스토리지에 상태 저장
-          const isDark = document.body.classList.contains('dark');
-          localStorage.setItem('darkMode', isDark);
-        }
-        function shareBtn() {
-          // 1. 현재 페이지의 URL 가져오기
-          const currentUrl = window.location.href;
-
-          navigator.clipboard.writeText(currentUrl)
-              .then(() => {
-                  alert('현재 페이지 주소가 클립보드에 복사되었습니다!');
-                  console.log('URL이 성공적으로 클립보드에 복사되었습니다:', currentUrl);
-              })
-              .catch(err => {     
-                  console.error('URL 복사 실패:', err);
-                  alert('URL 복사에 실패했습니다. 주소를 직접 복사해주세요:\n' + currentUrl);
-              });
-        }
-        function logoBtn() {
-          location.href='/';
-        }
-        function shareBtn() {
-          // 1. 현재 페이지의 URL 가져오기
-          const currentUrl = window.location.href;
-
-          navigator.clipboard.writeText(currentUrl)
-              .then(() => {
-                  alert('현재 페이지 주소가 클립보드에 복사되었습니다!');
-                  console.log('URL이 성공적으로 클립보드에 복사되었습니다:', currentUrl);
-              })
-              .catch(err => {     
-                  console.error('URL 복사 실패:', err);
-                  alert('URL 복사에 실패했습니다. 주소를 직접 복사해주세요:\n' + currentUrl);
-              });
-        }
-  </script>
-</head>
-<body>
-  <div id="wrap">
-    <div id="nav">
-      
-      <div id="logo">
-        <a href="/"><img id="logo_img" src="/static/image/logo_transparent_cut.png" alt="Logo" ></a>
-        {% if user_id %}
-        <span>for　<span><a href="/accounts/mypage1/">{{nickname}}</a></span></span>
-        {% endif %}
-      </div>
-
-      <div id="searchAll">
-        <form action="fest_list.html" method="GET" onsubmit="searchBtn(event)">
-          <div class="searchKey">
-            <input name="keyWord" type="text" placeholder="name Search" />
-            <button type="submit">검색</button>
-          </div>
-        </form>
-      </div>
-
-      <div id="pageMove">     
-        <ul>
-          <li><a href="/festivals/list/">festivals</a></li>
-          {% if user.is_authenticated %}
-              <li><a href="/accounts/logout/" onclick="return confirm('Are you sure you want to logout?');">logout</a></li>
-              <li><a href="/accounts/mypage1/">my page</a></li>
-          {% else %}
-              <li><a href="/accounts/login/">login</a></li>
-              <li><a href="/accounts/signup/terms/">sign up</a></li>
-          {% endif %}
-          <li><a href="/inquiry/support/">support</a></li>  
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="contents">
-      
-    </div>
-
-  {% include "footer.html" %}
-</body>
+            <div class="listTitle"><h3> Festivals</h3></div>
+            <div class="recommendFestList"></div>
+        </div>
+        {% include "footer.html" %}
+    </body>
+</html>

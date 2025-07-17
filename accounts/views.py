@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from festivals.models import Festival
 from wishlist.models import Wishlist
+from shortforms.models import ShortForm
 
 import uuid
 import datetime
@@ -399,7 +400,9 @@ def mypage1(request):
 def mypage2(request):
     user = request.user
     my_wish = Wishlist.objects.filter(user=user).select_related('festival').prefetch_related('festival__tags', 'festival__images')
-    context = {'my_wish': my_wish}
+    my_short = ShortForm.objects.filter(user=user)
+    print(my_short)
+    context = {'my_wish': my_wish,'my_short':my_short}
     
     return render(request,'mypage2.html', context)
 
