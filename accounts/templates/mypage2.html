@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/css/main.css">
     <title>My Page</title>
     <style>
+
         .contents {
             max-width: none;
             width: 60%;
@@ -31,19 +32,16 @@
         }
         .profile-details {
             margin-top: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffffff;
-            background: linear-gradient(90deg, #fc7311 0%, #00f2ff 100%);
-            padding: 1rem 2rem;
-            border-radius: 1rem;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            width: fit-content;
-            margin: 2rem auto;
+            font-size: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+        .profile-details > span > a {
+            display: inline-block;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ffb300 0%, #4fc3f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         /* my plans, My Reviews, notification, settings 탭 */
@@ -85,13 +83,12 @@
             margin-bottom: 50px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
             gap: 20px;
         }
         .festCard {
             width: calc(32% - 10px);
             min-height: 620px;
-            height: fit-content;
             display: flex;
             flex-direction: column;
             border-radius: 12px;
@@ -99,13 +96,13 @@
             cursor: pointer;
             text-align: left;
             font-family: inherit;
-        
             background: 
             linear-gradient(to bottom right, #fefae0, #e9f5ff),
             repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px),
             repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 6px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.08);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
+            margin-bottom: 10px;
         }
 
         /*
@@ -121,22 +118,8 @@
             object-fit: cover;
         }
 
-        .festCard::before {
-            content: "Happening Now";
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #F66989;
-            /*background: linear-gradient(45deg, #cc5c48, #e2905b);*/
-            color: #fff;
-            font-size: 12px;
-            padding: 5px 7px;
-            border-radius: 8px;
-            font-weight: bold;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            z-index: 1;
-        }
 
+        
 
 
         /* 공통 텍스트 스타일 */
@@ -210,6 +193,7 @@
             margin: 5px 20px 10px;
         }
 
+        
 
 
         /* My Reviews 탭 */
@@ -217,6 +201,7 @@
         .reviews {
             margin-bottom: 20px;
         }
+        /*
         .review-item {
             display: flex;
             justify-content: space-between;
@@ -247,6 +232,59 @@
             background-color: #ddd;
             flex-shrink: 0;
         }
+        */
+
+        .review-card { 
+            border: 1px solid #eee; 
+            padding: 16px;
+            background-color: #fff; /*background: #fafbfc;*/ 
+            display: flex;
+        }
+        .review-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .review-card .review-header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            gap: 15px; 
+        }
+        .star { 
+            color: #ff9800; font-size: 1.1em; 
+        }
+        .review-card .review-user { 
+            font-weight: bold; 
+        }
+        .review-card .review-actions { 
+            display: flex; gap: 12px; 
+        }
+        .review-card .review-date { 
+            color: #888; font-size: 0.9em; 
+        }
+        .review-right {
+           width: 14%;
+        }
+        .review-thumbnail {
+            width: 109px;
+            height: 109px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        /*
+        .review-thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        */
+
+
+        
+        /* My shotrs 탭 */
 
         #recommendFestList {
             width: 100%;
@@ -267,45 +305,36 @@
 
         .festCard_name {
             width: 200px;
-            height: 250px;
+            height: 300px;
             border-radius: 10px;
             overflow: hidden;
             text-align: center;
             background: linear-gradient(to bottom right, #fefae0, #e9f5ff), repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 6px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            display: inline-block;
         }
 
-        /*
-        .festCard_name:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.15);
-        }
-        */
-
-        .festCard_name img {
+        .festCard_shorts img {
             width: 100%;
-            height: 150px;
+            height: 100%;
             object-fit: cover;
+            display: block;
+            z-index: 0;
         }
 
         .festHeader {
-            width: 90%;
-            height: 32%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            
-        }
-
-        .festHeader p {
-            text-align: left;
+            position: absolute;
             font-size: 15px;
-            text-align: center;
+            padding: 0 5px;
+            z-index: 1;
+            bottom: 30px;
+            left: 10px;
+            background-color: rgba(255,255,255,0.7)
         }
 
-        /* My shotrs 탭 */
-
+        /*
         .short-container {
             display: flex;
             flex-wrap: wrap;
@@ -332,30 +361,24 @@
             font-weight: bold;
             text-align: center;
         }
-        .more-button {
-            display: block;
-            margin: 30px auto;
-            padding: 10px 20px;
-            border: 1px solid #f97316;
-            background-color: transparent;
-            color: #f97316;
-            font-weight: bold;
-            border-radius: 8px;
-        }
-        .more-button:hover {
-            background-color: #f97316;
-            color: #fff;
-        }
+        */
+
+
 
         /* Settings 탭 */
 
         #settings {
             text-align: left;
+            width: 920px;
+            margin: 20px auto;
+            padding: 30px;
         }
 
         #settings h3 {
             text-align: center;
         }
+
+
 
         /* 회원 정보 수정 폼 */
 
@@ -378,10 +401,12 @@
             border-radius: 4px;
             font-size: 1rem;
         }
+        
         .radio-group {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
+            gap: 5px;
         }
         .radio-group label {
             flex: 1;
@@ -396,17 +421,32 @@
             display: none;
         }
         .radio-group input:checked + label {
-            background-color: #2563eb;
+            background-color: #f97316;
             color: #ffffff;
-            border-color: #2563eb;
+            border-color: #f97316;
         }
+
+        .checkbox {
+            display:flex;
+            align-items: center;
+            gap: 10px; /* input과 버튼 사이 간격 */
+            margin-bottom: 15px;
+        }
+        .checkbox-input {
+            margin-bottom: 0 !important;
+        }
+        .checkbox .clickBtn {
+            padding: 10px 15px;
+        }
+
+
 
         /* 버튼 설정 */
 
         .actions {
             display: flex;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 10px;
         }
         .button {
             padding: 10px 20px;
@@ -420,6 +460,22 @@
             background-color: #2563eb;
             color: #ffffff;
         }
+
+        .more-button {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 20px;
+            border: 1px solid #f97316;
+            background-color: transparent;
+            color: #f97316;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        .more-button:hover {
+            background-color: #f97316;
+            color: #fff;
+        }
+
 
         .space {
             height: 20px;
@@ -443,7 +499,7 @@
         <div class="contents">
             <div class="profile-card">
                 <div class="profile-details">
-                    <span>{{nickname}}'s festival hub </span>
+                    <span><a href="/accounts/mypage1/">{{ nickname }}</a></span>　's festival hub
                 </div>
             </div>
 
@@ -467,104 +523,127 @@
                         {% endif %}
                         {% endwith %}
                         <p>
-                        <div class="festival-header">
-                            <div class="festival-name">{{data.festival.name}}</div>
-                            <div class="rating-region">
-                            <span class="festival-rating">⭐ {{data.festival.rating}}</span>
-                            <span class="region-info">🌏 {{data.festival.region}}</span>
+                            <div class="festival-header">
+                                <div class="festival-name">{{data.festival.name}}</div>
+                                <div class="rating-region">
+                                <span class="festival-rating">⭐ {{data.festival.rating}}</span>
+                                <span class="region-info">🌏 {{data.festival.region}}</span>
                             </div>
                             <p class="date-info">📅 {{data.festival.start_date}} ~ {{data.festival.end_date}}</p>
-                        </div>
+                            </div>
+                            <div class="festival-tags">
+                            {% for tag in data.festival.tags.all %}
+                                <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                            </div>
                         </p>
-                        {% for tag in data.festival.tags.all %}
-                            <span class="tag">#{{ tag.name }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endfor %}     
+                    </div>  
+                    {% endfor %}   
                 </div>
                 <button id="loadMoreBtn" class="white-orange-active moreBtn">view more</button>
             </div>
             <div id="my-reviews" class="content" style="display: none;">
-                <h3>My Festivals</h3>
-                <div class="festivals">
-                    <div id="recommendFestList">
-                        <a href="/festivals/view/${festival.id}/">
-                            <div class="festCard_name">
-                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
-                                <div class="festHeader"><p>${festival.name}</p></div>
-                            </div>
-                        </a>
-                        <a href="/festivals/view/${festival.id}/">
-                            <div class="festCard_name">
-                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
-                                <div class="festHeader"><p>${festival.name}</p></div>
-                            </div>
-                        </a>
-                        <a href="/festivals/view/${festival.id}/">
-                            <div class="festCard_name">
-                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
-                                <div class="festHeader"><p>${festival.name}</p></div>
-                            </div>
-                        </a>
-                        <a href="/festivals/view/${festival.id}/">
-                            <div class="festCard_name">
-                                <div><img src="${imageUrl}" alt="${festival.name} 축제 이미지"></div>
-                                <div class="festHeader"><p>${festival.name}</p></div>
-                            </div>
-                        </a>
-                    </div>
-                    <button class="more-button">More</button>
-                </div>
-                <div class="space"></div>
                 <h3>My Reviews</h3>
                 <div class="reviews">
-                    <div class="review-item">
-                        <div class="review-content">
-                            <p class="review-title">[Now] 광복절 송룬+알틴아라산 키르기스스탄 5박 7일</p>
-                            <p class="review-meta">25.08.14 / 사용자: 활발한밴디23</p>
-                            <p>키르기스스탄 어드벤처 여행을 떠나려고 해요...</p>
+                    <div class="review-card">
+                        <div class="review-left">
+                            <div class="review-top">
+                                <div class="review-header">
+                                <span class="star">★${review.rating}</span>
+                                <span class="review-user">${review.user}</span>
+                                </div>
+                                <div class="review-content">${review.content}</div>
+                            </div>
+                            <div class="review-actions">
+                                <span class="review-date">${review.created_at}</span>
+                                ${review.is_owner ? `<button type="button" onclick="deleteReview(${review.id})" style="margin-left:8px;">delete</button>` : ""}
+                            </div>
                         </div>
-                        <div class="review-image"></div>
-                    </div>
-                    <div class="review-item">
-                        <div class="review-content">
-                            <p class="review-title">7월 3일-7일(런던), 7일-11일(에든버러) 여행 같이 하실 분</p>
-                            <p class="review-meta">사용자: 그니</p>
-                            <p>이번에 영국으로 혼자 여행 가는데...</p>
+                        <div class="review-right">
+                            ${review.images.map(url => `<img src="${url}" class="review-thumbnail" style="max-width:85px;max-height:85px;border-radius:4px;">`).join('')}
                         </div>
-                        <div class="review-image"></div>
                     </div>
-                    <div class="review-item">
-                        <div class="review-content">
-                            <p class="review-title">7/16~21 홍콩 마카오 동행구합니다</p>
-                            <p class="review-meta">사용자: nnnnew</p>
-                            <p>이번 일정은 당일차이로...</p>
+                    <div class="review-card">
+                        <div class="review-left">
+                            <div class="review-top">
+                                <div class="review-header">
+                                <span class="star">★${review.rating}</span>
+                                <span class="review-user">${review.user}</span>
+                                </div>
+                                <div class="review-content">${review.content}</div>
+                            </div>
+                            <div class="review-actions">
+                                <span class="review-date">${review.created_at}</span>
+                                ${review.is_owner ? `<button type="button" onclick="deleteReview(${review.id})" style="margin-left:8px;">delete</button>` : ""}
+                            </div>
                         </div>
-                        <div class="review-image"></div>
+                        <div class="review-right">
+                            ${review.images.map(url => `<img src="${url}" class="review-thumbnail" style="max-width:85px;max-height:85px;border-radius:4px;">`).join('')}
+                        </div>
                     </div>
+                    <div class="review-card">
+                        <div class="review-left">
+                            <div class="review-top">
+                                <div class="review-header">
+                                <span class="star">★${review.rating}</span>
+                                <span class="review-user">${review.user}</span>
+                                </div>
+                                <div class="review-content">${review.content}</div>
+                            </div>
+                            <div class="review-actions">
+                                <span class="review-date">${review.created_at}</span>
+                                ${review.is_owner ? `<button type="button" onclick="deleteReview(${review.id})" style="margin-left:8px;">delete</button>` : ""}
+                            </div>
+                        </div>
+                        <div class="review-right">
+                            ${review.images.map(url => `<img src="${url}" class="review-thumbnail" style="max-width:85px;max-height:85px;border-radius:4px;">`).join('')}
+                        </div>
+                    </div>
+                
                     <button class="more-button">More</button>
                 </div>
 
             </div>
             <div id="my-shorts" class="content" style="display: none;">
                 <div class="short-contents">
-                    {% for short in my_short %}
                     <h3>Short Contents</h3>
-                    <div class="short-container">
-                        <div class="short-item">
-                            <img src="{{short.image}}" alt="숏폼 사진">
-                            <div class="short-title">{{short.title}}</div>
-                        </div>
-                    {% endfor %} 
+                    <div id="recommendFestList">
+                        <a href="/festivals/view/${Shorts.id}/">
+                            <div class="festCard_shorts">
+                                <img src="${imageUrl}" alt="${Shorts.name} 축제 이미지">
+                                <div class="festHeader">${Shorts.name}</div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${Shorts.id}/">
+                            <div class="festCard_shorts">
+                                <img src="${imageUrl}" alt="${Shorts.name} 축제 이미지">
+                                <div class="festHeader">${Shorts.name}</div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${Shorts.id}/">
+                            <div class="festCard_shorts">
+                                <img src="${imageUrl}" alt="${Shorts.name} 축제 이미지">
+                                <div class="festHeader">{Shorts.name}</div>
+                            </div>
+                        </a>
+                        <a href="/festivals/view/${Shorts.id}/">
+                            <div class="festCard_shorts">
+                                <img src="/static/image/2.jpg" alt="${Shorts.name} 축제 이미지">
+                                <div class="festHeader">${Shorts.name}</div>
+                            </div>
+                        </a>
                     </div>
+                    <button class="more-button">More</button>
                 </div>
             </div>
             <div id="settings" class="content" style="display: none;">
                 <h3>Settings</h3>
                 <form action="#" method="post">
                 <label for="id">ID *</label>
-                <input type="text" id="id" placeholder="Enter your ID">
-                <button class="button id_check">check for duplicates</button>
+                <div class="checkbox">
+                    <input type="text" id="id" class="checkbox-input" placeholder="Enter your ID">
+                    <button class="clickBtn orange id_check">check for duplicates</button>
+                </div>
                 
                 <label for="password">Password *</label>
                 <input type="password" id="password" placeholder="Enter your password">
@@ -576,12 +655,16 @@
                 <input type="text" id="name" placeholder="Enter your name">
 
                 <label for="nickname">Nickname *</label>
-                <input type="text" id="nickname" placeholder="10 characters maximum">
-                <button class="button nname_check">check for duplicates</button>
+                <div class="checkbox">
+                    <input type="text" id="nickname" class="checkbox-input" placeholder="10 characters maximum">
+                    <button class="clickBtn orange nname_check">check for duplicates</button>
+                </div>
 
                 <label for="email">E-mail *</label>
-                <input type="text" id="email" placeholder="Enter your email">
-                <button class="button mail_check">check for duplicates</button>
+                <div class="checkbox">
+                    <input type="text" id="email" class="checkbox-input" placeholder="Enter your email">
+                    <button class="clickBtn orange mail_check">check for duplicates</button>
+                </div>
 
                 <p>Would you like to subscribe to FastFest email notifications? </p>
                 <div class="radio-group">
@@ -633,7 +716,7 @@
                 <!-- Add more interests as needed -->
 
                 <div class="actions">
-                    <button type="submit" class="button signup">Save</button>
+                    <button type="submit" class="more-button signup">Save</button>
                 </div>
                 </form>
             </div>
@@ -645,7 +728,6 @@
         function showTab(tabId) {
             const tabs = document.querySelectorAll('.content');
             const buttons = document.querySelectorAll('.tab-link');
-
             tabs.forEach(tab => {
                 tab.style.display = 'none';
             });

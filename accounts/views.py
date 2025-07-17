@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from festivals.models import Festival
 from wishlist.models import Wishlist
-from shortforms.models import ShortForm
 
 import uuid
 import datetime
@@ -400,10 +399,7 @@ def mypage1(request):
 def mypage2(request):
     user = request.user
     my_wish = Wishlist.objects.filter(user=user).select_related('festival').prefetch_related('festival__tags', 'festival__images')
-    my_short = ShortForm.objects.filter(user=user)
-    print(my_short)
-    context = {'my_wish': my_wish,'my_short':my_short}
-    
+    context = {'my_wish': my_wish}
     return render(request,'mypage2.html', context)
 
 # 7. login_password_reset.html >> lgfor에서 메일 발송하면, 발송된 메일의 링크로만 넘어올 수 있음.
@@ -523,4 +519,10 @@ def naver_callback(request):
                 continue  # user_id, nickname 충돌시 재시도
         # 10번 시도해도 실패 시
         return render(request, "login.html", {"messages": ["회원가입에 실패했습니다. 관리자에게 문의해 주세요."]})
+
+
+
+
+
+
 
