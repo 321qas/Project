@@ -536,3 +536,9 @@ def naver_callback(request):
         # 10번 시도해도 실패 시
         return render(request, "login.html", {"messages": ["회원가입에 실패했습니다. 관리자에게 문의해 주세요."]})
 
+
+
+
+
+
+
