@@ -548,14 +548,19 @@
             </div>
             <div id="my-shorts" class="content" style="display: none;">
                 <div class="short-contents">
-                    {% for short in my_short %}
                     <h3>Short Contents</h3>
                     <div class="short-container">
-                        <div class="short-item">
-                            <img src="{{short.image}}" alt="숏폼 사진">
-                            <div class="short-title">{{short.title}}</div>
-                        </div>
-                    {% endfor %} 
+                        {% for short in my_short %}
+                            <div class="short-item">
+                                {% if short.images.first %} {# 이미지가 존재하는지 확인 #}
+                                    <img src="{{ short.images.first.image.url }}" alt="{{ short.title }} 숏폼 사진">
+                                {% else %}
+                                    {# 이미지가 없을 경우 표시할 대체 이미지 경로 (예: /static/images/no_image.png) #}
+                                    <img src="/static/images/no_image.png" alt="이미지 없음">
+                                {% endif %}
+                                <div class="short-title">{{ short.title }}</div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from festivals.models import Festival
 from wishlist.models import Wishlist
-from shortforms.models import ShortForm
+from shortforms.models import ShortForm,ShortFormImage
+from django.db.models import Prefetch
 
 import uuid
 import datetime
@@ -397,12 +398,23 @@ def mypage1(request):
     
     return render(request,'mypage1.html',context)
 
+from datetime import datetime, timedelta
+
 def mypage2(request):
     user = request.user
     my_wish = Wishlist.objects.filter(user=user).select_related('festival').prefetch_related('festival__tags', 'festival__images')
-    my_short = ShortForm.objects.filter(user=user)
-    print(my_short)
-    context = {'my_wish': my_wish,'my_short':my_short}
+    
+    # Prefetch를 사용하여 각 ShortForm에 연결된 첫 번째 이미지만 가져오도록 수정합니다.
+    # 여기서 [:1]을 제거하고, 템플릿에서 .first()로 접근합니다.
+    shortforms_qs = ShortForm.objects.filter(user=user).prefetch_related(
+        Prefetch(
+            'images', 
+            queryset=ShortFormImage.objects.order_by('uploaded_at') # 슬라이싱 제거!
+        )
+    )
+    
+    context = {'my_wish': my_wish,'my_short':shortforms_qs}
+    # print(shortforms_qs) # 디버깅용 print문은 이제 제거해도 좋습니다.
     
     return render(request,'mypage2.html', context)
 
